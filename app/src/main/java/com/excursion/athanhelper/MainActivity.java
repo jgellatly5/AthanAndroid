@@ -1,17 +1,20 @@
 package com.excursion.athanhelper;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
-
     TextView dawnTimeTextView;
     TextView middayTimeTextView;
     TextView afternoonTimeTextView;
@@ -25,6 +28,11 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String title = "Athan";
+        SpannableString s = new SpannableString(title);
+        s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getSupportActionBar().setTitle(s);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
