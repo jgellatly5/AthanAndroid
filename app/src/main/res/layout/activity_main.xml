@@ -11,14 +11,14 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="221dp"
-        android:layout_below="@+id/imageView2"
+        android:layout_below="@+id/imageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="30dp"
         android:layout_alignParentBottom="true"/>
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_alignParentLeft="true"
@@ -35,13 +35,14 @@
         android:id="@+id/prayerTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignBottom="@+id/imageView"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="55dp"
         android:layout_marginEnd="41dp"
         android:layout_marginRight="41dp"
         android:text="00:12:40s"
+        android:textColor="@android:color/background_dark"
         android:textSize="32sp"
         tools:ignore="HardcodedText"/>
 
@@ -49,9 +50,11 @@
         android:id="@+id/nextPrayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next Prayer"
-        android:textSize="18sp"
         android:layout_above="@+id/prayerTimer"
         android:layout_alignLeft="@+id/prayerTimer"
-        android:layout_alignStart="@+id/prayerTimer"/>
+        android:layout_alignStart="@+id/prayerTimer"
+        android:fontFamily="sans-serif"
+        android:text="Next Prayer"
+        android:textAllCaps="true"
+        android:textSize="18sp"/>
 </RelativeLayout>

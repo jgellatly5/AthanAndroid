@@ -30,7 +30,6 @@ public class MainActivity extends FragmentActivity {
         SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
         viewPager.setAdapter(swipeAdapter);
 
-
         dawnTimeTextView = (TextView) findViewById(R.id.dawnTimeTextView);
         middayTimeTextView = (TextView) findViewById(R.id.middayTimeTextView);
         afternoonTimeTextView = (TextView) findViewById(R.id.afternoonTimeTextView);
