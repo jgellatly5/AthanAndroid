@@ -43,7 +43,7 @@
         android:layout_marginRight="41dp"
         android:text="00:12:40s"
         android:textColor="@android:color/background_dark"
-        android:textSize="32sp"
+        android:textSize="36sp"
         tools:ignore="HardcodedText"/>
 
     <TextView
