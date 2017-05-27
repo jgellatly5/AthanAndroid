@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,186 +7,51 @@
     android:layout_height="match_parent"
     tools:context="com.excursion.athanhelper.MainActivity">
 
-    <GridLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:columnCount="2"
-        android:rowCount="5"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="17dp"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="14dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dayTextView"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp">
-
-        <TextView
-            android:id="@+id/dawnTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:gravity="center"
-            android:text="Dawn"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/dawnTimeTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="1"
-            android:layout_row="0"
-            android:gravity="center"
-            android:text="5:45am"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/middayTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="0"
-            android:layout_row="1"
-            android:gravity="center"
-            android:text="Mid-day"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/middayTimeTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="1"
-            android:layout_row="1"
-            android:gravity="center"
-            android:text="12:20pm"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/afternoonTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="0"
-            android:layout_row="2"
-            android:gravity="center"
-            android:text="Afternoon"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/afternoonTimeTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="1"
-            android:layout_row="2"
-            android:gravity="center"
-            android:text="3:37pm"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/sunsetTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="0"
-            android:layout_row="3"
-            android:gravity="center"
-            android:text="Sunset"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/sunsetTimeTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="1"
-            android:layout_row="3"
-            android:gravity="center"
-            android:text="6:07pm"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/nightTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="0"
-            android:layout_row="4"
-            android:gravity="center"
-            android:text="Night"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-
-        <TextView
-            android:id="@+id/nightTimeTextView"
-            android:layout_width="172dp"
-            android:layout_height="52dp"
-            android:layout_column="1"
-            android:layout_row="4"
-            android:gravity="center"
-            android:text="7:07pm"
-            android:textAlignment="center"
-            android:textSize="24sp"/>
-    </GridLayout>
-
-    <TextView
-        android:id="@+id/dayTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Monday 03/17"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="67dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="221dp"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentBottom="true"/>
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="148dp"
-        android:layout_height="121dp"
-        app:srcCompat="@drawable/crescent"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="32dp"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="31dp"/>
-
-    <TextView
-        android:id="@+id/prayerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next Prayer"
-        android:textSize="18sp"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/prayerTimer"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/prayerTimer"/>
+        android:id="@+id/imageView2"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="44dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="43dp"
+        android:contentDescription="crescent"
+        android:src="@drawable/crescent"
+        tools:ignore="HardcodedText"/>
 
     <TextView
         android:id="@+id/prayerTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="55dp"
+        android:layout_marginEnd="41dp"
+        android:layout_marginRight="41dp"
         android:text="00:12:40s"
-        android:textSize="30sp"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:layout_constraintLeft_toRightOf="@+id/imageView"
-        android:layout_marginLeft="14dp"/>
-</android.support.constraint.ConstraintLayout>
+        android:textSize="32sp"
+        tools:ignore="HardcodedText"/>
+
+    <TextView
+        android:id="@+id/nextPrayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next Prayer"
+        android:textSize="18sp"
+        android:layout_above="@+id/prayerTimer"
+        android:layout_alignLeft="@+id/prayerTimer"
+        android:layout_alignStart="@+id/prayerTimer"/>
+</RelativeLayout>

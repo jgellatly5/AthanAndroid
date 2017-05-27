@@ -2,10 +2,15 @@ package com.excursion.athanhelper;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class MainActivity extends FragmentActivity {
+    ViewPager viewPager;
 
     TextView dawnTimeTextView;
     TextView middayTimeTextView;
@@ -13,11 +18,18 @@ public class MainActivity extends AppCompatActivity {
     TextView sunsetTimeTextView;
     TextView nightTimeTextView;
     TextView prayerTimer;
+    SimpleDateFormat sdf;
+    Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(swipeAdapter);
+
 
         dawnTimeTextView = (TextView) findViewById(R.id.dawnTimeTextView);
         middayTimeTextView = (TextView) findViewById(R.id.middayTimeTextView);
@@ -25,11 +37,16 @@ public class MainActivity extends AppCompatActivity {
         sunsetTimeTextView = (TextView) findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) findViewById(R.id.nightTimeTextView);
         prayerTimer = (TextView) findViewById(R.id.prayerTimer);
+        sdf = new SimpleDateFormat("hh:mm:ss");
+        date = new Date();
 
         new CountDownTimer(50000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                prayerTimer.setText(String.valueOf(millisUntilFinished / 1000) + "s");
+                date.setTime(millisUntilFinished);
+                //String timerValue = sdf.format(String.valueOf(millisUntilFinished / 1000) + "s");
+                //prayerTimer.setText(timerValue);
+                prayerTimer.setText(sdf.format(date) + "s");
             }
 
             @Override
