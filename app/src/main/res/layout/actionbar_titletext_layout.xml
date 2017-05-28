@@ -5,11 +5,15 @@
               android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/actionbar_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Athan"
-        android:textColor="#ffffff"
-        android:id="@+id/mytext"
-        android:textSize="18sp" />
+        android:clickable="false"
+        android:focusable="false"
+        android:fontFamily="monospace"
+        android:longClickable="false"
+        android:maxLines="1"
+        android:textColor="#b3b3b3"
+        android:textSize="30sp"/>
 </LinearLayout>

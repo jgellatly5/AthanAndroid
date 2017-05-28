@@ -7,9 +7,15 @@
 
     <!-- TODO: Update blank fragment layout -->
     <GridLayout
+        android:id="@+id/gridLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
         android:columnCount="2"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         android:rowCount="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -18,11 +24,7 @@
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"
-        android:id="@+id/gridLayout"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true">
+        tools:layout_constraintTop_creator="1">
 
         <TextView
             android:id="@+id/dawnTextView"
@@ -31,8 +33,9 @@
             android:layout_column="0"
             android:layout_row="0"
             android:gravity="center"
+            android:paddingLeft="10dp"
             android:text="Dawn"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textSize="24sp"/>
 
         <TextView
@@ -42,8 +45,9 @@
             android:layout_column="1"
             android:layout_row="0"
             android:gravity="center"
+            android:paddingRight="10dp"
             android:text="5:45am"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             android:textSize="24sp"/>
 
         <TextView
@@ -53,8 +57,9 @@
             android:layout_column="0"
             android:layout_row="1"
             android:gravity="center"
+            android:paddingLeft="10dp"
             android:text="Mid-day"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textSize="24sp"/>
 
         <TextView
@@ -64,8 +69,9 @@
             android:layout_column="1"
             android:layout_row="1"
             android:gravity="center"
+            android:paddingRight="10dp"
             android:text="12:20pm"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             android:textSize="24sp"/>
 
         <TextView
@@ -75,8 +81,9 @@
             android:layout_column="0"
             android:layout_row="2"
             android:gravity="center"
+            android:paddingLeft="10dp"
             android:text="Afternoon"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textSize="24sp"/>
 
         <TextView
@@ -86,8 +93,9 @@
             android:layout_column="1"
             android:layout_row="2"
             android:gravity="center"
+            android:paddingRight="10dp"
             android:text="3:37pm"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             android:textSize="24sp"/>
 
         <TextView
@@ -97,8 +105,9 @@
             android:layout_column="0"
             android:layout_row="3"
             android:gravity="center"
+            android:paddingLeft="10dp"
             android:text="Sunset"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textSize="24sp"/>
 
         <TextView
@@ -108,8 +117,9 @@
             android:layout_column="1"
             android:layout_row="3"
             android:gravity="center"
+            android:paddingRight="10dp"
             android:text="6:07pm"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             android:textSize="24sp"/>
 
         <TextView
@@ -119,8 +129,9 @@
             android:layout_column="0"
             android:layout_row="4"
             android:gravity="center"
+            android:paddingLeft="10dp"
             android:text="Night"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textSize="24sp"/>
 
         <TextView
@@ -130,8 +141,9 @@
             android:layout_column="1"
             android:layout_row="4"
             android:gravity="center"
+            android:paddingRight="10dp"
             android:text="7:07pm"
-            android:textAlignment="center"
+            android:textAlignment="textEnd"
             android:textSize="24sp"/>
     </GridLayout>
 
@@ -139,10 +151,10 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
         android:text="Monday 03/17"
-        android:textSize="18sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:textSize="24sp"/>
 
 </RelativeLayout>
