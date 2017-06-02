@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         sdf = new SimpleDateFormat("hh:mm:ss");
         date = new Date();
 
+        final Calendar c = Calendar.getInstance();
+
         new CountDownTimer(50000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 //String timerValue = sdf.format(String.valueOf(millisUntilFinished / 1000) + "s");
                 //prayerTimer.setText(timerValue);
                 prayerTimer.setText(sdf.format(date) + "s");
+                int seconds = c.get(Calendar.SECOND);
+                //Log.i("give seconds", String.valueOf(seconds));
             }
 
             @Override
