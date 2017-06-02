@@ -26,11 +26,6 @@ public class SwipeAdapter extends FragmentPagerAdapter {
         bundle.putInt("day", day + i);
         bundle.putInt("count", i + 1);
         fragment.setArguments(bundle);
-
-
-
-
-
         return fragment;
     }
 

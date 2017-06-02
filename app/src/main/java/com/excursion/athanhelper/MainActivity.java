@@ -5,37 +5,88 @@ import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
-    TextView dawnTimeTextView;
-    TextView middayTimeTextView;
-    TextView afternoonTimeTextView;
-    TextView sunsetTimeTextView;
-    TextView nightTimeTextView;
     TextView prayerTimer;
-    SimpleDateFormat sdf;
-    Date date;
+    Date targetDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        String title = "Athan";
-//        SpannableString s = new SpannableString(title);
-//        s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        getSupportActionBar().setTitle(s);
+        customizeActionBar();
 
+        setupSwipe();
+
+        prayerTimer = (TextView) findViewById(R.id.prayerTimer);
+
+        Calendar cal = Calendar.getInstance();
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        final String currentTime = simpleDateFormat.format(cal.getTime());
+
+        targetDate = new Date();
+        String myTime = "02:20:54";
+        try {
+            //get milliseconds from targetTime
+            targetDate = simpleDateFormat.parse(myTime);
+            long milliSeconds = targetDate.getTime();
+            String formattedTime = simpleDateFormat.format(targetDate);
+            Log.i("newTime", formattedTime);
+
+            //get milliseconds from currentTime
+            Date currentTimeDate = simpleDateFormat.parse(currentTime);
+            long currentTimeMilliSeconds = currentTimeDate.getTime();
+
+            //get milliseconds from difference
+            long difference = milliSeconds - currentTimeMilliSeconds;
+            Log.i("differeneInMillis", String.valueOf(difference));
+
+            //set Timer to show difference in timer
+            Date timerValue = new Date();
+            timerValue.setTime(difference);
+            String timerValueString = simpleDateFormat.format(timerValue);
+            Log.i("TimerValue", timerValueString);
+
+            new CountDownTimer(difference, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    Date newDateTimer = new Date();
+                    newDateTimer.setTime(millisUntilFinished);
+                    prayerTimer.setText(simpleDateFormat.format(newDateTimer) + "s");
+                }
+
+                @Override
+                public void onFinish() {
+                    prayerTimer.setText("00:00:00s");
+                }
+            }.start();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupSwipe() {
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(swipeAdapter);
+    }
+
+    private void customizeActionBar() {
         //Customize the ActionBar
         final ActionBar abar = getSupportActionBar();
         View viewActionBar = getLayoutInflater().inflate(R.layout.actionbar_titletext_layout, null);
@@ -50,38 +101,6 @@ public class MainActivity extends AppCompatActivity {
         abar.setDisplayShowTitleEnabled(false);
         abar.setDisplayHomeAsUpEnabled(true);
         abar.setHomeButtonEnabled(true);
-
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(swipeAdapter);
-
-        dawnTimeTextView = (TextView) findViewById(R.id.dawnTimeTextView);
-        middayTimeTextView = (TextView) findViewById(R.id.middayTimeTextView);
-        afternoonTimeTextView = (TextView) findViewById(R.id.afternoonTimeTextView);
-        sunsetTimeTextView = (TextView) findViewById(R.id.sunsetTimeTextView);
-        nightTimeTextView = (TextView) findViewById(R.id.nightTimeTextView);
-        prayerTimer = (TextView) findViewById(R.id.prayerTimer);
-        sdf = new SimpleDateFormat("hh:mm:ss");
-        date = new Date();
-
-        final Calendar c = Calendar.getInstance();
-
-        new CountDownTimer(50000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                date.setTime(millisUntilFinished);
-                //String timerValue = sdf.format(String.valueOf(millisUntilFinished / 1000) + "s");
-                //prayerTimer.setText(timerValue);
-                prayerTimer.setText(sdf.format(date) + "s");
-                int seconds = c.get(Calendar.SECOND);
-                //Log.i("give seconds", String.valueOf(seconds));
-            }
-
-            @Override
-            public void onFinish() {
-                prayerTimer.setText("00:00:00s");
-            }
-        }.start();
     }
 
     @Override

@@ -31,16 +31,12 @@ public class PageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         textView = (TextView) view.findViewById(R.id.textView);
         Bundle bundle = getArguments();
-        String message = Integer.toString(bundle.getInt("day"));
-        Log.i("message", message);
 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
         String strDate = sdf.format(cal.getTime());
+        Log.i("time", strDate);
         String[] values = strDate.split("/", 0);
-        for (int i = 0; i < values.length; i++) {
-            Log.i("month", values[i]);
-        }
         int day = bundle.getInt("day");
         int count = bundle.getInt("count");
         int numberDay = count + Integer.parseInt(values[2]) - 1;
