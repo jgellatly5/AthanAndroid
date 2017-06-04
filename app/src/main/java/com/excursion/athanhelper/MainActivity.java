@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             //get milliseconds from targetTime
             targetDate = simpleDateFormat.parse(myTime);
-            long milliSeconds = targetDate.getTime();// + timeZone.getOffset(targetDate.getTime());
+            long milliSeconds = targetDate.getTime();
             String formattedTime = simpleDateFormat.format(targetDate);
             Log.i("newTime", formattedTime);
             Log.i("newTimeMilliSeconds", String.valueOf(milliSeconds));
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             Log.i("timeZoneOffset", String.valueOf(timeZone.getOffset(currentTimeDate.getTime())));
 
             //get milliseconds from difference
-
             long difference = milliSeconds - currentTimeMilliSeconds;
             if (difference < 0) {
                 difference = Math.abs(difference);
@@ -78,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             diff.setTimeInMillis(difference);
             String diffTime = simpleDateFormat.format(diff.getTime());
             Log.i("diffTime", String.valueOf(diff));
+
             // check to see if legit
             timerValue.setTime(difference);
             final SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
