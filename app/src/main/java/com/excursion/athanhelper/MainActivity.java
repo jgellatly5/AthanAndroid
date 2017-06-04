@@ -17,11 +17,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     TextView prayerTimer;
-    Date targetDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,41 +34,64 @@ public class MainActivity extends AppCompatActivity {
 
         prayerTimer = (TextView) findViewById(R.id.prayerTimer);
 
+        // get currentTime and set format
         Calendar cal = Calendar.getInstance();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        TimeZone timeZone = TimeZone.getTimeZone("America/Los_Angeles");
+        Log.i("timeZone", String.valueOf(timeZone));
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
         final String currentTime = simpleDateFormat.format(cal.getTime());
 
-        targetDate = new Date();
-        String myTime = "02:20:54";
+        // instantiate dates
+        Date targetDate = null;
+        Date currentTimeDate = null;
+        Date timerValue = new Date();
+
+        String myTime = "12:20:00";
         try {
             //get milliseconds from targetTime
             targetDate = simpleDateFormat.parse(myTime);
-            long milliSeconds = targetDate.getTime();
+            long milliSeconds = targetDate.getTime();// + timeZone.getOffset(targetDate.getTime());
             String formattedTime = simpleDateFormat.format(targetDate);
             Log.i("newTime", formattedTime);
+            Log.i("newTimeMilliSeconds", String.valueOf(milliSeconds));
+            Log.i("timeZoneOffset", String.valueOf(timeZone.getOffset(targetDate.getTime())));
 
             //get milliseconds from currentTime
-            Date currentTimeDate = simpleDateFormat.parse(currentTime);
-            long currentTimeMilliSeconds = currentTimeDate.getTime();
+            currentTimeDate = simpleDateFormat.parse(currentTime);
+            long currentTimeMilliSeconds = currentTimeDate.getTime();// + timeZone.getOffset(currentTimeDate.getTime());
+            String formattedCurrent = simpleDateFormat.format(currentTimeDate);
+            Log.i("currentTime", formattedCurrent);
+            Log.i("cuurentTimeInMillis", String.valueOf(currentTimeMilliSeconds));
+            Log.i("timeZoneOffset", String.valueOf(timeZone.getOffset(currentTimeDate.getTime())));
 
             //get milliseconds from difference
+
             long difference = milliSeconds - currentTimeMilliSeconds;
-            Log.i("differeneInMillis", String.valueOf(difference));
+            if (difference < 0) {
+                difference = Math.abs(difference);
+            }
+            Log.i("differenceTimeInMillis", String.valueOf(difference));
 
             //set Timer to show difference in timer
-            Date timerValue = new Date();
+            Calendar diff = Calendar.getInstance();
+            diff.setTimeInMillis(difference);
+            String diffTime = simpleDateFormat.format(diff.getTime());
+            Log.i("diffTime", String.valueOf(diff));
+            // check to see if legit
             timerValue.setTime(difference);
-            String timerValueString = simpleDateFormat.format(timerValue);
-            Log.i("TimerValue", timerValueString);
+            final SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
+            offset.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String timerValueString = offset.format(timerValue);
+            Log.i("timerValue", timerValueString);
 
             new CountDownTimer(difference, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     Date newDateTimer = new Date();
                     newDateTimer.setTime(millisUntilFinished);
-                    prayerTimer.setText(simpleDateFormat.format(newDateTimer) + "s");
+                    prayerTimer.setText(offset.format(newDateTimer) + "s");
                 }
-
                 @Override
                 public void onFinish() {
                     prayerTimer.setText("00:00:00s");
