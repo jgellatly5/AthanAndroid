@@ -9,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 /**
@@ -19,7 +22,12 @@ import java.util.Locale;
  */
 public class PageFragment extends Fragment {
 
-    TextView textView;
+    TextView dateTextView;
+    TextView dawnTimeTextView;
+    TextView middayTimeTextView;
+    TextView afternoonTimeTextView;
+    TextView sunsetTimeTextView;
+    TextView nightTimeTextView;
 
     public PageFragment() {
         // Required empty public constructor
@@ -29,13 +37,51 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
-        textView = (TextView) view.findViewById(R.id.textView);
+        dateTextView = (TextView) view.findViewById(R.id.textView);
         Bundle bundle = getArguments();
 
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
-        String strDate = sdf.format(cal.getTime());
-        Log.i("time", strDate);
+        dawnTimeTextView = (TextView) view.findViewById(R.id.dawnTimeTextView);
+        middayTimeTextView = (TextView) view.findViewById(R.id.middayTimeTextView);
+        afternoonTimeTextView = (TextView) view.findViewById(R.id.afternoonTimeTextView);
+        sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
+        nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
+
+        Log.i("dawnTimeTextView", (String) dawnTimeTextView.getText());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a", Locale.US);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+        Date dawnDate = null;
+        try {
+            dawnDate = simpleDateFormat.parse((String) dawnTimeTextView.getText());
+            //dawnDate = simpleDateFormat.parse("5:45 am");
+            String dawnTarget = simpleDateFormat.format(dawnDate);
+            Log.i("dawnTarget", dawnTarget);
+            long dawnMillis = dawnDate.getTime();
+            Log.i("dawnMillis", String.valueOf(dawnMillis));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String strDate = getCurrentDay();
+        formatDate(bundle, strDate);
+        return view;
+    }
+
+    private String getNextTextView() {
+        TextView[] arrayTextView = {dawnTimeTextView, middayTimeTextView, afternoonTimeTextView, sunsetTimeTextView, nightTimeTextView};
+        int currentTextView = 0;
+        for (int i = 0; i < arrayTextView.length; i++) {
+            //return arrayTextView[i];
+            long difference = ((MainActivity)getActivity()).getTimerDifference();
+            if (difference > 0) {
+                arrayTextView[i] = arrayTextView[currentTextView];
+            } else {
+                currentTextView++;
+                arrayTextView[i] = arrayTextView[currentTextView];
+            }
+        }
+        return "";
+    }
+
+    private void formatDate(Bundle bundle, String strDate) {
         String[] values = strDate.split("/", 0);
         int day = bundle.getInt("day");
         int count = bundle.getInt("count");
@@ -64,10 +110,15 @@ public class PageFragment extends Fragment {
                 break;
         }
         if (numberDay < 10) {
-            textView.setText(dayString + " " + values[1] + "/0" + numberString);
+            dateTextView.setText(dayString + " " + values[1] + "/0" + numberString);
         } else {
-            textView.setText(dayString + " " + values[1] + "/" + numberString);
+            dateTextView.setText(dayString + " " + values[1] + "/" + numberString);
         }
-        return view;
+    }
+
+    private String getCurrentDay() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+        return sdf.format(cal.getTime());
     }
 }

@@ -46,7 +46,7 @@
             android:layout_row="0"
             android:gravity="center"
             android:paddingRight="10dp"
-            android:text="5:45am"
+            android:text="5:45 am"
             android:textAlignment="textEnd"
             android:textSize="24sp"/>
 

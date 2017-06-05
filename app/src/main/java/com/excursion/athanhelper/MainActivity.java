@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         customizeActionBar();
-
         setupSwipe();
+        getTimerDifference();
+    }
 
-        prayerTimer = (TextView) findViewById(R.id.prayerTimer);
-
+    public long getTimerDifference() {
         // get currentTime and set format
         Calendar cal = Calendar.getInstance();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         Date currentTimeDate = null;
         Date timerValue = new Date();
 
-        String myTime = "12:20:00";
+        String myTime = "19:07:00";
+        long difference = 0;
         try {
             //get milliseconds from targetTime
             targetDate = simpleDateFormat.parse(myTime);
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("timeZoneOffset", String.valueOf(timeZone.getOffset(currentTimeDate.getTime())));
 
             //get milliseconds from difference
-            long difference = milliSeconds - currentTimeMilliSeconds;
+            difference = milliSeconds - currentTimeMilliSeconds;
             if (difference < 0) {
                 difference = Math.abs(difference);
             }
@@ -90,17 +91,20 @@ public class MainActivity extends AppCompatActivity {
                 public void onTick(long millisUntilFinished) {
                     Date newDateTimer = new Date();
                     newDateTimer.setTime(millisUntilFinished);
+                    prayerTimer = (TextView) findViewById(R.id.prayerTimer);
                     prayerTimer.setText(offset.format(newDateTimer) + "s");
                 }
+
                 @Override
                 public void onFinish() {
                     prayerTimer.setText("00:00:00s");
                 }
             }.start();
-
+            return difference;
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return difference;
     }
 
     private void setupSwipe() {
