@@ -46,20 +46,21 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
-        Log.i("dawnTimeTextView", (String) dawnTimeTextView.getText());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a", Locale.US);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-        Date dawnDate = null;
-        try {
-            dawnDate = simpleDateFormat.parse((String) dawnTimeTextView.getText());
-            //dawnDate = simpleDateFormat.parse("5:45 am");
-            String dawnTarget = simpleDateFormat.format(dawnDate);
-            Log.i("dawnTarget", dawnTarget);
-            long dawnMillis = dawnDate.getTime();
-            Log.i("dawnMillis", String.valueOf(dawnMillis));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a", Locale.US);
+//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+//        Date targetDate = null;
+//
+//        try {
+//            targetDate = simpleDateFormat.parse((String) dawnTimeTextView.getText());
+//            String targetFormat = simpleDateFormat.format(targetDate);
+//            Log.i("targetFormat", targetFormat);
+//            long targetMillis = targetDate.getTime();
+//            Log.i("targetMillis", String.valueOf(targetMillis));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        getNextTextView();
+
         String strDate = getCurrentDay();
         formatDate(bundle, strDate);
         return view;
@@ -69,13 +70,38 @@ public class PageFragment extends Fragment {
         TextView[] arrayTextView = {dawnTimeTextView, middayTimeTextView, afternoonTimeTextView, sunsetTimeTextView, nightTimeTextView};
         int currentTextView = 0;
         for (int i = 0; i < arrayTextView.length; i++) {
-            //return arrayTextView[i];
             long difference = ((MainActivity)getActivity()).getTimerDifference();
             if (difference > 0) {
                 arrayTextView[i] = arrayTextView[currentTextView];
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a", Locale.US);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+                Date targetDate = null;
+
+                try {
+                    targetDate = simpleDateFormat.parse((String) arrayTextView[i].getText());
+                    String targetFormat = simpleDateFormat.format(targetDate);
+                    Log.i("targetFormat", targetFormat);
+                    long targetMillis = targetDate.getTime();
+                    Log.i("targetMillis", String.valueOf(targetMillis));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             } else {
                 currentTextView++;
                 arrayTextView[i] = arrayTextView[currentTextView];
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a", Locale.US);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+                Date targetDate = null;
+
+                try {
+                    targetDate = simpleDateFormat.parse((String) arrayTextView[i].getText());
+                    String targetFormat = simpleDateFormat.format(targetDate);
+                    Log.i("targetFormat", targetFormat);
+                    long targetMillis = targetDate.getTime();
+                    Log.i("targetMillis", String.valueOf(targetMillis));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return "";
