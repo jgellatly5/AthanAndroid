@@ -59,14 +59,14 @@ public class PageFragment extends Fragment {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-        getNextTextView();
+        getNextTime();
 
         String strDate = getCurrentDay();
         formatDate(bundle, strDate);
         return view;
     }
 
-    private String getNextTextView() {
+    private String getNextTime() {
         TextView[] arrayTextView = {dawnTimeTextView, middayTimeTextView, afternoonTimeTextView, sunsetTimeTextView, nightTimeTextView};
         int currentTextView = 0;
         for (int i = 0; i < arrayTextView.length; i++) {

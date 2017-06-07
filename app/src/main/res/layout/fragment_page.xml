@@ -70,7 +70,7 @@
             android:layout_row="1"
             android:gravity="center"
             android:paddingRight="10dp"
-            android:text="12:20pm"
+            android:text="12:20 pm"
             android:textAlignment="textEnd"
             android:textSize="24sp"/>
 
@@ -94,7 +94,7 @@
             android:layout_row="2"
             android:gravity="center"
             android:paddingRight="10dp"
-            android:text="3:37pm"
+            android:text="3:37 pm"
             android:textAlignment="textEnd"
             android:textSize="24sp"/>
 
@@ -118,7 +118,7 @@
             android:layout_row="3"
             android:gravity="center"
             android:paddingRight="10dp"
-            android:text="6:07pm"
+            android:text="6:07 pm"
             android:textAlignment="textEnd"
             android:textSize="24sp"/>
 
@@ -142,7 +142,7 @@
             android:layout_row="4"
             android:gravity="center"
             android:paddingRight="10dp"
-            android:text="7:07pm"
+            android:text="7:07 pm"
             android:textAlignment="textEnd"
             android:textSize="24sp"/>
     </GridLayout>
