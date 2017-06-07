@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         customizeActionBar();
         setupSwipe();
-
-        //Log.i("getNextTime", getNextTime());
         startNewTimer();
     }
 
@@ -63,8 +61,6 @@ public class MainActivity extends AppCompatActivity {
         Date timerValue = new Date();
 
         myTime = times.get(currentTimeIndex);
-        //myTime = "21:24:00";
-        //long difference = 0;
         try {
             //get milliseconds from targetTime
             targetDate = simpleDateFormat.parse(myTime);
@@ -122,23 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 prayerTimer.setText("00:00:00s");
                 Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
                 getNextTime();
-                //myTime = getNextTime();
                 Log.i("myTime", myTime);
                 startNewTimer();
             }
         }.start();
     }
-
-//    private String getNextTime() {
-//        if (difference > 0) {
-//            currentTimeIndex++;
-//        }
-//        if (currentTimeIndex >= times.size()) {
-//            currentTimeIndex = 0;
-//        }
-//        Log.i("current item", times.get(currentTimeIndex));
-//        return times.get(currentTimeIndex);
-//    }
 
     private void getNextTime() {
         if (difference > 0) {
