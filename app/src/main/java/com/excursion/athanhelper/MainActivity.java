@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     TextView prayerTimer;
     String myTime = "";
-    int currentTimeIndex = -1;
+    //int currentTimeIndex = -1;
+    int currentTimeIndex = 0;
     ArrayList<String> times = new ArrayList<>();
     long difference = 0;
     SimpleDateFormat offset;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        times.add("21:13:00");
+        times.add("21:45:00");
         times.add("05:45:00");
         times.add("12:20:00");
         times.add("15:37:00");
@@ -44,10 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
         customizeActionBar();
         setupSwipe();
-        //start new timer
-        getTimerDifference();
+
+        //Log.i("getNextTime", getNextTime());
         startNewTimer();
-        //getNextTime();
     }
 
     public long getTimerDifference() {
@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         Date currentTimeDate = null;
         Date timerValue = new Date();
 
-        //myTime = getNextTime();
-        myTime = "21:17:00";
+        myTime = times.get(currentTimeIndex);
+        //myTime = "21:24:00";
         //long difference = 0;
         try {
             //get milliseconds from targetTime
@@ -100,22 +100,6 @@ public class MainActivity extends AppCompatActivity {
             String timerValueString = offset.format(timerValue);
             Log.i("timerValue", timerValueString);
 
-//            new CountDownTimer(difference, 1000) {
-//                @Override
-//                public void onTick(long millisUntilFinished) {
-//                    Date newDateTimer = new Date();
-//                    newDateTimer.setTime(millisUntilFinished);
-//                    prayerTimer = (TextView) findViewById(R.id.prayerTimer);
-//                    prayerTimer.setText(offset.format(newDateTimer) + "s");
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    prayerTimer.setText("00:00:00s");
-//                    Toast.makeText(MainActivity.this, "New Prayer starting", Toast.LENGTH_SHORT).show();
-//                    myTime = getNextTime();
-//                }
-//            }.start();
             return difference;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -124,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startNewTimer() {
-        CountDownTimer timer = new CountDownTimer(difference, 1000) {
+        CountDownTimer timer = new CountDownTimer(getTimerDifference(), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Date newDateTimer = new Date();
@@ -137,14 +121,26 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
                 Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
-                myTime = getNextTime();
+                getNextTime();
+                //myTime = getNextTime();
                 Log.i("myTime", myTime);
                 startNewTimer();
             }
         }.start();
     }
 
-    private String getNextTime() {
+//    private String getNextTime() {
+//        if (difference > 0) {
+//            currentTimeIndex++;
+//        }
+//        if (currentTimeIndex >= times.size()) {
+//            currentTimeIndex = 0;
+//        }
+//        Log.i("current item", times.get(currentTimeIndex));
+//        return times.get(currentTimeIndex);
+//    }
+
+    private void getNextTime() {
         if (difference > 0) {
             currentTimeIndex++;
         }
@@ -152,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             currentTimeIndex = 0;
         }
         Log.i("current item", times.get(currentTimeIndex));
-        return times.get(currentTimeIndex);
+        myTime = times.get(currentTimeIndex);
     }
 
     private void setupSwipe() {
