@@ -46,20 +46,8 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a", Locale.US);
-//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-//        Date targetDate = null;
-//
-//        try {
-//            targetDate = simpleDateFormat.parse((String) dawnTimeTextView.getText());
-//            String targetFormat = simpleDateFormat.format(targetDate);
-//            Log.i("targetFormat", targetFormat);
-//            long targetMillis = targetDate.getTime();
-//            Log.i("targetMillis", String.valueOf(targetMillis));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
         getNextTime();
+        Log.i("getNextTime", getNextTime());
 
         String strDate = getCurrentDay();
         formatDate(bundle, strDate);
