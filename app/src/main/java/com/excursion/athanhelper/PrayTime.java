@@ -268,7 +268,7 @@ public class PrayTime {
 
     // ---------------------- Time-Zone Functions -----------------------
     // compute local time-zone for a specific date
-    private double getTimeZone1() {
+    public double getTimeZone1() {
         TimeZone timez = TimeZone.getDefault();
         double hoursDiff = (timez.getRawOffset() / 1000.0) / 3600;
         return hoursDiff;
@@ -404,7 +404,7 @@ public class PrayTime {
     }
 
     // return prayer times for a given date
-    private ArrayList<String> getPrayerTimes(Calendar date, double latitude,
+    public ArrayList<String> getPrayerTimes(Calendar date, double latitude,
                                              double longitude, double tZone) {
 
         int year = date.get(Calendar.YEAR);

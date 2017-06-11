@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -46,8 +47,15 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
-        getNextTime();
-        Log.i("getNextTime", getNextTime());
+//        getNextTime();
+//        Log.i("getNextTime", getNextTime());
+
+        PrayTime prayerTime = new PrayTime();
+        Calendar c = Calendar.getInstance();
+        ArrayList<String> newTimes = new ArrayList<>();
+        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+        dawnTimeTextView.setText(newTimes.get(1));
+        sunsetTimeTextView.setText(newTimes.get(4));
 
         String strDate = getCurrentDay();
         formatDate(bundle, strDate);

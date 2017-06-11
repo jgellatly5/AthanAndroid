@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     //int currentTimeIndex = -1;
     int currentTimeIndex = 0;
     ArrayList<String> times = new ArrayList<>();
+    ArrayList<String> newTimes = new ArrayList<>();
     long difference = 0;
     SimpleDateFormat offset;
 
@@ -35,6 +36,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PrayTime prayerTime = new PrayTime();
+        ArrayList<String> names = new ArrayList<>();
+        names = prayerTime.getTimeNames();
+        Log.i("prayer names", String.valueOf(names));
+
+        Calendar c = Calendar.getInstance();
+        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+        Log.i("prayer times", String.valueOf(newTimes));
 
         times.add("21:45:00");
         times.add("05:45:00");
@@ -60,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
         Date currentTimeDate = null;
         Date timerValue = new Date();
 
-        myTime = times.get(currentTimeIndex);
+        //myTime = times.get(currentTimeIndex);
+        myTime = newTimes.get(currentTimeIndex) + ":00";
         try {
             //get milliseconds from targetTime
             targetDate = simpleDateFormat.parse(myTime);
@@ -128,11 +139,16 @@ public class MainActivity extends AppCompatActivity {
         if (difference > 0) {
             currentTimeIndex++;
         }
-        if (currentTimeIndex >= times.size()) {
+//        if (currentTimeIndex >= times.size()) {
+//            currentTimeIndex = 0;
+//        }
+        if (currentTimeIndex >= newTimes.size()) {
             currentTimeIndex = 0;
         }
-        Log.i("current item", times.get(currentTimeIndex));
-        myTime = times.get(currentTimeIndex);
+        //Log.i("current item", times.get(currentTimeIndex));
+        Log.i("current item", newTimes.get(currentTimeIndex));
+        //myTime = times.get(currentTimeIndex);
+        myTime = newTimes.get(currentTimeIndex);
     }
 
     private void setupSwipe() {
