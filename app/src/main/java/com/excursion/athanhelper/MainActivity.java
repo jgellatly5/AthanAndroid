@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
         customizeActionBar();
         setupSwipe();
-        //getTimerDifference();
         startNewTimer();
     }
 
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         afternoonTime = newTimes.get(3) + ":00";
         sunsetTime = newTimes.get(4) + ":00";
         nightTime = newTimes.get(5) + ":00";
-        myTime = getNextTime();
+        myTime = newTimes.get(getNextTime()) + ":00";
         try {
             //get milliseconds from targetTime
             targetDate = simpleDateFormat.parse(myTime);
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startNewTimer() {
-        CountDownTimer timer = new CountDownTimer(getTimerDifference()[2], 1000) {
+        CountDownTimer timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Date newDateTimer = new Date();
@@ -191,31 +190,26 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
                 Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
-                myTime = getNextTime();
+                myTime = newTimes.get(getNextTime()) + ":00";
                 Log.i("myTime", myTime);
                 startNewTimer();
             }
         }.start();
     }
 
-    private String getNextTime() {
-        Log.i("difference", String.valueOf(difference));
-        Log.i("difference1", String.valueOf(differences[0]));
-        Log.i("difference2", String.valueOf(differences[1]));
-        Log.i("difference3", String.valueOf(differences[2]));
-
+    private int getNextTime() {
         for(int i = 1; i < differences.length; i++) {
             if(differences[i] < 0) {
                 currentTimeIndex = i + 1;
                 Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
+                Log.i("difference values", String.valueOf(differences[i]));
             }
         }
         if (currentTimeIndex >= newTimes.size()) {
             currentTimeIndex = 0;
         }
-        Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
         myTime = newTimes.get(currentTimeIndex) + ":00";
-        return  myTime;
+        return currentTimeIndex;
     }
 
     private void setupSwipe() {
