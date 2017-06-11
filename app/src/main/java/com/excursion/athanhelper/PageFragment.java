@@ -55,7 +55,10 @@ public class PageFragment extends Fragment {
         ArrayList<String> newTimes = new ArrayList<>();
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
         dawnTimeTextView.setText(newTimes.get(1));
+        middayTimeTextView.setText(newTimes.get(2));
+        afternoonTimeTextView.setText(newTimes.get(3));
         sunsetTimeTextView.setText(newTimes.get(4));
+        nightTimeTextView.setText(newTimes.get(5));
 
         String strDate = getCurrentDay();
         formatDate(bundle, strDate);
