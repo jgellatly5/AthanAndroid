@@ -25,11 +25,20 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     TextView prayerTimer;
     String myTime = "";
-    //int currentTimeIndex = -1;
+    String dawnTime = "";
+    String middayTime = "";
+    String afternoonTime = "";
+    String sunsetTime = "";
+    String nightTime = "";
     int currentTimeIndex = 0;
     ArrayList<String> times = new ArrayList<>();
     ArrayList<String> newTimes = new ArrayList<>();
     long difference = 0;
+    long difference1 = 0;
+    long difference2 = 0;
+    long difference3 = 0;
+    long difference4 = 0;
+    long difference5 = 0;
     SimpleDateFormat offset;
 
     @Override
@@ -67,11 +76,21 @@ public class MainActivity extends AppCompatActivity {
 
         // instantiate dates
         Date targetDate = null;
+        Date dawnDate = null;
+        Date middayDate = null;
+        Date afternoonDate = null;
+        Date sunsetDate = null;
+        Date nightDate = null;
         Date currentTimeDate = null;
         Date timerValue = new Date();
 
-        //myTime = times.get(currentTimeIndex);
-        myTime = newTimes.get(currentTimeIndex) + ":00";
+        // format times received from PrayTime model
+        dawnTime = newTimes.get(1)+ ":00";
+        middayTime = newTimes.get(2) + ":00";
+        afternoonTime = newTimes.get(3) + ":00";
+        sunsetTime = newTimes.get(4) + ":00";
+        nightTime = newTimes.get(5) + ":00";
+        myTime = getNextTime();
         try {
             //get milliseconds from targetTime
             targetDate = simpleDateFormat.parse(myTime);
@@ -79,6 +98,36 @@ public class MainActivity extends AppCompatActivity {
             String formattedTime = simpleDateFormat.format(targetDate);
             Log.i("newTime", formattedTime);
             Log.i("newTimeMilliSeconds", String.valueOf(milliSeconds));
+
+            dawnDate = simpleDateFormat.parse(dawnTime);
+            long dawnMillis = dawnDate.getTime();
+            String formatDawn = simpleDateFormat.format(dawnDate);
+            Log.i("dawnTime", formatDawn);
+            Log.i("dawnTimeMilliSeconds", String.valueOf(dawnMillis));
+
+            middayDate = simpleDateFormat.parse(middayTime);
+            long middayMillis = middayDate.getTime();
+            String formatMidday = simpleDateFormat.format(dawnDate);
+            Log.i("middayTime", formatMidday);
+            Log.i("middayTimeMilliSeconds", String.valueOf(middayMillis));
+
+            afternoonDate = simpleDateFormat.parse(afternoonTime);
+            long afMillis = afternoonDate.getTime();
+            String formatAf = simpleDateFormat.format(afternoonDate);
+            Log.i("afTime", formatAf);
+            Log.i("afTimeMilliSeconds", String.valueOf(afMillis));
+
+            sunsetDate = simpleDateFormat.parse(sunsetTime);
+            long sunsetMillis = sunsetDate.getTime();
+            String formatSunset = simpleDateFormat.format(sunsetDate);
+            Log.i("sunsetTime", formatSunset);
+            Log.i("sunsetTimeMilliSeconds", String.valueOf(sunsetMillis));
+
+            nightDate = simpleDateFormat.parse(nightTime);
+            long nightMillis = nightDate.getTime();
+            String formatNight = simpleDateFormat.format(nightDate);
+            Log.i("nightTime", formatNight);
+            Log.i("nightTimeMilliSeconds", String.valueOf(nightMillis));
 
             //get milliseconds from currentTime
             currentTimeDate = simpleDateFormat.parse(currentTime);
@@ -94,11 +143,20 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.i("differenceTimeInMillis", String.valueOf(difference));
 
-            //set Timer to show difference in timer
-            Calendar diff = Calendar.getInstance();
-            diff.setTimeInMillis(difference);
-            String diffTime = simpleDateFormat.format(diff.getTime());
-            Log.i("diffTime", String.valueOf(diff));
+            difference1 = dawnMillis - currentTimeMilliSeconds;
+            Log.i("difference1TimeInMillis", String.valueOf(difference1));
+
+            difference2 = middayMillis - currentTimeMilliSeconds;
+            Log.i("difference2TimeInMillis", String.valueOf(difference2));
+
+            difference3 = afMillis - currentTimeMilliSeconds;
+            Log.i("difference3TimeInMillis", String.valueOf(difference3));
+
+            difference4 = sunsetMillis - currentTimeMilliSeconds;
+            Log.i("difference4TimeInMillis", String.valueOf(difference4));
+
+            difference5 = nightMillis - currentTimeMilliSeconds;
+            Log.i("difference5TimeInMillis", String.valueOf(difference5));
 
             // check to see if legit
             timerValue.setTime(difference);
@@ -128,15 +186,32 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
                 Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
-                getNextTime();
+                //getNextTime();
+                myTime = getNextTime();
                 Log.i("myTime", myTime);
                 startNewTimer();
             }
         }.start();
     }
 
-    private void getNextTime() {
-        if (difference > 0) {
+//    private void getNextTime() {
+//        if (difference > 0) {
+//            currentTimeIndex++;
+//        }
+////        if (currentTimeIndex >= times.size()) {
+////            currentTimeIndex = 0;
+////        }
+//        if (currentTimeIndex >= newTimes.size()) {
+//            currentTimeIndex = 0;
+//        }
+//        //Log.i("current item", times.get(currentTimeIndex));
+//        Log.i("current item", newTimes.get(currentTimeIndex));
+//        //myTime = times.get(currentTimeIndex);
+//        myTime = newTimes.get(currentTimeIndex);
+//    }
+
+    private String getNextTime() {
+        if (difference < 0) {
             currentTimeIndex++;
         }
 //        if (currentTimeIndex >= times.size()) {
@@ -148,7 +223,8 @@ public class MainActivity extends AppCompatActivity {
         //Log.i("current item", times.get(currentTimeIndex));
         Log.i("current item", newTimes.get(currentTimeIndex));
         //myTime = times.get(currentTimeIndex);
-        myTime = newTimes.get(currentTimeIndex);
+        myTime = newTimes.get(currentTimeIndex) + ":00";
+        return  myTime;
     }
 
     private void setupSwipe() {
