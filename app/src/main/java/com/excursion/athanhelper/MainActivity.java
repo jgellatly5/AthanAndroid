@@ -31,14 +31,15 @@ public class MainActivity extends AppCompatActivity {
     String sunsetTime = "";
     String nightTime = "";
     int currentTimeIndex = 0;
-    ArrayList<String> times = new ArrayList<>();
     ArrayList<String> newTimes = new ArrayList<>();
-    long difference = 0;
     long difference1 = 0;
     long difference2 = 0;
     long difference3 = 0;
     long difference4 = 0;
     long difference5 = 0;
+    long[] differences = {difference1, difference2, difference3, difference4, difference5};
+    long difference = 0;
+
     SimpleDateFormat offset;
 
     @Override
@@ -55,19 +56,13 @@ public class MainActivity extends AppCompatActivity {
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
         Log.i("prayer times", String.valueOf(newTimes));
 
-        times.add("21:45:00");
-        times.add("05:45:00");
-        times.add("12:20:00");
-        times.add("15:37:00");
-        times.add("18:07:00");
-        times.add("19:07:00");
-
         customizeActionBar();
         setupSwipe();
+        //getTimerDifference();
         startNewTimer();
     }
 
-    public long getTimerDifference() {
+    public long[] getTimerDifference() {
         // get currentTime and set format
         Calendar cal = Calendar.getInstance();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -82,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         Date sunsetDate = null;
         Date nightDate = null;
         Date currentTimeDate = null;
-        Date timerValue = new Date();
 
         // format times received from PrayTime model
         dawnTime = newTimes.get(1)+ ":00";
@@ -158,22 +152,33 @@ public class MainActivity extends AppCompatActivity {
             difference5 = nightMillis - currentTimeMilliSeconds;
             Log.i("difference5TimeInMillis", String.valueOf(difference5));
 
-            // check to see if legit
-            timerValue.setTime(difference);
+            // format for prayerTimer
             offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
             offset.setTimeZone(TimeZone.getTimeZone("GMT"));
-            String timerValueString = offset.format(timerValue);
-            Log.i("timerValue", timerValueString);
 
-            return difference;
+//            return difference;
+            differences[0] = difference1;
+            differences[1] = difference2;
+            differences[2] = difference3;
+            differences[3] = difference4;
+            differences[4] = difference5;
+            getNextTime();
+            return differences;
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return difference;
+//        return difference;
+        getNextTime();
+        differences[0] = difference1;
+        differences[1] = difference2;
+        differences[2] = difference3;
+        differences[3] = difference4;
+        differences[4] = difference5;
+        return differences;
     }
 
     private void startNewTimer() {
-        CountDownTimer timer = new CountDownTimer(getTimerDifference(), 1000) {
+        CountDownTimer timer = new CountDownTimer(getTimerDifference()[2], 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Date newDateTimer = new Date();
@@ -186,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
                 Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
-                //getNextTime();
                 myTime = getNextTime();
                 Log.i("myTime", myTime);
                 startNewTimer();
@@ -194,35 +198,22 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-//    private void getNextTime() {
-//        if (difference > 0) {
-//            currentTimeIndex++;
-//        }
-////        if (currentTimeIndex >= times.size()) {
-////            currentTimeIndex = 0;
-////        }
-//        if (currentTimeIndex >= newTimes.size()) {
-//            currentTimeIndex = 0;
-//        }
-//        //Log.i("current item", times.get(currentTimeIndex));
-//        Log.i("current item", newTimes.get(currentTimeIndex));
-//        //myTime = times.get(currentTimeIndex);
-//        myTime = newTimes.get(currentTimeIndex);
-//    }
-
     private String getNextTime() {
-        if (difference < 0) {
-            currentTimeIndex++;
+        Log.i("difference", String.valueOf(difference));
+        Log.i("difference1", String.valueOf(differences[0]));
+        Log.i("difference2", String.valueOf(differences[1]));
+        Log.i("difference3", String.valueOf(differences[2]));
+
+        for(int i = 1; i < differences.length; i++) {
+            if(differences[i] < 0) {
+                currentTimeIndex = i + 1;
+                Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
+            }
         }
-//        if (currentTimeIndex >= times.size()) {
-//            currentTimeIndex = 0;
-//        }
         if (currentTimeIndex >= newTimes.size()) {
             currentTimeIndex = 0;
         }
-        //Log.i("current item", times.get(currentTimeIndex));
-        Log.i("current item", newTimes.get(currentTimeIndex));
-        //myTime = times.get(currentTimeIndex);
+        Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
         myTime = newTimes.get(currentTimeIndex) + ":00";
         return  myTime;
     }
