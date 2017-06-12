@@ -72,6 +72,8 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView.setText(newTimes.get(4));
         nightTimeTextView.setText(newTimes.get(5));
 
+        Log.i("bundle prayers", String.valueOf(bundle.getStringArrayList("prayerTimes")));
+
         String strDate = getCurrentDay();
         formatDate(bundle, strDate);
         return view;
