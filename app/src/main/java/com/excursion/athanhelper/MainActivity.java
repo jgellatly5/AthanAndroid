@@ -24,7 +24,6 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     TextView prayerTimer;
-    String myTime = "";
     String dawnTime = "";
     String middayTime = "";
     String afternoonTime = "";
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     long difference4 = 0;
     long difference5 = 0;
     long[] differences = {difference1, difference2, difference3, difference4, difference5};
-    long difference = 0;
 
     SimpleDateFormat offset;
 
@@ -69,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         final String currentTime = simpleDateFormat.format(cal.getTime());
 
         // instantiate dates
-        Date targetDate = null;
         Date dawnDate = null;
         Date middayDate = null;
         Date afternoonDate = null;
@@ -83,15 +80,7 @@ public class MainActivity extends AppCompatActivity {
         afternoonTime = newTimes.get(3) + ":00";
         sunsetTime = newTimes.get(4) + ":00";
         nightTime = newTimes.get(5) + ":00";
-        myTime = newTimes.get(getNextTime()) + ":00";
         try {
-            //get milliseconds from targetTime
-            targetDate = simpleDateFormat.parse(myTime);
-            long milliSeconds = targetDate.getTime();
-            String formattedTime = simpleDateFormat.format(targetDate);
-            Log.i("newTime", formattedTime);
-            Log.i("newTimeMilliSeconds", String.valueOf(milliSeconds));
-
             dawnDate = simpleDateFormat.parse(dawnTime);
             long dawnMillis = dawnDate.getTime();
             String formatDawn = simpleDateFormat.format(dawnDate);
@@ -127,14 +116,7 @@ public class MainActivity extends AppCompatActivity {
             long currentTimeMilliSeconds = currentTimeDate.getTime();
             String formattedCurrent = simpleDateFormat.format(currentTimeDate);
             Log.i("currentTime", formattedCurrent);
-            Log.i("cuurentTimeInMillis", String.valueOf(currentTimeMilliSeconds));
-
-            //get milliseconds from difference
-            difference = milliSeconds - currentTimeMilliSeconds;
-            if (difference < 0) {
-                difference = Math.abs(difference);
-            }
-            Log.i("differenceTimeInMillis", String.valueOf(difference));
+            Log.i("currentTimeInMillis", String.valueOf(currentTimeMilliSeconds));
 
             difference1 = dawnMillis - currentTimeMilliSeconds;
             Log.i("difference1TimeInMillis", String.valueOf(difference1));
@@ -155,19 +137,15 @@ public class MainActivity extends AppCompatActivity {
             offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
             offset.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-//            return difference;
             differences[0] = difference1;
             differences[1] = difference2;
             differences[2] = difference3;
             differences[3] = difference4;
             differences[4] = difference5;
-            getNextTime();
             return differences;
         } catch (ParseException e) {
             e.printStackTrace();
         }
-//        return difference;
-        getNextTime();
         differences[0] = difference1;
         differences[1] = difference2;
         differences[2] = difference3;
@@ -190,8 +168,6 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
                 Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
-                myTime = newTimes.get(getNextTime()) + ":00";
-                Log.i("myTime", myTime);
                 startNewTimer();
             }
         }.start();
@@ -208,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
         if (currentTimeIndex >= newTimes.size()) {
             currentTimeIndex = 0;
         }
-        myTime = newTimes.get(currentTimeIndex) + ":00";
         return currentTimeIndex;
     }
 
