@@ -3,6 +3,7 @@ package com.excursion.athanhelper;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,24 @@ public class PageFragment extends Fragment {
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
         PrayTime prayerTime = new PrayTime();
+
+        ArrayList<Calendar> daysOfTheWeek = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            daysOfTheWeek.add(Calendar.getInstance());
+        }
+        int dayCounter = 0;
         Calendar c = Calendar.getInstance();
+        int month = c.MONTH;
+        int dayOfMonth = c.DAY_OF_MONTH;
+        int year = c.YEAR;
+        for (Calendar day : daysOfTheWeek) {
+            day.set(year, month, dayOfMonth + dayCounter);
+            ArrayList<String> nextDayTimes = new ArrayList<>();
+            nextDayTimes =  prayerTime.getPrayerTimes(day, 32.8, -117.2, -7);
+            Log.i("nextDayTimes", String.valueOf(nextDayTimes));
+            dayCounter++;
+        }
+
         ArrayList<String> newTimes = new ArrayList<>();
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
 
