@@ -39,24 +39,50 @@ public class MainActivity extends AppCompatActivity {
     long[] differences = {difference1, difference2, difference3, difference4, difference5};
 
     SimpleDateFormat offset;
+    PrayTime prayerTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        PrayTime prayerTime = new PrayTime();
+        prayerTime = new PrayTime();
         ArrayList<String> names = new ArrayList<>();
         names = prayerTime.getTimeNames();
         Log.i("prayer names", String.valueOf(names));
 
         Calendar c = Calendar.getInstance();
+        // TODO get lat and long from location
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
         Log.i("prayer times", String.valueOf(newTimes));
 
         customizeActionBar();
         setupSwipe();
         startNewTimer();
+    }
+
+    public void getNextDayPrayer() {
+
+        ArrayList<Calendar> daysOfTheWeek = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            daysOfTheWeek.add(Calendar.getInstance());
+        }
+        int dayCounter = 0;
+        Calendar c = Calendar.getInstance();
+        int month = c.MONTH;
+        int dayOfMonth = c.DAY_OF_MONTH;
+        int year = c.YEAR;
+        for (Calendar day : daysOfTheWeek) {
+            day.set(year, month, dayOfMonth + dayCounter);
+            ArrayList<String> nextDayTimes = new ArrayList<>();
+            nextDayTimes =  prayerTime.getPrayerTimes(day, 32.8, -117.2, -7);
+            Log.i("nextDayTimes", String.valueOf(nextDayTimes));
+            dayCounter++;
+        }
+
+        ArrayList<String> newTimes = new ArrayList<>();
+        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+
     }
 
     public long[] getTimerDifference() {
