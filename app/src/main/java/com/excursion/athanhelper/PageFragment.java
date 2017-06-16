@@ -45,8 +45,6 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
-        Calendar c = Calendar.getInstance();
-
         String strDate = getCurrentDay();
         formatDate(bundle, strDate);
         formatPrayers(bundle, strDate);
@@ -54,14 +52,7 @@ public class PageFragment extends Fragment {
     }
 
     private void formatPrayers(Bundle bundle, String strDate) {
-        String[] values = strDate.split("/", 0);
-        int day = bundle.getInt("day");
         int count = bundle.getInt("count");
-        int numberDay = count + Integer.parseInt(values[2]) - 1;
-        ArrayList<Calendar> daysOfTheWeek = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            daysOfTheWeek.add(Calendar.getInstance());
-        }
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);
         int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);

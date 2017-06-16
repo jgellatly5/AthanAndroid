@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         sunsetTime = newTimes.get(4) + ":00";
         nightTime = newTimes.get(5) + ":00";
         nextDawnTime = nextDayTimes.get(1) + ":00";
+        Log.i("nextDawnTime", nextDawnTime);
         try {
             dawnDate = simpleDateFormat.parse(dawnTime);
             long dawnMillis = dawnDate.getTime();
@@ -153,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
             difference5 = nightMillis - currentTimeMilliSeconds;
             Log.i("difference5TimeInMillis", String.valueOf(difference5));
 
-            difference6 = Math.abs(nextDawnMillis - currentTimeMilliSeconds);
+//            difference6 = Math.abs(nextDawnMillis - currentTimeMilliSeconds);
+            difference6 = nextDawnMillis - currentTimeMilliSeconds + 86400000;
             Log.i("difference6TimeInMillis", String.valueOf(difference6));
 
             // format for prayerTimer
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 currentTimeIndex = i + 1;
                 Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
                 Log.i("difference values", String.valueOf(differences[i]));
+                // TODO switch currentIndex after newDay is made
                 if (currentTimeIndex == 5 && differences[i] < 0) {
                     //get next date and get the difference
                     //getNextDayDifference();
@@ -215,16 +218,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return currentTimeIndex;
     }
-
-//    public long getNextDayDifference() {
-//        Date nextDawnDate = null;
-//        long nextDayDifference = 0;
-//        String nextDawnTime = nextDayTimes.get(1) + ":00";
-//        nextDawnDate = simpleDateFormat
-////        nextDayTimes
-////        nextCalendarDay
-//        return nextDayDifference;
-//    }
 
     private void setupSwipe() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
