@@ -26,6 +26,7 @@ public class PageFragment extends Fragment {
     TextView afternoonTimeTextView;
     TextView sunsetTimeTextView;
     TextView nightTimeTextView;
+    PrayTime prayerTime = new PrayTime();
 
     public PageFragment() {
         // Required empty public constructor
@@ -44,39 +45,41 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
-        PrayTime prayerTime = new PrayTime();
+        Calendar c = Calendar.getInstance();
 
+        String strDate = getCurrentDay();
+        formatDate(bundle, strDate);
+        formatPrayers(bundle, strDate);
+        return view;
+    }
+
+    private void formatPrayers(Bundle bundle, String strDate) {
+        String[] values = strDate.split("/", 0);
+        int day = bundle.getInt("day");
+        int count = bundle.getInt("count");
+        int numberDay = count + Integer.parseInt(values[2]) - 1;
         ArrayList<Calendar> daysOfTheWeek = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             daysOfTheWeek.add(Calendar.getInstance());
         }
-        int dayCounter = 0;
         Calendar c = Calendar.getInstance();
         int month = Calendar.MONTH;
         int dayOfMonth = Calendar.DAY_OF_MONTH;
         int year = Calendar.YEAR;
-        for (Calendar day : daysOfTheWeek) {
-            day.set(year, month, dayOfMonth + dayCounter);
-            ArrayList<String> nextDayTimes = new ArrayList<>();
-            nextDayTimes =  prayerTime.getPrayerTimes(day, 32.8, -117.2, -7);
-            Log.i("nextDayTimes", String.valueOf(nextDayTimes));
-            dayCounter++;
-        }
+        Log.i("monthtimes", String.valueOf(month));
+        Log.i("daytimes", String.valueOf(dayOfMonth));
+        Log.i("yeartimes", String.valueOf(year));
 
-        ArrayList<String> newTimes = new ArrayList<>();
-        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
-
-        dawnTimeTextView.setText(newTimes.get(1));
-        middayTimeTextView.setText(newTimes.get(2));
-        afternoonTimeTextView.setText(newTimes.get(3));
-        sunsetTimeTextView.setText(newTimes.get(4));
-        nightTimeTextView.setText(newTimes.get(5));
-
-        Log.i("bundle prayers", String.valueOf(bundle.getStringArrayList("prayerTimes")));
-
-        String strDate = getCurrentDay();
-        formatDate(bundle, strDate);
-        return view;
+        Calendar nextDay = Calendar.getInstance();
+        nextDay.set(year, month, dayOfMonth + count);
+        ArrayList<String> nextDayTimes = new ArrayList<>();
+        nextDayTimes =  prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+        Log.i("nextDayTimes", String.valueOf(nextDayTimes));
+        dawnTimeTextView.setText(nextDayTimes.get(1));
+        middayTimeTextView.setText(nextDayTimes.get(2));
+        afternoonTimeTextView.setText(nextDayTimes.get(3));
+        sunsetTimeTextView.setText(nextDayTimes.get(4));
+        nightTimeTextView.setText(nextDayTimes.get(5));
     }
 
     private void formatDate(Bundle bundle, String strDate) {
