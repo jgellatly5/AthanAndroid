@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             difference5 = nightMillis - currentTimeMilliSeconds;
             Log.i("difference5TimeInMillis", String.valueOf(difference5));
 
-            difference6 = nextDawnMillis - currentTimeMilliSeconds;
+            difference6 = Math.abs(nextDawnMillis - currentTimeMilliSeconds);
             Log.i("difference6TimeInMillis", String.valueOf(difference6));
 
             // format for prayerTimer
