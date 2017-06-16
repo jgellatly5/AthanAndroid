@@ -63,9 +63,9 @@ public class PageFragment extends Fragment {
             daysOfTheWeek.add(Calendar.getInstance());
         }
         Calendar c = Calendar.getInstance();
-        int month = Calendar.MONTH;
-        int dayOfMonth = Calendar.DAY_OF_MONTH;
-        int year = Calendar.YEAR;
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
         Log.i("monthtimes", String.valueOf(month));
         Log.i("daytimes", String.valueOf(dayOfMonth));
         Log.i("yeartimes", String.valueOf(year));
@@ -85,13 +85,13 @@ public class PageFragment extends Fragment {
     private void formatDate(Bundle bundle, String strDate) {
         String[] values = strDate.split("/", 0);
         int day = bundle.getInt("day");
-        Log.i("day", String.valueOf(day));
         int count = bundle.getInt("count");
         int numberDay = count + Integer.parseInt(values[2]) - 1;
         String numberString = String.valueOf(numberDay);
         if (day >= 8) {
             day = day - 7;
         }
+        Log.i("day", String.valueOf(day));
         String dayString = "";
         switch (day) {
             case 1: dayString = "Sunday";

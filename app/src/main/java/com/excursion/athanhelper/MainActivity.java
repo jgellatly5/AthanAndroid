@@ -56,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
         Log.i("prayer times", String.valueOf(newTimes));
 
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
+        Log.i("monthtimes", String.valueOf(month));
+        Log.i("daytimes", String.valueOf(dayOfMonth));
+        Log.i("yeartimes", String.valueOf(year));
+
         customizeActionBar();
         setupSwipe();
         startNewTimer();
