@@ -29,14 +29,17 @@ public class MainActivity extends AppCompatActivity {
     String afternoonTime = "";
     String sunsetTime = "";
     String nightTime = "";
+    String nextDawnTime = "";
     int currentTimeIndex = 0;
     ArrayList<String> newTimes = new ArrayList<>();
+    ArrayList<String> nextDayTimes = new ArrayList<>();
     long difference1 = 0;
     long difference2 = 0;
     long difference3 = 0;
     long difference4 = 0;
     long difference5 = 0;
-    long[] differences = {difference1, difference2, difference3, difference4, difference5};
+    long difference6 = 0;
+    long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
 
     SimpleDateFormat offset;
     PrayTime prayerTime;
@@ -55,41 +58,17 @@ public class MainActivity extends AppCompatActivity {
         // TODO get lat and long from location
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
         Log.i("prayer times", String.valueOf(newTimes));
-
-        int month = c.get(Calendar.MONTH);
-        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-        int year = c.get(Calendar.YEAR);
-        Log.i("monthtimes", String.valueOf(month));
-        Log.i("daytimes", String.valueOf(dayOfMonth));
-        Log.i("yeartimes", String.valueOf(year));
+        Log.i("calendar first day", String.valueOf(c));
+        Calendar nextDay = Calendar.getInstance();
+        nextDay.add(Calendar.DATE, 1);
+        //nextDay.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE) + 1);
+        Log.i("calendar next day", String.valueOf(nextDay));
+        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+        Log.i("prayer times next day", String.valueOf(nextDayTimes));
 
         customizeActionBar();
         setupSwipe();
         startNewTimer();
-    }
-
-    public void getNextDayPrayer() {
-
-        ArrayList<Calendar> daysOfTheWeek = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            daysOfTheWeek.add(Calendar.getInstance());
-        }
-        int dayCounter = 0;
-        Calendar c = Calendar.getInstance();
-        int month = Calendar.MONTH;
-        int dayOfMonth = Calendar.DAY_OF_MONTH;
-        int year = Calendar.YEAR;
-        for (Calendar day : daysOfTheWeek) {
-            day.set(year, month, dayOfMonth + dayCounter);
-            ArrayList<String> nextDayTimes = new ArrayList<>();
-            nextDayTimes =  prayerTime.getPrayerTimes(day, 32.8, -117.2, -7);
-            Log.i("nextDayTimes", String.valueOf(nextDayTimes));
-            dayCounter++;
-        }
-
-        ArrayList<String> newTimes = new ArrayList<>();
-        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
-
     }
 
     public long[] getTimerDifference() {
@@ -105,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         Date afternoonDate = null;
         Date sunsetDate = null;
         Date nightDate = null;
+        Date nextDawnDate = null;
         Date currentTimeDate = null;
 
         // format times received from PrayTime model
@@ -113,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         afternoonTime = newTimes.get(3) + ":00";
         sunsetTime = newTimes.get(4) + ":00";
         nightTime = newTimes.get(5) + ":00";
+        nextDawnTime = nextDayTimes.get(1) + ":00";
         try {
             dawnDate = simpleDateFormat.parse(dawnTime);
             long dawnMillis = dawnDate.getTime();
@@ -144,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i("nightTime", formatNight);
             Log.i("nightTimeMilliSeconds", String.valueOf(nightMillis));
 
+            nextDawnDate = simpleDateFormat.parse(nextDawnTime);
+            long nextDawnMillis = nextDawnDate.getTime();
+            String formatNextDawn = simpleDateFormat.format(nextDawnDate);
+            Log.i("nextDawnTime", formatNextDawn);
+            Log.i("nextDawnMilliSeconds", String.valueOf(nextDawnMillis));
+
             //get milliseconds from currentTime
             currentTimeDate = simpleDateFormat.parse(currentTime);
             long currentTimeMilliSeconds = currentTimeDate.getTime();
@@ -166,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
             difference5 = nightMillis - currentTimeMilliSeconds;
             Log.i("difference5TimeInMillis", String.valueOf(difference5));
 
+            difference6 = nextDawnMillis - currentTimeMilliSeconds;
+            Log.i("difference6TimeInMillis", String.valueOf(difference6));
+
             // format for prayerTimer
             offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
             offset.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -175,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
             differences[2] = difference3;
             differences[3] = difference4;
             differences[4] = difference5;
+            differences[5] = difference6;
             return differences;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -184,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         differences[2] = difference3;
         differences[3] = difference4;
         differences[4] = difference5;
+        differences[5] = difference6;
         return differences;
     }
 
@@ -214,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("difference values", String.valueOf(differences[i]));
                 if (currentTimeIndex == 5 && differences[i] < 0) {
                     //get next date and get the difference
+                    //getNextDayDifference();
                 }
             }
         }
@@ -223,9 +216,14 @@ public class MainActivity extends AppCompatActivity {
         return currentTimeIndex;
     }
 
-//    private void getNextDay() {
-//        Calendar nextCalendarDay = Calendar.getInstance();
-//        nextCalendarDay
+//    public long getNextDayDifference() {
+//        Date nextDawnDate = null;
+//        long nextDayDifference = 0;
+//        String nextDawnTime = nextDayTimes.get(1) + ":00";
+//        nextDawnDate = simpleDateFormat
+////        nextDayTimes
+////        nextCalendarDay
+//        return nextDayDifference;
 //    }
 
     private void setupSwipe() {
