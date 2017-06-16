@@ -52,9 +52,9 @@ public class PageFragment extends Fragment {
         }
         int dayCounter = 0;
         Calendar c = Calendar.getInstance();
-        int month = c.MONTH;
-        int dayOfMonth = c.DAY_OF_MONTH;
-        int year = c.YEAR;
+        int month = Calendar.MONTH;
+        int dayOfMonth = Calendar.DAY_OF_MONTH;
+        int year = Calendar.YEAR;
         for (Calendar day : daysOfTheWeek) {
             day.set(year, month, dayOfMonth + dayCounter);
             ArrayList<String> nextDayTimes = new ArrayList<>();
@@ -82,6 +82,7 @@ public class PageFragment extends Fragment {
     private void formatDate(Bundle bundle, String strDate) {
         String[] values = strDate.split("/", 0);
         int day = bundle.getInt("day");
+        Log.i("day", String.valueOf(day));
         int count = bundle.getInt("count");
         int numberDay = count + Integer.parseInt(values[2]) - 1;
         String numberString = String.valueOf(numberDay);

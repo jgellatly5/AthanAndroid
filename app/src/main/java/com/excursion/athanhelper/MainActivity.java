@@ -69,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
         }
         int dayCounter = 0;
         Calendar c = Calendar.getInstance();
-        int month = c.MONTH;
-        int dayOfMonth = c.DAY_OF_MONTH;
-        int year = c.YEAR;
+        int month = Calendar.MONTH;
+        int dayOfMonth = Calendar.DAY_OF_MONTH;
+        int year = Calendar.YEAR;
         for (Calendar day : daysOfTheWeek) {
             day.set(year, month, dayOfMonth + dayCounter);
             ArrayList<String> nextDayTimes = new ArrayList<>();
@@ -205,6 +205,9 @@ public class MainActivity extends AppCompatActivity {
                 currentTimeIndex = i + 1;
                 Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
                 Log.i("difference values", String.valueOf(differences[i]));
+                if (currentTimeIndex == 5 && differences[i] < 0) {
+                    //get next date and get the difference
+                }
             }
         }
         if (currentTimeIndex >= newTimes.size()) {
@@ -212,6 +215,11 @@ public class MainActivity extends AppCompatActivity {
         }
         return currentTimeIndex;
     }
+
+//    private void getNextDay() {
+//        Calendar nextCalendarDay = Calendar.getInstance();
+//        nextCalendarDay
+//    }
 
     private void setupSwipe() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
