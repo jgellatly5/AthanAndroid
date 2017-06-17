@@ -63,9 +63,10 @@ public class PageFragment extends Fragment {
 
         Calendar nextDay = Calendar.getInstance();
         nextDay.set(year, month, dayOfMonth + count);
+        Log.i("PageFragNextDay", String.valueOf(nextDay));
         ArrayList<String> nextDayTimes = new ArrayList<>();
         nextDayTimes =  prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
-        Log.i("nextDayTimes", String.valueOf(nextDayTimes));
+        Log.i("PageFragnextDayTimes", String.valueOf(nextDayTimes));
         dawnTimeTextView.setText(nextDayTimes.get(1));
         middayTimeTextView.setText(nextDayTimes.get(2));
         afternoonTimeTextView.setText(nextDayTimes.get(3));

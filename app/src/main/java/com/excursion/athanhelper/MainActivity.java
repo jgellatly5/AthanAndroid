@@ -1,5 +1,9 @@
 package com.excursion.athanhelper;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     long difference5 = 0;
     long difference6 = 0;
     long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
+    double latitude;
+    double longitude;
 
     SimpleDateFormat offset;
     PrayTime prayerTime;
@@ -55,15 +61,43 @@ public class MainActivity extends AppCompatActivity {
         Log.i("prayer names", String.valueOf(names));
 
         Calendar c = Calendar.getInstance();
-        // TODO get lat and long from location
-        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        //newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
         Log.i("prayer times", String.valueOf(newTimes));
-        Log.i("calendar first day", String.valueOf(c));
         Calendar nextDay = Calendar.getInstance();
-        nextDay.add(Calendar.DATE, 1);
-        //nextDay.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE) + 1);
+        //nextDay.add(Calendar.DATE, 1);
+        nextDay.set(year, month, dayOfMonth + 1);
         Log.i("calendar next day", String.valueOf(nextDay));
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+//        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
         Log.i("prayer times next day", String.valueOf(nextDayTimes));
 
         customizeActionBar();
@@ -207,15 +241,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
                 Log.i("difference values", String.valueOf(differences[i]));
                 // TODO switch currentIndex after newDay is made
-                if (currentTimeIndex == 5 && differences[i] < 0) {
-                    //get next date and get the difference
-                    //getNextDayDifference();
+                if (currentTimeIndex > 5) {
+                    currentTimeIndex = 0;
                 }
             }
         }
-        if (currentTimeIndex >= newTimes.size()) {
-            currentTimeIndex = 0;
-        }
+//        if (currentTimeIndex >= newTimes.size()) {
+//            currentTimeIndex = 0;
+//        }
         return currentTimeIndex;
     }
 
