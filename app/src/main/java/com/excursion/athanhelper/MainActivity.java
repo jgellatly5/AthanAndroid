@@ -56,9 +56,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         prayerTime = new PrayTime();
-//        ArrayList<String> names = new ArrayList<>();
-//        names = prayerTime.getTimeNames();
-//        Log.i("prayer names", String.valueOf(names));
+        prayerTime.setCalcMethod(2);
+//        prayerTime.setIshaAngle(15);
+//        prayerTime.setFajrAngle(15);
+        prayerTime.setAsrJuristic(0);
+        ArrayList<String> names = new ArrayList<>();
+        names = prayerTime.getTimeNames();
+        Log.i("prayer names", String.valueOf(names));
 
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);

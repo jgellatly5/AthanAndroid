@@ -39,6 +39,9 @@ public class PageFragment extends Fragment {
         dateTextView = (TextView) view.findViewById(R.id.textView);
         Bundle bundle = getArguments();
 
+        prayerTime.setAsrJuristic(0);
+        prayerTime.setCalcMethod(2);
+
         dawnTimeTextView = (TextView) view.findViewById(R.id.dawnTimeTextView);
         middayTimeTextView = (TextView) view.findViewById(R.id.middayTimeTextView);
         afternoonTimeTextView = (TextView) view.findViewById(R.id.afternoonTimeTextView);
