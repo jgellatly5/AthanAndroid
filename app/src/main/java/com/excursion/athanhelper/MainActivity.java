@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         prayerTime = new PrayTime();
-        ArrayList<String> names = new ArrayList<>();
-        names = prayerTime.getTimeNames();
-        Log.i("prayer names", String.valueOf(names));
+//        ArrayList<String> names = new ArrayList<>();
+//        names = prayerTime.getTimeNames();
+//        Log.i("prayer names", String.valueOf(names));
 
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);
@@ -89,19 +89,28 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        //newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
-        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
+        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+//        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
         Log.i("prayer times", String.valueOf(newTimes));
         Calendar nextDay = Calendar.getInstance();
         //nextDay.add(Calendar.DATE, 1);
         nextDay.set(year, month, dayOfMonth + 1);
-        Log.i("calendar next day", String.valueOf(nextDay));
-//        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
+        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+//        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
         Log.i("prayer times next day", String.valueOf(nextDayTimes));
 
         customizeActionBar();
         setupSwipe();
+        long log1 = getTimerDifference()[1];
+        long log2 = getTimerDifference()[2];
+        long log3 = getTimerDifference()[3];
+        long log4 = getTimerDifference()[4];
+        long log5 = getTimerDifference()[5];
+        Log.i("countDownTime1", String.valueOf(log1));
+        Log.i("countDownTime2", String.valueOf(log2));
+        Log.i("countDownTime3", String.valueOf(log3));
+        Log.i("countDownTime4", String.valueOf(log4));
+        Log.i("countDownTime5", String.valueOf(log5));
         startNewTimer();
     }
 
@@ -138,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
             middayDate = simpleDateFormat.parse(middayTime);
             long middayMillis = middayDate.getTime();
-            String formatMidday = simpleDateFormat.format(dawnDate);
+            String formatMidday = simpleDateFormat.format(middayDate);
             Log.i("middayTime", formatMidday);
             Log.i("middayTimeMilliSeconds", String.valueOf(middayMillis));
 
