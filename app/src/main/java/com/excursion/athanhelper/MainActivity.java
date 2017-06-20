@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
     double latitude;
     double longitude;
+    int calcMethod = 0;
 
     SimpleDateFormat offset;
     PrayTime prayerTime;
@@ -56,10 +57,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         prayerTime = new PrayTime();
-        prayerTime.setCalcMethod(2);
+        calcMethod = 2;
+        prayerTime.setCalcMethod(calcMethod);
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
         prayerTime.setAsrJuristic(0);
+//        prayerTime.setTimeFormat(1);
         ArrayList<String> names = new ArrayList<>();
         names = prayerTime.getTimeNames();
         Log.i("prayer names", String.valueOf(names));
@@ -253,15 +256,16 @@ public class MainActivity extends AppCompatActivity {
                 currentTimeIndex = i + 1;
                 Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
                 Log.i("difference values", String.valueOf(differences[i]));
-                // TODO switch currentIndex after newDay is made
+//                if (calcMethod == 2) {
+//                    if (currentTimeIndex == 5) {
+//                        currentTimeIndex = 6;
+//                    }
+//                }
                 if (currentTimeIndex > 5) {
                     currentTimeIndex = 0;
                 }
             }
         }
-//        if (currentTimeIndex >= newTimes.size()) {
-//            currentTimeIndex = 0;
-//        }
         return currentTimeIndex;
     }
 
