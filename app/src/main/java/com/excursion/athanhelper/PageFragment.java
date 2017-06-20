@@ -63,15 +63,24 @@ public class PageFragment extends Fragment {
 
         Calendar nextDay = Calendar.getInstance();
         nextDay.set(year, month, dayOfMonth + count);
-        Log.i("PageFragNextDay", String.valueOf(nextDay));
         ArrayList<String> nextDayTimes = new ArrayList<>();
         nextDayTimes =  prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
         Log.i("PageFragnextDayTimes", String.valueOf(nextDayTimes));
-        dawnTimeTextView.setText(nextDayTimes.get(1));
-        middayTimeTextView.setText(nextDayTimes.get(2));
-        afternoonTimeTextView.setText(nextDayTimes.get(3));
-        sunsetTimeTextView.setText(nextDayTimes.get(4));
-        nightTimeTextView.setText(nextDayTimes.get(5));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+
+        dawnTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(1)), false));
+        middayTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(2)), false));
+        afternoonTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(3)), false));
+        sunsetTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(4)), false));
+        nightTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(5)), false));
+    }
+
+    private double convertTimeToDouble(String time) {
+        String[] parts = time.split(":", 0);
+        Double hours = Double.parseDouble(parts[0]);
+        Double mins = Double.parseDouble(parts[1])/60;
+        return hours + mins;
     }
 
     private void formatDate(Bundle bundle, String strDate) {

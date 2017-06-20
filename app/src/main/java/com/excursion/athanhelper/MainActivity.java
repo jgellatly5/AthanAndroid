@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getNextTime() {
-        for(int i = 1; i < differences.length; i++) {
+        for(int i = 0; i < differences.length; i++) {
             if(differences[i] < 0) {
                 currentTimeIndex = i + 1;
                 Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
