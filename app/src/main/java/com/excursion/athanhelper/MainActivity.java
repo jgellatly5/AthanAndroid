@@ -2,11 +2,13 @@ package com.excursion.athanhelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     double latitude;
     double longitude;
     int calcMethod = 0;
+    int juristicMethod = 0;
+    int highAltitudes = 0;
+    int timeFormat = 0;
 
     SimpleDateFormat offset;
     PrayTime prayerTime;
@@ -58,12 +63,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String calcMethodString = sharedPreferences.getString("calculation_method", "");
+        String juristicMethodString = sharedPreferences.getString("juristic_method", "");
+        String highAltitudesString = sharedPreferences.getString("high_altitudes", "");
+        String timeFormatString = sharedPreferences.getString("time_formats", "");
+        calcMethod = Integer.parseInt(calcMethodString);
+        juristicMethod = Integer.parseInt(juristicMethodString);
+        highAltitudes = Integer.parseInt(highAltitudesString);
+        timeFormat = Integer.parseInt(timeFormatString);
+        Log.i("calcmethod", calcMethodString);
+        Log.i("jurismethod", juristicMethodString);
+        Log.i("highaltmethod", highAltitudesString);
+        Log.i("timeformatmethod", timeFormatString);
+
         prayerTime = new PrayTime();
-        calcMethod = 2;
+//        calcMethod = 2;
         prayerTime.setCalcMethod(calcMethod);
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
-        prayerTime.setAsrJuristic(0);
+        prayerTime.setAsrJuristic(juristicMethod);
 //        prayerTime.setTimeFormat(1);
         ArrayList<String> names = new ArrayList<>();
         names = prayerTime.getTimeNames();
@@ -110,16 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
         customizeActionBar();
         setupSwipe();
-        long log1 = getTimerDifference()[1];
-        long log2 = getTimerDifference()[2];
-        long log3 = getTimerDifference()[3];
-        long log4 = getTimerDifference()[4];
-        long log5 = getTimerDifference()[5];
-        Log.i("countDownTime1", String.valueOf(log1));
-        Log.i("countDownTime2", String.valueOf(log2));
-        Log.i("countDownTime3", String.valueOf(log3));
-        Log.i("countDownTime4", String.valueOf(log4));
-        Log.i("countDownTime5", String.valueOf(log5));
         startNewTimer();
     }
 
@@ -210,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
             difference5 = nightMillis - currentTimeMilliSeconds;
             Log.i("difference5TimeInMillis", String.valueOf(difference5));
 
-//            difference6 = Math.abs(nextDawnMillis - currentTimeMilliSeconds);
             difference6 = nextDawnMillis - currentTimeMilliSeconds + 86400000;
             Log.i("difference6TimeInMillis", String.valueOf(difference6));
 
