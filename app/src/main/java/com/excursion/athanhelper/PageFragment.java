@@ -75,8 +75,8 @@ public class PageFragment extends Fragment {
         dawnTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(1)), false));
         middayTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(2)), false));
         afternoonTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(3)), false));
-        sunsetTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(4)), false));
-        nightTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(5)), false));
+        sunsetTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(5)), false));
+        nightTimeTextView.setText(prayerTime.floatToTime12(convertTimeToDouble(nextDayTimes.get(6)), false));
     }
 
     private double convertTimeToDouble(String time) {

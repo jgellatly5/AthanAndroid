@@ -143,8 +143,12 @@ public class MainActivity extends AppCompatActivity {
         dawnTime = newTimes.get(1)+ ":00";
         middayTime = newTimes.get(2) + ":00";
         afternoonTime = newTimes.get(3) + ":00";
-        sunsetTime = newTimes.get(4) + ":00";
-        nightTime = newTimes.get(5) + ":00";
+        if (calcMethod == 2) {
+            sunsetTime = newTimes.get(5) + ":00";
+        } else {
+            sunsetTime = newTimes.get(4) + ":00";
+        }
+        nightTime = newTimes.get(6) + ":00";
         nextDawnTime = nextDayTimes.get(1) + ":00";
         Log.i("nextDawnTime", nextDawnTime);
         try {
