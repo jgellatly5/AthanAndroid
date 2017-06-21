@@ -11,4 +11,31 @@
         android:positiveButtonText="@null"
         android:title="Set Calculation Method"/>
 
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_calc_methods"
+        android:entryValues="@array/pref_juristic_methods_values"
+        android:key="juristic_method"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set Juristic Method"/>
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_high_altitudes"
+        android:entryValues="@array/pref_high_altitudes_values"
+        android:key="high_altitudes"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Adjusting Methods for Higher Altitudes"/>
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/pref_time_formats"
+        android:entryValues="@array/pref_time_format_values"
+        android:key="time_formats"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set Time Format"/>
+
 </PreferenceScreen>
