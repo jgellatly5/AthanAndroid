@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat offset;
     PrayTime prayerTime;
 
+    //SharedPreferences.OnSharedPreferenceChangeListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,26 @@ public class MainActivity extends AppCompatActivity {
         String juristicMethodString = sharedPreferences.getString("juristic_method", "");
         String highAltitudesString = sharedPreferences.getString("high_altitudes", "");
         String timeFormatString = sharedPreferences.getString("time_formats", "");
+
+        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                String KEY_PREF_CALC_METHOD = "calculation_method";
+                String KEY_PREF_JURISTIC_METHOD = "juristic_method";
+                String KEY_PREF_HIGH_ALTITUDES = "high_altitudes";
+                String KEY_PREF_TIME_FORMATS = "time_formats";
+                Log.i("preferenceChanged", "preferenceChanged");
+                if (key.equals(KEY_PREF_CALC_METHOD)) {
+                    String calcMethodString = sharedPreferences.getString(key, "");
+                    calcMethod = Integer.parseInt(calcMethodString);
+                    Log.i("calcMethodChanged", String.valueOf(calcMethod));
+                    Log.i("calcMethodChanged", calcMethodString);
+                }
+            }
+        };
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+
+
         calcMethod = Integer.parseInt(calcMethodString);
         juristicMethod = Integer.parseInt(juristicMethodString);
         highAltitudes = Integer.parseInt(highAltitudesString);
@@ -324,4 +346,18 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+//    }
 }
