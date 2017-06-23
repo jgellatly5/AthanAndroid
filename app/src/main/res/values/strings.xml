@@ -36,14 +36,14 @@
         <item>1</item>
     </string-array>
 
-    <!--Adjusting Methods for Higher Altitudes-->
-    <string-array name="pref_high_altitudes">
+    <!--Adjusting Methods for Higher Latitudes-->
+    <string-array name="pref_high_latitudes">
         <item>No Adjustment</item>
         <item>Middle of Night</item>
         <item>1/7th of Night</item>
         <item>Angle Based (1/60th of Night)</item>
     </string-array>
-    <string-array name="pref_high_altitudes_values">
+    <string-array name="pref_high_latitudes_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>

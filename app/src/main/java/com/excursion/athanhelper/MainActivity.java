@@ -1,11 +1,7 @@
 package com.excursion.athanhelper;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     int calcMethod = 0;
     int juristicMethod = 0;
-    int highAltitudes = 0;
+    int highLatitudes = 0;
     int timeFormat = 0;
 
     SimpleDateFormat offset;
@@ -67,8 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
     final String KEY_PREF_CALC_METHOD = "calculation_method";
     final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-    final String KEY_PREF_HIGH_ALTITUDES = "high_altitudes";
+    final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
     final String KEY_PREF_TIME_FORMATS = "time_formats";
+
+    final int DEFAULT_CALC_METHOD = 2;
+    final int DEFAULT_JURISTIC_METHOD = 0;
+    final int DEFAULT_HIGH_LATITUDES = 0;
+    final int DEFAULT_TIME_FORMAT = 1;
 
     Calendar c = Calendar.getInstance();
     int month = c.get(Calendar.MONTH);
@@ -86,20 +87,32 @@ public class MainActivity extends AppCompatActivity {
                     calcMethod = Integer.parseInt(calcMethodString);
                     prayerTime.setCalcMethod(calcMethod);
                     newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+//                    newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
                     Log.i("prayer times", String.valueOf(newTimes));
                     nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+//                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
                     Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
                 case KEY_PREF_JURISTIC_METHOD:
                     String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
                     juristicMethod = Integer.parseInt(juristicMethodString);
                     prayerTime.setAsrJuristic(juristicMethod);
+                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+                    Log.i("prayer times", String.valueOf(newTimes));
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
-                case KEY_PREF_HIGH_ALTITUDES:
-                    String highAltitudesString = sharedPreferences.getString(KEY_PREF_HIGH_ALTITUDES, "");
-                    highAltitudes = Integer.parseInt(highAltitudesString);
+                case KEY_PREF_HIGH_LATITUDES:
+                    String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
+                    highLatitudes = Integer.parseInt(highLatitudesString);
+                    prayerTime.setAdjustHighLats(highLatitudes);
+                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+                    Log.i("prayer times", String.valueOf(newTimes));
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
                 case KEY_PREF_TIME_FORMATS:
+                    //TODO set up time format to be compatible with get timer difference
                     String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
                     timeFormat = Integer.parseInt(timeFormatsString);
                     break;
@@ -118,44 +131,47 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         // set default settings
-        calcMethod = 2;
-        juristicMethod = 0;
-        highAltitudes = 0;
-        timeFormat = 1;
+        calcMethod = DEFAULT_CALC_METHOD;
+        juristicMethod = DEFAULT_JURISTIC_METHOD;
+        highLatitudes = DEFAULT_HIGH_LATITUDES;
+        timeFormat = DEFAULT_TIME_FORMAT;
 
         prayerTime = new PrayTime();
         prayerTime.setCalcMethod(calcMethod);
         prayerTime.setAsrJuristic(juristicMethod);
+        prayerTime.setAdjustHighLats(highLatitudes);
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
 //        prayerTime.setTimeFormat(1);
         Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
+//        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+//        LocationListener locationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(Location location) {
+//                latitude = location.getLatitude();
+//                longitude = location.getLongitude();
+//            }
+//
+//            @Override
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderEnabled(String provider) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderDisabled(String provider) {
+//
+//            }
+//        };
 
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+//        Log.i("latitude", String.valueOf(latitude));
+//        Log.i("longitude", String.valueOf(longitude));
 //        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
         Log.i("prayer times", String.valueOf(newTimes));
         nextDay.set(year, month, dayOfMonth + 1);

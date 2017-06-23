@@ -39,6 +39,8 @@ public class PageFragment extends Fragment {
         dateTextView = (TextView) view.findViewById(R.id.textView);
         Bundle bundle = getArguments();
 
+        //TODO update UI with shared prefs
+
         prayerTime.setAsrJuristic(0);
         prayerTime.setCalcMethod(2);
 
