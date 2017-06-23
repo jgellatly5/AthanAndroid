@@ -32,15 +32,20 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     TextView prayerTimer;
+    CountDownTimer timer;
+
     String dawnTime = "";
     String middayTime = "";
     String afternoonTime = "";
     String sunsetTime = "";
     String nightTime = "";
     String nextDawnTime = "";
+
     int currentTimeIndex = 0;
+
     ArrayList<String> newTimes = new ArrayList<>();
     ArrayList<String> nextDayTimes = new ArrayList<>();
+
     long difference1 = 0;
     long difference2 = 0;
     long difference3 = 0;
@@ -48,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
     long difference5 = 0;
     long difference6 = 0;
     long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
+
     double latitude;
     double longitude;
+
     int calcMethod = 0;
     int juristicMethod = 0;
     int highAltitudes = 0;
@@ -58,46 +65,47 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat offset;
     PrayTime prayerTime;
 
+    final String KEY_PREF_CALC_METHOD = "calculation_method";
+    final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
+    final String KEY_PREF_HIGH_ALTITUDES = "high_altitudes";
+    final String KEY_PREF_TIME_FORMATS = "time_formats";
+
+    Calendar c = Calendar.getInstance();
+    int month = c.get(Calendar.MONTH);
+    int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+    int year = c.get(Calendar.YEAR);
+    Calendar nextDay = Calendar.getInstance();
+
     SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            final String KEY_PREF_CALC_METHOD = "calculation_method";
-            final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-            final String KEY_PREF_HIGH_ALTITUDES = "high_altitudes";
-            final String KEY_PREF_TIME_FORMATS = "time_formats";
-//            if (key.equals(KEY_PREF_CALC_METHOD)) {
-//                String calcMethodString = sharedPreferences.getString(key, "");
-//                calcMethod = Integer.parseInt(calcMethodString);
-//                Log.i("calcMethodChanged", String.valueOf(calcMethod));
-//                Log.i("calcMethodChanged", calcMethodString);
-//            }
             switch(key) {
                 case KEY_PREF_CALC_METHOD:
-                    Log.i("key", "calc_method");
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                     calcMethod = Integer.parseInt(calcMethodString);
-                    Log.i("calcMethodChanged", String.valueOf(calcMethod));
+                    prayerTime.setCalcMethod(calcMethod);
+                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+                    Log.i("prayer times", String.valueOf(newTimes));
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
                 case KEY_PREF_JURISTIC_METHOD:
-                    Log.i("key", "juristic_method");
                     String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
                     juristicMethod = Integer.parseInt(juristicMethodString);
-                    Log.i("jurisiticMethodChanged", String.valueOf(juristicMethod));
+                    prayerTime.setAsrJuristic(juristicMethod);
                     break;
                 case KEY_PREF_HIGH_ALTITUDES:
-                    Log.i("key", "high_alts");
                     String highAltitudesString = sharedPreferences.getString(KEY_PREF_HIGH_ALTITUDES, "");
                     highAltitudes = Integer.parseInt(highAltitudesString);
-                    Log.i("highAltsMethodChanged", String.valueOf(highAltitudes));
                     break;
                 case KEY_PREF_TIME_FORMATS:
-                    Log.i("key", "time_formats");
                     String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
                     timeFormat = Integer.parseInt(timeFormatsString);
-                    Log.i("timeFormatMethodChanged", String.valueOf(timeFormat));
                     break;
             }
+            timer.cancel();
+            startNewTimer();
         }
     };
 
@@ -109,35 +117,19 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
-
-        String calcMethodString = sharedPreferences.getString("calculation_method", "");
-        String juristicMethodString = sharedPreferences.getString("juristic_method", "");
-        String highAltitudesString = sharedPreferences.getString("high_altitudes", "");
-        String timeFormatString = sharedPreferences.getString("time_formats", "");
-
-        calcMethod = Integer.parseInt(calcMethodString);
-        juristicMethod = Integer.parseInt(juristicMethodString);
-        highAltitudes = Integer.parseInt(highAltitudesString);
-        timeFormat = Integer.parseInt(timeFormatString);
-        Log.i("calcmethod", calcMethodString);
-        Log.i("jurismethod", juristicMethodString);
-        Log.i("highaltmethod", highAltitudesString);
-        Log.i("timeformatmethod", timeFormatString);
+        // set default settings
+        calcMethod = 2;
+        juristicMethod = 0;
+        highAltitudes = 0;
+        timeFormat = 1;
 
         prayerTime = new PrayTime();
         prayerTime.setCalcMethod(calcMethod);
+        prayerTime.setAsrJuristic(juristicMethod);
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
-        prayerTime.setAsrJuristic(juristicMethod);
 //        prayerTime.setTimeFormat(1);
-        ArrayList<String> names = new ArrayList<>();
-        names = prayerTime.getTimeNames();
-        Log.i("prayer names", String.valueOf(names));
-
-        Calendar c = Calendar.getInstance();
-        int month = c.get(Calendar.MONTH);
-        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-        int year = c.get(Calendar.YEAR);
+        Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
 
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
@@ -166,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
 //        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
         Log.i("prayer times", String.valueOf(newTimes));
-        Calendar nextDay = Calendar.getInstance();
-        //nextDay.add(Calendar.DATE, 1);
         nextDay.set(year, month, dayOfMonth + 1);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
 //        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
@@ -292,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startNewTimer() {
-        CountDownTimer timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
+        timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Date newDateTimer = new Date();
