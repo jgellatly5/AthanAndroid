@@ -62,16 +62,41 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            String KEY_PREF_CALC_METHOD = "calculation_method";
-            String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-            String KEY_PREF_HIGH_ALTITUDES = "high_altitudes";
-            String KEY_PREF_TIME_FORMATS = "time_formats";
-            Log.i("preferenceChanged", "preferenceChanged");
-            if (key.equals(KEY_PREF_CALC_METHOD)) {
-                String calcMethodString = sharedPreferences.getString(key, "");
-                calcMethod = Integer.parseInt(calcMethodString);
-                Log.i("calcMethodChanged", String.valueOf(calcMethod));
-                Log.i("calcMethodChanged", calcMethodString);
+            final String KEY_PREF_CALC_METHOD = "calculation_method";
+            final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
+            final String KEY_PREF_HIGH_ALTITUDES = "high_altitudes";
+            final String KEY_PREF_TIME_FORMATS = "time_formats";
+//            if (key.equals(KEY_PREF_CALC_METHOD)) {
+//                String calcMethodString = sharedPreferences.getString(key, "");
+//                calcMethod = Integer.parseInt(calcMethodString);
+//                Log.i("calcMethodChanged", String.valueOf(calcMethod));
+//                Log.i("calcMethodChanged", calcMethodString);
+//            }
+            switch(key) {
+                case KEY_PREF_CALC_METHOD:
+                    Log.i("key", "calc_method");
+                    String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
+                    calcMethod = Integer.parseInt(calcMethodString);
+                    Log.i("calcMethodChanged", String.valueOf(calcMethod));
+                    break;
+                case KEY_PREF_JURISTIC_METHOD:
+                    Log.i("key", "juristic_method");
+                    String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
+                    juristicMethod = Integer.parseInt(juristicMethodString);
+                    Log.i("jurisiticMethodChanged", String.valueOf(juristicMethod));
+                    break;
+                case KEY_PREF_HIGH_ALTITUDES:
+                    Log.i("key", "high_alts");
+                    String highAltitudesString = sharedPreferences.getString(KEY_PREF_HIGH_ALTITUDES, "");
+                    highAltitudes = Integer.parseInt(highAltitudesString);
+                    Log.i("highAltsMethodChanged", String.valueOf(highAltitudes));
+                    break;
+                case KEY_PREF_TIME_FORMATS:
+                    Log.i("key", "time_formats");
+                    String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
+                    timeFormat = Integer.parseInt(timeFormatsString);
+                    Log.i("timeFormatMethodChanged", String.valueOf(timeFormat));
+                    break;
             }
         }
     };
