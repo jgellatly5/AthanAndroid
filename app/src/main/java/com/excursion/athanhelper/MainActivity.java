@@ -115,11 +115,6 @@ public class MainActivity extends AppCompatActivity {
                     nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
                     Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
-                case KEY_PREF_TIME_FORMATS:
-                    //TODO set up time format to be compatible with get timer difference
-                    String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
-                    timeFormat = Integer.parseInt(timeFormatsString);
-                    break;
             }
             timer.cancel();
             startNewTimer();

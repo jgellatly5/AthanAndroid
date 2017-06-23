@@ -55,12 +55,10 @@
         <item>24-hour Format</item>
         <item>12-hour Format</item>
         <item>12-hour Format w/ No Suffix</item>
-        <item>Floating Point Number</item>
     </string-array>
     <string-array name="pref_time_format_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
-        <item>3</item>
     </string-array>
 </resources>
