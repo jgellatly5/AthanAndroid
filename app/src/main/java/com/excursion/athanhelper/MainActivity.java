@@ -1,7 +1,11 @@
 package com.excursion.athanhelper;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -142,32 +146,31 @@ public class MainActivity extends AppCompatActivity {
         prayerTime.setAdjustHighLats(highLatitudes);
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
-//        prayerTime.setTimeFormat(1);
         Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
 
-//        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-//        LocationListener locationListener = new LocationListener() {
-//            @Override
-//            public void onLocationChanged(Location location) {
-//                latitude = location.getLatitude();
-//                longitude = location.getLongitude();
-//            }
-//
-//            @Override
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderEnabled(String provider) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderDisabled(String provider) {
-//
-//            }
-//        };
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
 
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
 //        Log.i("latitude", String.valueOf(latitude));
