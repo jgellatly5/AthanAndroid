@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -21,6 +22,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
@@ -42,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     String nextDawnTime = "";
 
     int currentTimeIndex = 0;
+    int timeZoneOffset = 0;
+    int dstOffset = 0;
 
     ArrayList<String> newTimes = new ArrayList<>();
     ArrayList<String> nextDayTimes = new ArrayList<>();
@@ -64,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
     SimpleDateFormat offset;
     PrayTime prayerTime;
+
+    final String API_KEY_GOOGLE_TIMEZONE = "AIzaSyD18gubjQeeZwLRdi2HfgBjzD6y4sKVRg0";
 
     final String KEY_PREF_CALC_METHOD = "calculation_method";
     final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
@@ -121,10 +136,70 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public class DownloadTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String result = "";
+            URL url;
+            HttpURLConnection urlConnection = null;
+            try {
+                url = new URL(urls[0]);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = urlConnection.getInputStream();
+                InputStreamReader reader = new InputStreamReader(in);
+                int data = reader.read();
+                while (data != -1) {
+                    char current = (char) data;
+                    result += current;
+                    data = reader.read();
+                }
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "failed";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "failed";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String rawOffsetInfo = jsonObject.getString("rawOffset");
+                String dstOffsetInfo = jsonObject.getString("dstOffset");
+                dstOffset = Integer.parseInt(dstOffsetInfo)/3600;
+                timeZoneOffset = Integer.parseInt(rawOffsetInfo)/3600 + dstOffset;
+                Log.i("Google Time Zone", rawOffsetInfo);
+                Log.i("Google Time Zone", String.valueOf(timeZoneOffset));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        long timeStamp = c.getTimeInMillis();
+        String timeStampString = String.valueOf(timeStamp);
+        Log.i("timeStamp", timeStampString);
+
+        DownloadTask downloadTask = new DownloadTask();
+        String result = null;
+        try {
+            result = downloadTask.execute("https://maps.googleapis.com/maps/api/timezone/json?location=32.8,-117.2&timestamp=1458000000&key=" + API_KEY_GOOGLE_TIMEZONE).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.i("result", result);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
