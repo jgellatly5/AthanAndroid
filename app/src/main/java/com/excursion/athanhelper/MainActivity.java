@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     int currentTimeIndex = 0;
     int timeZoneOffset = 0;
     int dstOffset = 0;
+    int rawOffset = 0;
 
     ArrayList<String> newTimes = new ArrayList<>();
     ArrayList<String> nextDayTimes = new ArrayList<>();
@@ -187,13 +188,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         long timeStamp = c.getTimeInMillis();
-        String timeStampString = String.valueOf(timeStamp);
+        String timeStampString = String.valueOf(timeStamp/1000);
         Log.i("timeStamp", timeStampString);
 
         DownloadTask downloadTask = new DownloadTask();
         String result = null;
         try {
-            result = downloadTask.execute("https://maps.googleapis.com/maps/api/timezone/json?location=32.8,-117.2&timestamp=1458000000&key=" + API_KEY_GOOGLE_TIMEZONE).get();
+            result = downloadTask.execute("https://maps.googleapis.com/maps/api/timezone/json?location=32.8,-117.2&timestamp=" + timeStampString + "&key=" + API_KEY_GOOGLE_TIMEZONE).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -242,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        Log.i("timeZone", String.valueOf(timeZoneOffset));
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
 //        Log.i("latitude", String.valueOf(latitude));
 //        Log.i("longitude", String.valueOf(longitude));
