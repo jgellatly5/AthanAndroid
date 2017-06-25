@@ -53,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
     String nextDawnTime = "";
 
     int currentTimeIndex = 0;
+
+    public int getTimeZoneOffset() {
+        return timeZoneOffset;
+    }
+
     int timeZoneOffset = 0;
     int dstOffset = 0;
     int rawOffset = 0;
@@ -106,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                     calcMethod = Integer.parseInt(calcMethodString);
                     prayerTime.setCalcMethod(calcMethod);
-                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
 //                    newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
                     Log.i("prayer times", String.valueOf(newTimes));
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
 //                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
                     Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
@@ -117,18 +122,18 @@ public class MainActivity extends AppCompatActivity {
                     String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
                     juristicMethod = Integer.parseInt(juristicMethodString);
                     prayerTime.setAsrJuristic(juristicMethod);
-                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
                     Log.i("prayer times", String.valueOf(newTimes));
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
                     Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
                 case KEY_PREF_HIGH_LATITUDES:
                     String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
                     highLatitudes = Integer.parseInt(highLatitudesString);
                     prayerTime.setAdjustHighLats(highLatitudes);
-                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
                     Log.i("prayer times", String.valueOf(newTimes));
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
                     Log.i("prayer times next day", String.valueOf(nextDayTimes));
                     break;
             }
@@ -179,6 +184,10 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            searchPrayerTimes();
+            customizeActionBar();
+            setupSwipe();
+            startNewTimer();
         }
     }
 
@@ -217,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
         prayerTime.setAdjustHighLats(highLatitudes);
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
-        Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
 
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
@@ -242,21 +250,20 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+    }
 
+    private void searchPrayerTimes() {
+        Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
         Log.i("timeZone", String.valueOf(timeZoneOffset));
-        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, -7);
+        newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
 //        Log.i("latitude", String.valueOf(latitude));
 //        Log.i("longitude", String.valueOf(longitude));
 //        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
         Log.i("prayer times", String.valueOf(newTimes));
         nextDay.set(year, month, dayOfMonth + 1);
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
 //        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
         Log.i("prayer times next day", String.valueOf(nextDayTimes));
-
-        customizeActionBar();
-        setupSwipe();
-        startNewTimer();
     }
 
     public long[] getTimerDifference() {
