@@ -78,26 +78,26 @@ public class PageFragment extends Fragment {
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                     calcMethod = Integer.parseInt(calcMethodString);
                     prayerTime.setCalcMethod(calcMethod);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
 //                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
                     break;
                 case KEY_PREF_JURISTIC_METHOD:
                     String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
                     juristicMethod = Integer.parseInt(juristicMethodString);
                     prayerTime.setAsrJuristic(juristicMethod);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
                     break;
                 case KEY_PREF_HIGH_LATITUDES:
                     String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
                     highLatitudes = Integer.parseInt(highLatitudesString);
                     prayerTime.setAdjustHighLats(highLatitudes);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
                     break;
                 case KEY_PREF_TIME_FORMATS:
                     String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
                     timeFormat = Integer.parseInt(timeFormatsString);
                     prayerTime.setTimeFormat(timeFormat);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
                     break;
             }
             updateView();
@@ -158,7 +158,6 @@ public class PageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         dateTextView = (TextView) view.findViewById(R.id.textView);
-//        Bundle bundle = getArguments();
 
         long timeStamp = nextDay.getTimeInMillis();
         String timeStampString = String.valueOf(timeStamp/1000);
@@ -188,9 +187,6 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
-//        String strDate = getCurrentDay();
-//        formatDate(bundle, strDate);
-//        formatPrayers(bundle, strDate);
         return view;
     }
 

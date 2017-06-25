@@ -12,6 +12,7 @@ import java.util.Calendar;
  */
 
 public class SwipeAdapter extends FragmentPagerAdapter {
+
     public SwipeAdapter(FragmentManager fm) {
         super(fm);
     }
