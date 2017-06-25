@@ -2,6 +2,7 @@ package com.excursion.athanhelper;
 
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -11,10 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -45,6 +56,11 @@ public class PageFragment extends Fragment {
     int highLatitudes = 0;
     int timeFormat = 0;
 
+    int dstOffset = 0;
+    int timeZoneOffset = 0;
+
+    final String API_KEY_GOOGLE_TIMEZONE = "AIzaSyD18gubjQeeZwLRdi2HfgBjzD6y4sKVRg0";
+
     Calendar nextDay = Calendar.getInstance();
     ArrayList<String> nextDayTimes = new ArrayList<>();
 
@@ -52,6 +68,7 @@ public class PageFragment extends Fragment {
         // Required empty public constructor
     }
 
+    //TODO set up timezone from API, location listener
     SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -87,12 +104,75 @@ public class PageFragment extends Fragment {
         }
     };
 
+    public class DownloadTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String result = "";
+            URL url;
+            HttpURLConnection urlConnection = null;
+            try {
+                url = new URL(urls[0]);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = urlConnection.getInputStream();
+                InputStreamReader reader = new InputStreamReader(in);
+                int data = reader.read();
+                while (data != -1) {
+                    char current = (char) data;
+                    result += current;
+                    data = reader.read();
+                }
+                return result;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "failed";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "failed";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String rawOffsetInfo = jsonObject.getString("rawOffset");
+                String dstOffsetInfo = jsonObject.getString("dstOffset");
+                dstOffset = Integer.parseInt(dstOffsetInfo)/3600;
+                timeZoneOffset = Integer.parseInt(rawOffsetInfo)/3600 + dstOffset;
+                Log.i("timezonefrag", rawOffsetInfo);
+                Log.i("timezonefrag", String.valueOf(timeZoneOffset));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Bundle bundle = getArguments();
+            String strDate = getCurrentDay();
+            formatDate(bundle, strDate);
+            formatPrayers(bundle, strDate);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         dateTextView = (TextView) view.findViewById(R.id.textView);
-        Bundle bundle = getArguments();
+//        Bundle bundle = getArguments();
+
+        long timeStamp = nextDay.getTimeInMillis();
+        String timeStampString = String.valueOf(timeStamp/1000);
+        Log.i("timeStamp", timeStampString);
+
+        DownloadTask downloadTask = new DownloadTask();
+        String result = null;
+        try {
+            result = downloadTask.execute("https://maps.googleapis.com/maps/api/timezone/json?location=32.8,-117.2&timestamp=" + timeStampString + "&key=" + API_KEY_GOOGLE_TIMEZONE).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
@@ -108,9 +188,9 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
-        String strDate = getCurrentDay();
-        formatDate(bundle, strDate);
-        formatPrayers(bundle, strDate);
+//        String strDate = getCurrentDay();
+//        formatDate(bundle, strDate);
+//        formatPrayers(bundle, strDate);
         return view;
     }
 
@@ -122,7 +202,7 @@ public class PageFragment extends Fragment {
         int year = c.get(Calendar.YEAR);
 
         nextDay.set(year, month, dayOfMonth + count);
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, -7);
+        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
 
@@ -144,6 +224,7 @@ public class PageFragment extends Fragment {
         return hours + mins;
     }
 
+    //TODO fix end of day month bug
     private void formatDate(Bundle bundle, String strDate) {
         String[] values = strDate.split("/", 0);
         int day = bundle.getInt("day");

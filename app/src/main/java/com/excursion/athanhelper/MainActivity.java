@@ -54,13 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     int currentTimeIndex = 0;
 
-    public int getTimeZoneOffset() {
-        return timeZoneOffset;
-    }
-
     int timeZoneOffset = 0;
     int dstOffset = 0;
-    int rawOffset = 0;
 
     ArrayList<String> newTimes = new ArrayList<>();
     ArrayList<String> nextDayTimes = new ArrayList<>();
@@ -101,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
     int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
     int year = c.get(Calendar.YEAR);
     Calendar nextDay = Calendar.getInstance();
-
 
     SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -188,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
 
         long timeStamp = c.getTimeInMillis();
         String timeStampString = String.valueOf(timeStamp/1000);
-        Log.i("timeStamp", timeStampString);
 
         DownloadTask downloadTask = new DownloadTask();
         String result = null;
@@ -199,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        Log.i("result", result);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
@@ -244,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void searchPrayerTimes() {
         Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
-        Log.i("timeZone", String.valueOf(timeZoneOffset));
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
 //        Log.i("latitude", String.valueOf(latitude));
 //        Log.i("longitude", String.valueOf(longitude));
@@ -258,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
     public long[] getTimerDifference() {
         // get currentTime and set format
+        //TODO change for dynamic timezone
         Calendar cal = Calendar.getInstance();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
@@ -394,11 +386,6 @@ public class MainActivity extends AppCompatActivity {
                 currentTimeIndex = i + 1;
                 Log.i("currentTimeIndex", String.valueOf(currentTimeIndex));
                 Log.i("difference values", String.valueOf(differences[i]));
-//                if (calcMethod == 2) {
-//                    if (currentTimeIndex == 5) {
-//                        currentTimeIndex = 6;
-//                    }
-//                }
                 if (currentTimeIndex > 5) {
                     currentTimeIndex = 0;
                 }
