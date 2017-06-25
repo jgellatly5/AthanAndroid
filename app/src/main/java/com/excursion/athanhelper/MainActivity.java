@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     int year = c.get(Calendar.YEAR);
     Calendar nextDay = Calendar.getInstance();
 
+
     SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -111,30 +112,19 @@ public class MainActivity extends AppCompatActivity {
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                     calcMethod = Integer.parseInt(calcMethodString);
                     prayerTime.setCalcMethod(calcMethod);
-                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
-//                    newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
-                    Log.i("prayer times", String.valueOf(newTimes));
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
-//                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
-                    Log.i("prayer times next day", String.valueOf(nextDayTimes));
+                    searchPrayerTimes();
                     break;
                 case KEY_PREF_JURISTIC_METHOD:
                     String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
                     juristicMethod = Integer.parseInt(juristicMethodString);
                     prayerTime.setAsrJuristic(juristicMethod);
-                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
-                    Log.i("prayer times", String.valueOf(newTimes));
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
-                    Log.i("prayer times next day", String.valueOf(nextDayTimes));
+                    searchPrayerTimes();
                     break;
                 case KEY_PREF_HIGH_LATITUDES:
                     String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
                     highLatitudes = Integer.parseInt(highLatitudesString);
                     prayerTime.setAdjustHighLats(highLatitudes);
-                    newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
-                    Log.i("prayer times", String.valueOf(newTimes));
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
-                    Log.i("prayer times next day", String.valueOf(nextDayTimes));
+                    searchPrayerTimes();
                     break;
             }
             timer.cancel();
