@@ -226,11 +226,14 @@ public class PageFragment extends Fragment {
         int day = bundle.getInt("day");
         int count = bundle.getInt("count");
         int numberDay = count + Integer.parseInt(values[2]) - 1;
+
+        //TODO set up monthday
+
         String numberString = String.valueOf(numberDay);
         if (day >= 8) {
             day = day - 7;
         }
-        Log.i("day", String.valueOf(day));
+        Log.i("numberDayFrag", String.valueOf(numberDay));
         String dayString = "";
         switch (day) {
             case 1: dayString = "Sunday";
