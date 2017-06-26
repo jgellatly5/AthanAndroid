@@ -1,11 +1,7 @@
 package com.excursion.athanhelper;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -101,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            switch(key) {
+            switch (key) {
                 case KEY_PREF_CALC_METHOD:
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                     calcMethod = Integer.parseInt(calcMethodString);
@@ -161,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(result);
                 String rawOffsetInfo = jsonObject.getString("rawOffset");
                 String dstOffsetInfo = jsonObject.getString("dstOffset");
-                dstOffset = Integer.parseInt(dstOffsetInfo)/3600;
-                timeZoneOffset = Integer.parseInt(rawOffsetInfo)/3600 + dstOffset;
+                dstOffset = Integer.parseInt(dstOffsetInfo) / 3600;
+                timeZoneOffset = Integer.parseInt(rawOffsetInfo) / 3600 + dstOffset;
                 Log.i("Google Time Zone", rawOffsetInfo);
                 Log.i("Google Time Zone", String.valueOf(timeZoneOffset));
             } catch (JSONException e) {
@@ -181,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         long timeStamp = c.getTimeInMillis();
-        String timeStampString = String.valueOf(timeStamp/1000);
+        String timeStampString = String.valueOf(timeStamp / 1000);
 
         DownloadTask downloadTask = new DownloadTask();
         String result = null;
@@ -209,41 +205,68 @@ public class MainActivity extends AppCompatActivity {
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
+//        String locationProvider = LocationManager.NETWORK_PROVIDER;
+//        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+////        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+////            // TODO: Consider calling
+////            //    ActivityCompat#requestPermissions
+////            // here to request the missing permissions, and then overriding
+////            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+////            //                                          int[] grantResults)
+////            // to handle the case where the user grants the permission. See the documentation
+////            // for ActivityCompat#requestPermissions for more details.
+////            return;
+////        }
+////        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+////        latitude = lastKnownLocation.getLatitude();
+////        longitude = lastKnownLocation.getLongitude();
+//
+//
+//        LocationListener locationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(Location location) {
+//                latitude = location.getLatitude();
+//                longitude = location.getLongitude();
+//            }
+//
+//            @Override
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderEnabled(String provider) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderDisabled(String provider) {
+//
+//            }
+//        };
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
     }
 
     private void searchPrayerTimes() {
         Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
-//        Log.i("latitude", String.valueOf(latitude));
-//        Log.i("longitude", String.valueOf(longitude));
-//        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, -7);
+        Log.i("latitude", String.valueOf(latitude));
+        Log.i("longitude", String.valueOf(longitude));
+//        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, timeZoneOffset);
         Log.i("prayer times", String.valueOf(newTimes));
         nextDay.set(year, month, dayOfMonth + 1);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
-//        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
+//        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
         Log.i("prayer times next day", String.valueOf(nextDayTimes));
     }
 
