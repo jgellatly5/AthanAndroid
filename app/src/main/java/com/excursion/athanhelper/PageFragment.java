@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 
@@ -141,15 +139,12 @@ public class PageFragment extends Fragment {
                 String dstOffsetInfo = jsonObject.getString("dstOffset");
                 dstOffset = Integer.parseInt(dstOffsetInfo)/3600;
                 timeZoneOffset = Integer.parseInt(rawOffsetInfo)/3600 + dstOffset;
-                Log.i("timezonefrag", rawOffsetInfo);
-                Log.i("timezonefrag", String.valueOf(timeZoneOffset));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             Bundle bundle = getArguments();
-            String strDate = getCurrentDay();
-            formatDate(bundle, strDate);
-            formatPrayers(bundle, strDate);
+            formatDate(bundle);
+            formatPrayers(bundle);
         }
     }
 
@@ -161,7 +156,6 @@ public class PageFragment extends Fragment {
 
         long timeStamp = nextDay.getTimeInMillis();
         String timeStampString = String.valueOf(timeStamp/1000);
-        Log.i("timeStamp", timeStampString);
 
         DownloadTask downloadTask = new DownloadTask();
         String result = null;
@@ -190,7 +184,7 @@ public class PageFragment extends Fragment {
         return view;
     }
 
-    private void formatPrayers(Bundle bundle, String strDate) {
+    private void formatPrayers(Bundle bundle) {
         int count = bundle.getInt("count");
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);
@@ -220,49 +214,52 @@ public class PageFragment extends Fragment {
         return hours + mins;
     }
 
-    //TODO fix end of day month bug
-    private void formatDate(Bundle bundle, String strDate) {
-        String[] values = strDate.split("/", 0);
-        int day = bundle.getInt("day");
+    private void formatDate(Bundle bundle) {
+        Calendar c = Calendar.getInstance();
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
+        int weekDay = bundle.getInt("day");
         int count = bundle.getInt("count");
-        int numberDay = count + Integer.parseInt(values[2]) - 1;
-
-        //TODO set up monthday
+        nextDay.set(year, month, dayOfMonth + count);
+        int numberDay = nextDay.get(Calendar.DAY_OF_MONTH);
+        int monthDay = nextDay.get(Calendar.MONTH) + 1;
 
         String numberString = String.valueOf(numberDay);
-        if (day >= 8) {
-            day = day - 7;
+
+        String monthString = "";
+        if (monthDay < 10) {
+            monthString = "0" + String.valueOf(monthDay);
+        } else {
+            monthString = String.valueOf(monthDay);
         }
-        Log.i("numberDayFrag", String.valueOf(numberDay));
-        String dayString = "";
-        switch (day) {
-            case 1: dayString = "Sunday";
+
+        if (weekDay >= 8) {
+            weekDay = weekDay - 7;
+        }
+        String weekDayString = "";
+        switch (weekDay) {
+            case 1: weekDayString = "Sunday";
                     break;
-            case 2: dayString = "Monday";
+            case 2: weekDayString = "Monday";
                     break;
-            case 3: dayString = "Tuesday";
+            case 3: weekDayString = "Tuesday";
                     break;
-            case 4: dayString = "Wednesday";
+            case 4: weekDayString = "Wednesday";
                     break;
-            case 5: dayString = "Thursday";
+            case 5: weekDayString = "Thursday";
                     break;
-            case 6: dayString = "Friday";
+            case 6: weekDayString = "Friday";
                     break;
-            case 7: dayString = "Saturday";
+            case 7: weekDayString = "Saturday";
                     break;
-            default: dayString = "This is not a day";
+            default: weekDayString = "This is not a day";
                 break;
         }
         if (numberDay < 10) {
-            dateTextView.setText(dayString + " " + values[1] + "/0" + numberString);
+            dateTextView.setText(weekDayString + " " + monthString + "/0" + numberString);
         } else {
-            dateTextView.setText(dayString + " " + values[1] + "/" + numberString);
+            dateTextView.setText(weekDayString + " " + monthString + "/" + numberString);
         }
-    }
-
-    private String getCurrentDay() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
-        return sdf.format(cal.getTime());
     }
 }
