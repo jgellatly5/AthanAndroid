@@ -249,10 +249,8 @@ public class MainActivity extends AppCompatActivity {
 
     public long[] getTimerDifference() {
         // get currentTime and set format
-        //TODO change for dynamic timezone
         Calendar cal = Calendar.getInstance();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
         final String currentTime = simpleDateFormat.format(cal.getTime());
 
         // instantiate dates
@@ -374,6 +372,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
+                //TODO new notification
                 Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
                 startNewTimer();
             }

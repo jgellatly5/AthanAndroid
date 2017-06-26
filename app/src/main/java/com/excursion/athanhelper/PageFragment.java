@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,6 +194,9 @@ public class PageFragment extends Fragment {
 
         nextDay.set(year, month, dayOfMonth + count);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
+        Log.i("prayerTimeFrag", String.valueOf(nextDayTimes));
+
+
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
 
@@ -200,6 +204,15 @@ public class PageFragment extends Fragment {
     }
 
     private void updateView() {
+        for (int i = 0; i < nextDayTimes.size(); i++) {
+            String[] formatPrayerString = nextDayTimes.get(i).split(":", 0);
+            int hour = Integer.parseInt(formatPrayerString[0]);
+            Log.i("hour", String.valueOf(hour));
+//            String hourString = "";
+//            if (hour < 10 ) {
+//                hourString =
+//            }
+        }
         dawnTimeTextView.setText(nextDayTimes.get(1));
         middayTimeTextView.setText(nextDayTimes.get(2));
         afternoonTimeTextView.setText(nextDayTimes.get(3));
