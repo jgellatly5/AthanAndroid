@@ -133,8 +133,6 @@ public class MainActivity extends AppCompatActivity {
         prayerTime.setCalcMethod(calcMethod);
         prayerTime.setAsrJuristic(juristicMethod);
         prayerTime.setAdjustHighLats(highLatitudes);
-//        prayerTime.setIshaAngle(15);
-//        prayerTime.setFajrAngle(15);
 
         String locationProvider = LocationManager.NETWORK_PROVIDER;
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);

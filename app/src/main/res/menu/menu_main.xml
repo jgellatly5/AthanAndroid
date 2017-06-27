@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Settings"
-        android:id="@+id/settings"></item>
+    <item
+        android:id="@+id/settings"
+        android:checkable="false"
+        android:title="Settings"
+        android:visible="true"></item>
 </menu>
