@@ -1,11 +1,17 @@
 package com.excursion.athanhelper;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -140,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     result += current;
                     data = reader.read();
                 }
+                Log.i("result", result);
                 return result;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -159,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
                 String dstOffsetInfo = jsonObject.getString("dstOffset");
                 dstOffset = Integer.parseInt(dstOffsetInfo) / 3600;
                 timeZoneOffset = Integer.parseInt(rawOffsetInfo) / 3600 + dstOffset;
-                Log.i("Google Time Zone", rawOffsetInfo);
-                Log.i("Google Time Zone", String.valueOf(timeZoneOffset));
+                Log.i("timeZone", rawOffsetInfo);
+                Log.i("timeZone", String.valueOf(timeZoneOffset));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -183,10 +190,13 @@ public class MainActivity extends AppCompatActivity {
         String result = null;
         try {
             result = downloadTask.execute("https://maps.googleapis.com/maps/api/timezone/json?location=32.8,-117.2&timestamp=" + timeStampString + "&key=" + API_KEY_GOOGLE_TIMEZONE).get();
+            Log.i("result", result);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Log.i("status", "failed");
         } catch (ExecutionException e) {
             e.printStackTrace();
+            Log.i("status", "failed");
         }
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -205,59 +215,25 @@ public class MainActivity extends AppCompatActivity {
 //        prayerTime.setIshaAngle(15);
 //        prayerTime.setFajrAngle(15);
 
-//        String locationProvider = LocationManager.NETWORK_PROVIDER;
-//        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-////        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-////            // TODO: Consider calling
-////            //    ActivityCompat#requestPermissions
-////            // here to request the missing permissions, and then overriding
-////            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-////            //                                          int[] grantResults)
-////            // to handle the case where the user grants the permission. See the documentation
-////            // for ActivityCompat#requestPermissions for more details.
-////            return;
-////        }
-////        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-////        latitude = lastKnownLocation.getLatitude();
-////        longitude = lastKnownLocation.getLongitude();
-//
-//
-//        LocationListener locationListener = new LocationListener() {
-//            @Override
-//            public void onLocationChanged(Location location) {
-//                latitude = location.getLatitude();
-//                longitude = location.getLongitude();
-//            }
-//
-//            @Override
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderEnabled(String provider) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderDisabled(String provider) {
-//
-//            }
-//        };
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return;
-//        }
-//        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        latitude = lastKnownLocation.getLatitude();
+        longitude = lastKnownLocation.getLongitude();
     }
 
     private void searchPrayerTimes() {
+        Log.i("timeZone", String.valueOf(timeZoneOffset));
         Log.i("prayer names", String.valueOf(prayerTime.getTimeNames()));
         newTimes = prayerTime.getPrayerTimes(c, 32.8, -117.2, timeZoneOffset);
         Log.i("latitude", String.valueOf(latitude));

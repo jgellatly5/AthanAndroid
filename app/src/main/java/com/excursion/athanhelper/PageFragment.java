@@ -1,10 +1,16 @@
 package com.excursion.athanhelper;
 
 
+import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +64,9 @@ public class PageFragment extends Fragment {
     int dstOffset = 0;
     int timeZoneOffset = 0;
 
+    double latitude;
+    double longitude;
+
     final String API_KEY_GOOGLE_TIMEZONE = "AIzaSyD18gubjQeeZwLRdi2HfgBjzD6y4sKVRg0";
 
     Calendar nextDay = Calendar.getInstance();
@@ -72,7 +81,7 @@ public class PageFragment extends Fragment {
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            switch(key) {
+            switch (key) {
                 case KEY_PREF_CALC_METHOD:
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                     calcMethod = Integer.parseInt(calcMethodString);
@@ -138,8 +147,8 @@ public class PageFragment extends Fragment {
                 JSONObject jsonObject = new JSONObject(result);
                 String rawOffsetInfo = jsonObject.getString("rawOffset");
                 String dstOffsetInfo = jsonObject.getString("dstOffset");
-                dstOffset = Integer.parseInt(dstOffsetInfo)/3600;
-                timeZoneOffset = Integer.parseInt(rawOffsetInfo)/3600 + dstOffset;
+                dstOffset = Integer.parseInt(dstOffsetInfo) / 3600;
+                timeZoneOffset = Integer.parseInt(rawOffsetInfo) / 3600 + dstOffset;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -156,7 +165,7 @@ public class PageFragment extends Fragment {
         dateTextView = (TextView) view.findViewById(R.id.textView);
 
         long timeStamp = nextDay.getTimeInMillis();
-        String timeStampString = String.valueOf(timeStamp/1000);
+        String timeStampString = String.valueOf(timeStamp / 1000);
 
         DownloadTask downloadTask = new DownloadTask();
         String result = null;
@@ -167,6 +176,22 @@ public class PageFragment extends Fragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return view;
+        }
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        latitude = lastKnownLocation.getLatitude();
+        longitude = lastKnownLocation.getLongitude();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
@@ -193,7 +218,7 @@ public class PageFragment extends Fragment {
         int year = c.get(Calendar.YEAR);
 
         nextDay.set(year, month, dayOfMonth + count);
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
+        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
         Log.i("prayerTimeFrag", String.valueOf(nextDayTimes));
 
 
