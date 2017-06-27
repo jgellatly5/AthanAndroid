@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -18,19 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -61,15 +50,12 @@ public class PageFragment extends Fragment {
     int highLatitudes = 0;
     int timeFormat = 0;
 
-    int dstOffset = 0;
-    int timeZoneOffset = 0;
-
     double latitude;
     double longitude;
 
-    final String API_KEY_GOOGLE_TIMEZONE = "AIzaSyD18gubjQeeZwLRdi2HfgBjzD6y4sKVRg0";
-
     Calendar nextDay = Calendar.getInstance();
+    int dstOffset = nextDay.get(Calendar.DST_OFFSET)/3600000;
+    int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET)/3600000 + dstOffset;
     ArrayList<String> nextDayTimes = new ArrayList<>();
 
     public PageFragment() {
@@ -86,96 +72,36 @@ public class PageFragment extends Fragment {
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                     calcMethod = Integer.parseInt(calcMethodString);
                     prayerTime.setCalcMethod(calcMethod);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
-//                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, -7);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
                     break;
                 case KEY_PREF_JURISTIC_METHOD:
                     String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
                     juristicMethod = Integer.parseInt(juristicMethodString);
                     prayerTime.setAsrJuristic(juristicMethod);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
                     break;
                 case KEY_PREF_HIGH_LATITUDES:
                     String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
                     highLatitudes = Integer.parseInt(highLatitudesString);
                     prayerTime.setAdjustHighLats(highLatitudes);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
                     break;
                 case KEY_PREF_TIME_FORMATS:
                     String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
                     timeFormat = Integer.parseInt(timeFormatsString);
                     prayerTime.setTimeFormat(timeFormat);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, 32.8, -117.2, timeZoneOffset);
+                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
                     break;
             }
             updateView();
         }
     };
 
-    public class DownloadTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... urls) {
-            String result = "";
-            URL url;
-            HttpURLConnection urlConnection = null;
-            try {
-                url = new URL(urls[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = urlConnection.getInputStream();
-                InputStreamReader reader = new InputStreamReader(in);
-                int data = reader.read();
-                while (data != -1) {
-                    char current = (char) data;
-                    result += current;
-                    data = reader.read();
-                }
-                return result;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return "failed";
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "failed";
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            try {
-                JSONObject jsonObject = new JSONObject(result);
-                String rawOffsetInfo = jsonObject.getString("rawOffset");
-                String dstOffsetInfo = jsonObject.getString("dstOffset");
-                dstOffset = Integer.parseInt(dstOffsetInfo) / 3600;
-                timeZoneOffset = Integer.parseInt(rawOffsetInfo) / 3600 + dstOffset;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Bundle bundle = getArguments();
-            formatDate(bundle);
-            formatPrayers(bundle);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         dateTextView = (TextView) view.findViewById(R.id.textView);
-
-        long timeStamp = nextDay.getTimeInMillis();
-        String timeStampString = String.valueOf(timeStamp / 1000);
-
-        DownloadTask downloadTask = new DownloadTask();
-        String result = null;
-        try {
-            result = downloadTask.execute("https://maps.googleapis.com/maps/api/timezone/json?location=32.8,-117.2&timestamp=" + timeStampString + "&key=" + API_KEY_GOOGLE_TIMEZONE).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
 
         String locationProvider = LocationManager.NETWORK_PROVIDER;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -207,6 +133,9 @@ public class PageFragment extends Fragment {
         sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
         nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
 
+        Bundle bundle = getArguments();
+        formatDate(bundle);
+        formatPrayers(bundle);
         return view;
     }
 
@@ -220,8 +149,6 @@ public class PageFragment extends Fragment {
         nextDay.set(year, month, dayOfMonth + count);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
         Log.i("prayerTimeFrag", String.valueOf(nextDayTimes));
-
-
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
 
