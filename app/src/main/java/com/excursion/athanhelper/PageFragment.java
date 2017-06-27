@@ -11,13 +11,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -48,7 +46,7 @@ public class PageFragment extends Fragment {
     int calcMethod = 0;
     int juristicMethod = 0;
     int highLatitudes = 0;
-    int timeFormat = 0;
+    int timeFormat = 1;
 
     double latitude;
     double longitude;
@@ -62,7 +60,6 @@ public class PageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    //TODO set up timezone from API, location listener
     SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -148,35 +145,29 @@ public class PageFragment extends Fragment {
 
         nextDay.set(year, month, dayOfMonth + count);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
-        Log.i("prayerTimeFrag", String.valueOf(nextDayTimes));
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
 
         updateView();
     }
 
     private void updateView() {
-        for (int i = 0; i < nextDayTimes.size(); i++) {
-            String[] formatPrayerString = nextDayTimes.get(i).split(":", 0);
-            int hour = Integer.parseInt(formatPrayerString[0]);
-            Log.i("hour", String.valueOf(hour));
-//            String hourString = "";
-//            if (hour < 10 ) {
-//                hourString =
-//            }
+        String newDawmTime = nextDayTimes.get(1).replaceFirst("^0+(?!$)", "");
+        String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
+        String newAfternoonTime = nextDayTimes.get(3).replaceFirst("^0+(?!$)", "");
+        String newSunsetTime = nextDayTimes.get(5).replaceFirst("^0+(?!$)", "");
+        String newNightTime = nextDayTimes.get(6).replaceFirst("^0+(?!$)", "");
+        if (timeFormat == 0) {
+            dawnTimeTextView.setText(nextDayTimes.get(1));
+            middayTimeTextView.setText(nextDayTimes.get(2));
+            afternoonTimeTextView.setText(nextDayTimes.get(3));
+            sunsetTimeTextView.setText(nextDayTimes.get(5));
+            nightTimeTextView.setText(nextDayTimes.get(6));
+        } else {
+            dawnTimeTextView.setText(newDawmTime);
+            middayTimeTextView.setText(newMiddayTime);
+            afternoonTimeTextView.setText(newAfternoonTime);
+            sunsetTimeTextView.setText(newSunsetTime);
+            nightTimeTextView.setText(newNightTime);
         }
-        dawnTimeTextView.setText(nextDayTimes.get(1));
-        middayTimeTextView.setText(nextDayTimes.get(2));
-        afternoonTimeTextView.setText(nextDayTimes.get(3));
-        sunsetTimeTextView.setText(nextDayTimes.get(5));
-        nightTimeTextView.setText(nextDayTimes.get(6));
-    }
-
-    private double convertTimeToDouble(String time) {
-        String[] parts = time.split(":", 0);
-        Double hours = Double.parseDouble(parts[0]);
-        Double mins = Double.parseDouble(parts[1])/60;
-        return hours + mins;
     }
 
     private void formatDate(Bundle bundle) {

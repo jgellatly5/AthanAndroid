@@ -1,6 +1,7 @@
 package com.excursion.athanhelper;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +23,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -255,8 +256,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
-                //TODO new notification
-                Toast.makeText(MainActivity.this, "New prayer starting", Toast.LENGTH_SHORT).show();
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getApplicationContext())
+                                .setSmallIcon(R.drawable.crescent)
+                                .setContentTitle("Start Prayer: " + prayerTime.getTimeNames().get(currentTimeIndex))
+                                .setContentText("Time for the next prayer.");
+                int mNotificationId = 001;
+                NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
                 startNewTimer();
             }
         }.start();
