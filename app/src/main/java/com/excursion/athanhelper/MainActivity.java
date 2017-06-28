@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -17,8 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -122,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
@@ -154,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
         longitude = lastKnownLocation.getLongitude();
 
         searchPrayerTimes();
-        customizeActionBar();
+//        customizeActionBar();
+        getActionBar();
         setupSwipe();
         startNewTimer();
     }
@@ -260,8 +261,8 @@ public class MainActivity extends AppCompatActivity {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getApplicationContext())
                                 .setSmallIcon(R.drawable.crescent)
-                                .setContentTitle("Start Prayer: " + prayerTime.getTimeNames().get(currentTimeIndex))
-                                .setContentText("Time for the next prayer.");
+                                .setContentTitle("Start Prayer: " + prayerTime.getTimeNames().get(currentTimeIndex + 1))
+                                .setContentText("Beginning timer until next prayer.");
                 int mNotificationId = 001;
                 NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
@@ -309,12 +310,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_main, menu);
-        for(int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-            SpannableString spanString = new SpannableString(menu.getItem(i).getTitle().toString());
-            spanString.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanString.length(), 0); //fix the color to white
-            item.setTitle(spanString);
-        }
+//        for(int i = 0; i < menu.size(); i++) {
+//            MenuItem item = menu.getItem(i);
+//            SpannableString spanString = new SpannableString(menu.getItem(i).getTitle().toString());
+//            spanString.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanString.length(), 0); //fix the color to white
+//            item.setTitle(spanString);
+//        }
         return super.onCreateOptionsMenu(menu);
     }
 

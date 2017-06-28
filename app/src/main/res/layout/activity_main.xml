@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context="com.excursion.athanhelper.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
@@ -21,15 +30,15 @@
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="27dp"
         android:layout_marginStart="27dp"
-        android:layout_marginTop="43dp"
         android:contentDescription="crescent"
         android:src="@drawable/crescent"
-        tools:ignore="HardcodedText"/>
+        tools:ignore="HardcodedText"
+        android:layout_below="@+id/my_toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="21dp"/>
 
     <TextView
         android:id="@+id/prayerTimer"
