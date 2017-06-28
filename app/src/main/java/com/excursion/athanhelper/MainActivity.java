@@ -14,15 +14,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -154,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         longitude = lastKnownLocation.getLongitude();
 
         searchPrayerTimes();
-//        customizeActionBar();
         getActionBar();
         setupSwipe();
         startNewTimer();
@@ -162,10 +158,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void searchPrayerTimes() {
         newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, timeZoneOffset);
-        Log.i("prayer times", String.valueOf(newTimes));
         nextDay.set(year, month, dayOfMonth + 1);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
-        Log.i("prayer times next day", String.valueOf(nextDayTimes));
     }
 
     public long[] getTimerDifference() {
@@ -289,33 +283,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(swipeAdapter);
     }
 
-    private void customizeActionBar() {
-        //Customize the ActionBar
-        final ActionBar abar = getSupportActionBar();
-        View viewActionBar = getLayoutInflater().inflate(R.layout.actionbar_titletext_layout, null);
-        ActionBar.LayoutParams params = new ActionBar.LayoutParams(//Center the textview in the ActionBar !
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.MATCH_PARENT,
-                Gravity.CENTER);
-        TextView textviewTitle = (TextView) viewActionBar.findViewById(R.id.actionbar_textview);
-        textviewTitle.setText("Athan");
-        abar.setCustomView(viewActionBar, params);
-        abar.setDisplayShowCustomEnabled(true);
-        abar.setDisplayShowTitleEnabled(false);
-        abar.setDisplayHomeAsUpEnabled(true);
-        abar.setHomeButtonEnabled(true);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_main, menu);
-//        for(int i = 0; i < menu.size(); i++) {
-//            MenuItem item = menu.getItem(i);
-//            SpannableString spanString = new SpannableString(menu.getItem(i).getTitle().toString());
-//            spanString.setSpan(new ForegroundColorSpan(Color.BLACK), 0, spanString.length(), 0); //fix the color to white
-//            item.setTitle(spanString);
-//        }
         return super.onCreateOptionsMenu(menu);
     }
 
