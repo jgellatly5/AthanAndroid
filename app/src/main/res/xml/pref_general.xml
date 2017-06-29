@@ -27,7 +27,7 @@
         android:key="high_altitudes"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="Adjusting Methods for Higher Latitudes"/>
+        android:title="Adjust Methods for Higher Latitudes"/>
 
     <ListPreference
         android:defaultValue="1"
