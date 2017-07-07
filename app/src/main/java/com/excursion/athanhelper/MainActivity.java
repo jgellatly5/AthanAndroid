@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -125,12 +126,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        if (hasPermissions()) {
-            getLocation();
-        } else {
-            requestPerms();
-        }
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
@@ -145,6 +140,16 @@ public class MainActivity extends AppCompatActivity {
         prayerTime.setAsrJuristic(juristicMethod);
         prayerTime.setAdjustHighLats(highLatitudes);
 
+        if (hasPermissions()) {
+            getLocation();
+        } else {
+            requestPerms();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         searchPrayerTimes();
         getActionBar();
         setupSwipe();
@@ -165,9 +170,6 @@ public class MainActivity extends AppCompatActivity {
             latitude = lastKnownLocation.getLatitude();
             longitude = lastKnownLocation.getLongitude();
         }
-
-//        latitude = 32.8;
-//        longitude = -117.2;
     }
 
     private void requestPerms() {
@@ -203,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         if (allowed) {
+            timer.cancel();
             getLocation();
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
