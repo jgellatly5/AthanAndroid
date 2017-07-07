@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -154,11 +155,19 @@ public class MainActivity extends AppCompatActivity {
         locationProvider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        //Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-//            latitude = lastKnownLocation.getLatitude();
-//            longitude = lastKnownLocation.getLongitude();
-        latitude = 32.8;
-        longitude = -117.2;
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        if (lastKnownLocation != null) {
+            latitude = lastKnownLocation.getLatitude();
+            longitude = lastKnownLocation.getLongitude();
+        } else {
+            locationProvider = LocationManager.GPS_PROVIDER;
+            lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+            latitude = lastKnownLocation.getLatitude();
+            longitude = lastKnownLocation.getLongitude();
+        }
+
+//        latitude = 32.8;
+//        longitude = -117.2;
     }
 
     private void requestPerms() {

@@ -5,11 +5,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +55,8 @@ public class PageFragment extends Fragment {
     double longitude;
 
     Calendar nextDay = Calendar.getInstance();
-    int dstOffset = nextDay.get(Calendar.DST_OFFSET)/3600000;
-    int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET)/3600000 + dstOffset;
+    int dstOffset = nextDay.get(Calendar.DST_OFFSET) / 3600000;
+    int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
     ArrayList<String> nextDayTimes = new ArrayList<>();
 
     String locationProvider;
@@ -110,8 +112,6 @@ public class PageFragment extends Fragment {
             requestPerms();
         }
 
-        getLocation();
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
@@ -142,11 +142,20 @@ public class PageFragment extends Fragment {
     private void getLocation() {
         locationProvider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-//        latitude = lastKnownLocation.getLatitude();
-//        longitude = lastKnownLocation.getLongitude();
-        latitude = 32.8;
-        longitude = -117.2;
+
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        if (lastKnownLocation != null) {
+            latitude = lastKnownLocation.getLatitude();
+            longitude = lastKnownLocation.getLongitude();
+        } else {
+            locationProvider = LocationManager.GPS_PROVIDER;
+            lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+            latitude = lastKnownLocation.getLatitude();
+            longitude = lastKnownLocation.getLongitude();
+        }
+
+//        latitude = 32.8;
+//        longitude = -117.2;
     }
 
     private boolean hasPermissions() {
