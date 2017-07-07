@@ -5,16 +5,17 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,7 +25,7 @@ import java.util.Calendar;
  * A simple {@link Fragment} subclass.
  */
 public class PageFragment extends Fragment {
-
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
     TextView dateTextView;
     TextView dawnTimeTextView;
     TextView middayTimeTextView;
@@ -55,6 +56,9 @@ public class PageFragment extends Fragment {
     int dstOffset = nextDay.get(Calendar.DST_OFFSET)/3600000;
     int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET)/3600000 + dstOffset;
     ArrayList<String> nextDayTimes = new ArrayList<>();
+
+    String locationProvider;
+    LocationManager locationManager;
 
     public PageFragment() {
         // Required empty public constructor
@@ -100,23 +104,13 @@ public class PageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         dateTextView = (TextView) view.findViewById(R.id.dayTextView);
 
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return view;
-//        }
-        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-//        latitude = lastKnownLocation.getLatitude();
-//        longitude = lastKnownLocation.getLongitude();
-        latitude = 32.8;
-        longitude = -117.2;
+        if (hasPermissions()) {
+            getLocation();
+        } else {
+            requestPerms();
+        }
+
+        getLocation();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
@@ -136,6 +130,59 @@ public class PageFragment extends Fragment {
         formatDate(bundle);
         formatPrayers(bundle);
         return view;
+    }
+
+    private void requestPerms() {
+        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+        }
+    }
+
+    private void getLocation() {
+        locationProvider = LocationManager.NETWORK_PROVIDER;
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+//        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+//        latitude = lastKnownLocation.getLatitude();
+//        longitude = lastKnownLocation.getLongitude();
+        latitude = 32.8;
+        longitude = -117.2;
+    }
+
+    private boolean hasPermissions() {
+        int res = 0;
+        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        for (String perms : permissions) {
+            res = getActivity().checkCallingOrSelfPermission(perms);
+            if (!(res == PackageManager.PERMISSION_GRANTED)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        boolean allowed = true;
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_FINE_LOCATION:
+                for (int res : grantResults) {
+                    allowed = allowed && (res == PackageManager.PERMISSION_GRANTED);
+                }
+                break;
+            default:
+                allowed = false;
+                break;
+        }
+        if (allowed) {
+            getLocation();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Toast.makeText(getActivity(), "Location permissions denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     private void formatPrayers(Bundle bundle) {
