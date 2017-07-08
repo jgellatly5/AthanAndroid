@@ -1,4 +1,4 @@
-package com.excursion.athanhelper;
+package com.gallopdevs.athanhelper;
 
 import org.junit.Test;
 

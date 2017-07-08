@@ -1,4 +1,4 @@
-package com.excursion.athanhelper;
+package com.gallopdevs.athanhelper;
 
 
 import android.app.Activity;

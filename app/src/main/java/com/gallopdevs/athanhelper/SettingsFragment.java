@@ -1,4 +1,4 @@
-package com.excursion.athanhelper;
+package com.gallopdevs.athanhelper;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

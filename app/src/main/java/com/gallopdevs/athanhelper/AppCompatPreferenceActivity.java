@@ -1,4 +1,4 @@
-package com.excursion.athanhelper;
+package com.gallopdevs.athanhelper;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

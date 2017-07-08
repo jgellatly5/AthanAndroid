@@ -1,4 +1,4 @@
-package com.excursion.athanhelper;
+package com.gallopdevs.athanhelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;

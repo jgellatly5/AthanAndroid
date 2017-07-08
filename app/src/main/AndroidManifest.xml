@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.excursion.athanhelper">
+          package="com.gallopdevs.athanhelper">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name="com.gallopdevs.athanhelper.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -20,14 +20,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.gallopdevs.athanhelper.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.gallopdevs.athanhelper.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsTheme">>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.excursion.athanhelper.MainActivity"/>
+                android:value="com.gallopdevs.athanhelper.MainActivity"/>
         </activity>
     </application>
 
