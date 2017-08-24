@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,6 +143,10 @@ public class PageFragment extends Fragment {
         locationProvider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPerms();
+            return;
+        }
         Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
         if (lastKnownLocation != null) {
             latitude = lastKnownLocation.getLatitude();
@@ -204,13 +209,13 @@ public class PageFragment extends Fragment {
     }
 
     private void updateView() {
-        String newDawmTime = nextDayTimes.get(1).replaceFirst("^0+(?!$)", "");
+        String newDawmTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
         String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
         String newAfternoonTime = nextDayTimes.get(3).replaceFirst("^0+(?!$)", "");
         String newSunsetTime = nextDayTimes.get(5).replaceFirst("^0+(?!$)", "");
         String newNightTime = nextDayTimes.get(6).replaceFirst("^0+(?!$)", "");
         if (timeFormat == 0) {
-            dawnTimeTextView.setText(nextDayTimes.get(1));
+            dawnTimeTextView.setText(nextDayTimes.get(0));
             middayTimeTextView.setText(nextDayTimes.get(2));
             afternoonTimeTextView.setText(nextDayTimes.get(3));
             sunsetTimeTextView.setText(nextDayTimes.get(5));

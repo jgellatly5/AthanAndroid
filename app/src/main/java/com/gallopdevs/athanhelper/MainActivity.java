@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -81,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
     int month = c.get(Calendar.MONTH);
     int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
     int year = c.get(Calendar.YEAR);
-    int dstOffset = c.get(Calendar.DST_OFFSET)/3600000;
-    int timeZoneOffset = c.get(Calendar.ZONE_OFFSET)/3600000 + dstOffset;
+    int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
+    int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
 
     String locationProvider;
     LocationManager locationManager;
@@ -159,6 +160,10 @@ public class MainActivity extends AppCompatActivity {
         locationProvider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPerms();
+            return;
+        }
         Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
         if (lastKnownLocation != null) {
             latitude = lastKnownLocation.getLatitude();
@@ -237,12 +242,12 @@ public class MainActivity extends AppCompatActivity {
         Date currentTimeDate = null;
 
         // format times received from PrayTime model
-        dawnTime = newTimes.get(1)+ ":00";
+        dawnTime = newTimes.get(0)+ ":00";
         middayTime = newTimes.get(2) + ":00";
         afternoonTime = newTimes.get(3) + ":00";
         sunsetTime = newTimes.get(4) + ":00";
         nightTime = newTimes.get(6) + ":00";
-        nextDawnTime = nextDayTimes.get(1) + ":00";
+        nextDawnTime = nextDayTimes.get(0) + ":00";
         try {
             // get milliseconds from parsing dates
             dawnDate = simpleDateFormat.parse(dawnTime);
