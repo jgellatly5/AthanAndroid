@@ -10,9 +10,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary"
         android:elevation="4dp"
+        android:gravity="center_vertical"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
@@ -30,30 +34,29 @@
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginLeft="27dp"
-        android:layout_marginStart="27dp"
-        android:contentDescription="crescent"
-        android:src="@drawable/crescent"
-        tools:ignore="HardcodedText"
-        android:layout_below="@+id/my_toolbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="21dp"/>
+        android:layout_below="@+id/my_toolbar"
+        android:layout_marginTop="21dp"
+        android:contentDescription="moon"
+        android:src="@drawable/moon"
+        app:srcCompat="@drawable/moon"
+        tools:ignore="HardcodedText"/>
 
     <TextView
         android:id="@+id/prayerTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="27dp"
-        android:layout_marginRight="27dp"
         android:text="00:12:40s"
         android:textColor="@android:color/background_dark"
         android:textSize="40sp"
         tools:ignore="HardcodedText"
-        android:layout_marginBottom="46dp"
+        android:layout_marginBottom="48dp"
         android:layout_above="@+id/viewPager"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="26dp"
+        android:layout_marginEnd="26dp"/>
 
     <TextView
         android:id="@+id/nextPrayer"
@@ -63,8 +66,7 @@
         android:text="Next Prayer"
         android:textAllCaps="true"
         android:textSize="18sp"
-        android:layout_alignBottom="@+id/prayerTimer"
+        android:layout_above="@+id/prayerTimer"
         android:layout_alignLeft="@+id/prayerTimer"
-        android:layout_alignStart="@+id/prayerTimer"
-        android:layout_marginBottom="39dp"/>
+        android:layout_alignStart="@+id/prayerTimer"/>
 </RelativeLayout>

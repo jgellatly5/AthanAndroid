@@ -71,7 +71,7 @@ public class PrayTime {
     // Time Names
     private ArrayList<String> timeNames;
     private String InvalidTime; // The string used for invalid times
-    // --------------------- Technical Settings --------------------
+    // --------------------- Technical settings_button --------------------
     private int numIterations; // number of iterations needed to compute times
     // ------------------- Calc Method Parameters --------------------
     private HashMap<Integer, double[]> methodParams;
@@ -134,7 +134,7 @@ public class PrayTime {
 
         InvalidTime = "-----"; // The string used for invalid times
 
-        // --------------------- Technical Settings --------------------
+        // --------------------- Technical settings_button --------------------
 
         this.setNumIterations(1); // number of iterations needed to compute
         // times
