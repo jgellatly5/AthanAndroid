@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +37,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
-    ViewPager viewPager;
-    TextView prayerTimer;
+
     CountDownTimer timer;
 
     String dawnTime = "";
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     final int DEFAULT_CALC_METHOD = 2;
     final int DEFAULT_JURISTIC_METHOD = 0;
     final int DEFAULT_HIGH_LATITUDES = 0;
-    final int DEFAULT_TIME_FORMAT = 1;
+//    final int DEFAULT_TIME_FORMAT = 1;
 
     Calendar c = Calendar.getInstance();
     int month = c.get(Calendar.MONTH);
@@ -89,7 +92,18 @@ public class MainActivity extends AppCompatActivity {
     int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
     int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
 
-    private FusedLocationProviderClient mFusedLocationCient;
+    @BindView(R.id.my_toolbar)
+    Toolbar myToolbar;
+    @BindView(R.id.viewPager)
+    ViewPager viewPager;
+    @BindView(R.id.imageView)
+    ImageView imageView;
+    @BindView(R.id.prayerTimer)
+    TextView prayerTimer;
+    @BindView(R.id.nextPrayer)
+    TextView nextPrayer;
+
+    private FusedLocationProviderClient mFusedLocationClient;
 
     Calendar nextDay = Calendar.getInstance();
 
@@ -126,24 +140,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(myToolbar);
 
-        mFusedLocationCient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         // set default settings
-        calcMethod = DEFAULT_CALC_METHOD;
-        juristicMethod = DEFAULT_JURISTIC_METHOD;
-        highLatitudes = DEFAULT_HIGH_LATITUDES;
-        timeFormat = DEFAULT_TIME_FORMAT;
-
         prayerTime = new PrayTime();
-        prayerTime.setCalcMethod(calcMethod);
-        prayerTime.setAsrJuristic(juristicMethod);
-        prayerTime.setAdjustHighLats(highLatitudes);
+        prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
+        prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
+        prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
 
         if (hasPermissions()) {
             getLocation();
@@ -166,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             requestPerms();
             return;
         }
-        mFusedLocationCient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
@@ -243,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
         Date currentTimeDate = null;
 
         // format times received from PrayTime model
-        dawnTime = newTimes.get(0)+ ":00";
+        dawnTime = newTimes.get(0) + ":00";
         middayTime = newTimes.get(2) + ":00";
         afternoonTime = newTimes.get(3) + ":00";
         sunsetTime = newTimes.get(4) + ":00";
@@ -310,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 Date newDateTimer = new Date();
                 newDateTimer.setTime(millisUntilFinished);
-                prayerTimer = (TextView) findViewById(R.id.prayerTimer);
                 prayerTimer.setText(offset.format(newDateTimer) + "s");
             }
 
@@ -331,8 +340,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getNextTime() {
-        for(int i = 0; i < differences.length; i++) {
-            if(differences[i] < 0) {
+        for (int i = 0; i < differences.length; i++) {
+            if (differences[i] < 0) {
                 currentTimeIndex = i + 1;
                 if (currentTimeIndex > 5) {
                     currentTimeIndex = 0;
@@ -343,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSwipe() {
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
         SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
         viewPager.setAdapter(swipeAdapter);
     }
@@ -357,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
