@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper;
+package com.gallopdevs.athanhelper.settings;
 
 
 import android.app.Activity;

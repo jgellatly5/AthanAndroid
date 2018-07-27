@@ -1,7 +1,9 @@
-package com.gallopdevs.athanhelper;
+package com.gallopdevs.athanhelper.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import com.gallopdevs.athanhelper.R;
 
 public class SettingsFragment extends PreferenceFragment {
 

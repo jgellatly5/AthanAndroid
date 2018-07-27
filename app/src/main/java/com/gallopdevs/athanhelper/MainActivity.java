@@ -2,12 +2,10 @@ package com.gallopdevs.athanhelper;
 
 import android.Manifest;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -23,6 +21,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.gallopdevs.athanhelper.model.PrayTime;
+import com.gallopdevs.athanhelper.settings.SettingsActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
     int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
     int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
 
-    String locationProvider;
-    LocationManager locationManager;
+    private FusedLocationProviderClient mFusedLocationCient;
 
     Calendar nextDay = Calendar.getInstance();
 
@@ -126,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
+        mFusedLocationCient = LocationServices.getFusedLocationProviderClient(this);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
@@ -157,23 +162,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getLocation() {
-        locationProvider = LocationManager.NETWORK_PROVIDER;
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPerms();
             return;
         }
-        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-        if (lastKnownLocation != null) {
-            latitude = lastKnownLocation.getLatitude();
-            longitude = lastKnownLocation.getLongitude();
-        } else {
-            locationProvider = LocationManager.GPS_PROVIDER;
-            lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-            latitude = lastKnownLocation.getLatitude();
-            longitude = lastKnownLocation.getLongitude();
-        }
+        mFusedLocationCient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
+            }
+        });
     }
 
     private void requestPerms() {

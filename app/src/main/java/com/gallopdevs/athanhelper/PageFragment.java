@@ -19,6 +19,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gallopdevs.athanhelper.model.PrayTime;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -59,8 +64,7 @@ public class PageFragment extends Fragment {
     int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
     ArrayList<String> nextDayTimes = new ArrayList<>();
 
-    String locationProvider;
-    LocationManager locationManager;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public PageFragment() {
         // Required empty public constructor
@@ -106,6 +110,8 @@ public class PageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         dateTextView = (TextView) view.findViewById(R.id.dayTextView);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
         if (hasPermissions()) {
             getLocation();
         } else {
@@ -140,23 +146,19 @@ public class PageFragment extends Fragment {
     }
 
     private void getLocation() {
-        locationProvider = LocationManager.NETWORK_PROVIDER;
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPerms();
             return;
         }
-        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-        if (lastKnownLocation != null) {
-            latitude = lastKnownLocation.getLatitude();
-            longitude = lastKnownLocation.getLongitude();
-        } else {
-            locationProvider = LocationManager.GPS_PROVIDER;
-            lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-            latitude = lastKnownLocation.getLatitude();
-            longitude = lastKnownLocation.getLongitude();
-        }
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
+            }
+        });
     }
 
     private boolean hasPermissions() {

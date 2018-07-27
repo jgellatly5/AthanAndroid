@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.gallopdevs.athanhelper.SettingsActivity"
+            android:name="com.gallopdevs.athanhelper.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName="com.gallopdevs.athanhelper.MainActivity"
             android:screenOrientation="portrait"
