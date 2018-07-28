@@ -2,11 +2,9 @@ package com.gallopdevs.athanhelper;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,18 +26,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PageFragment extends Fragment {
+
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
-    TextView dateTextView;
-    TextView dawnTimeTextView;
-    TextView middayTimeTextView;
-    TextView afternoonTimeTextView;
-    TextView sunsetTimeTextView;
-    TextView nightTimeTextView;
     PrayTime prayerTime = new PrayTime();
 
     final int DEFAULT_CALC_METHOD = 2;
@@ -63,6 +61,32 @@ public class PageFragment extends Fragment {
     int dstOffset = nextDay.get(Calendar.DST_OFFSET) / 3600000;
     int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
     ArrayList<String> nextDayTimes = new ArrayList<>();
+
+    @BindView(R.id.dawnTextView)
+    TextView dawnTextView;
+    @BindView(R.id.dawnTimeTextView)
+    TextView dawnTimeTextView;
+    @BindView(R.id.middayTextView)
+    TextView middayTextView;
+    @BindView(R.id.middayTimeTextView)
+    TextView middayTimeTextView;
+    @BindView(R.id.afternoonTextView)
+    TextView afternoonTextView;
+    @BindView(R.id.afternoonTimeTextView)
+    TextView afternoonTimeTextView;
+    @BindView(R.id.sunsetTextView)
+    TextView sunsetTextView;
+    @BindView(R.id.sunsetTimeTextView)
+    TextView sunsetTimeTextView;
+    @BindView(R.id.nightTextView)
+    TextView nightTextView;
+    @BindView(R.id.nightTimeTextView)
+    TextView nightTimeTextView;
+    @BindView(R.id.gridLayout)
+    GridLayout gridLayout;
+    @BindView(R.id.dayTextView)
+    TextView dayTextView;
+    Unbinder unbinder;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -108,7 +132,7 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
-        dateTextView = (TextView) view.findViewById(R.id.dayTextView);
+        unbinder = ButterKnife.bind(this, view);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
@@ -126,15 +150,10 @@ public class PageFragment extends Fragment {
         prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
         prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
 
-        dawnTimeTextView = (TextView) view.findViewById(R.id.dawnTimeTextView);
-        middayTimeTextView = (TextView) view.findViewById(R.id.middayTimeTextView);
-        afternoonTimeTextView = (TextView) view.findViewById(R.id.afternoonTimeTextView);
-        sunsetTimeTextView = (TextView) view.findViewById(R.id.sunsetTimeTextView);
-        nightTimeTextView = (TextView) view.findViewById(R.id.nightTimeTextView);
-
         Bundle bundle = getArguments();
         formatDate(bundle);
         formatPrayers(bundle);
+
         return view;
     }
 
@@ -244,7 +263,8 @@ public class PageFragment extends Fragment {
 
         String numberString = String.valueOf(numberDay);
 
-        String monthString = "";
+        String monthString;
+
         if (monthDay < 10) {
             monthString = "0" + String.valueOf(monthDay);
         } else {
@@ -254,29 +274,45 @@ public class PageFragment extends Fragment {
         if (weekDay >= 8) {
             weekDay = weekDay - 7;
         }
-        String weekDayString = "";
+
+        String weekDayString;
+
         switch (weekDay) {
-            case 1: weekDayString = "Sunday";
-                    break;
-            case 2: weekDayString = "Monday";
-                    break;
-            case 3: weekDayString = "Tuesday";
-                    break;
-            case 4: weekDayString = "Wednesday";
-                    break;
-            case 5: weekDayString = "Thursday";
-                    break;
-            case 6: weekDayString = "Friday";
-                    break;
-            case 7: weekDayString = "Saturday";
-                    break;
-            default: weekDayString = "This is not a day";
+            case 1:
+                weekDayString = "Sunday";
+                break;
+            case 2:
+                weekDayString = "Monday";
+                break;
+            case 3:
+                weekDayString = "Tuesday";
+                break;
+            case 4:
+                weekDayString = "Wednesday";
+                break;
+            case 5:
+                weekDayString = "Thursday";
+                break;
+            case 6:
+                weekDayString = "Friday";
+                break;
+            case 7:
+                weekDayString = "Saturday";
+                break;
+            default:
+                weekDayString = "This is not a day";
                 break;
         }
         if (numberDay < 10) {
-            dateTextView.setText(weekDayString + " " + monthString + "/0" + numberString);
+            dayTextView.setText(weekDayString + " " + monthString + "/0" + numberString);
         } else {
-            dateTextView.setText(weekDayString + " " + monthString + "/" + numberString);
+            dayTextView.setText(weekDayString + " " + monthString + "/" + numberString);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
