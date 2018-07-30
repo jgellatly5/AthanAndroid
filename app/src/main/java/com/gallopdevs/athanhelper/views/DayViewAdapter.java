@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper;
+package com.gallopdevs.athanhelper.views;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,15 +11,15 @@ import java.util.Calendar;
  * Created by jgell on 5/23/2017.
  */
 
-public class SwipeAdapter extends FragmentPagerAdapter {
+public class DayViewAdapter extends FragmentPagerAdapter {
 
-    public SwipeAdapter(FragmentManager fm) {
+    public DayViewAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int i) {
-        Fragment fragment = new PageFragment();
+        Fragment fragment = new DayViewFragment();
         Bundle bundle = new Bundle();
 
         Calendar cal = Calendar.getInstance();

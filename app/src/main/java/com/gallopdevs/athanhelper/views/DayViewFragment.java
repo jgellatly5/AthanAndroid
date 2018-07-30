@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper;
+package com.gallopdevs.athanhelper.views;
 
 
 import android.Manifest;
@@ -18,6 +18,7 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.model.PrayTime;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -34,7 +35,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PageFragment extends Fragment {
+public class DayViewFragment extends Fragment {
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
     PrayTime prayerTime = new PrayTime();
@@ -90,7 +91,7 @@ public class PageFragment extends Fragment {
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    public PageFragment() {
+    public DayViewFragment() {
         // Required empty public constructor
     }
 

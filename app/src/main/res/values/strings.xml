@@ -3,9 +3,10 @@
 
     <string name="title_activity_settings">Settings</string>
 
+    <string name="key_pref_calc_method">calculation_method</string>
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
-    <string name="key_pref_calc_method">calculation_method</string>
 
     <!--Calculation Methods-->
     <string-array name="pref_calc_methods">

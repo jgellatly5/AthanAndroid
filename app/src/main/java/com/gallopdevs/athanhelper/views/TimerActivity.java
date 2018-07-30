@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper;
+package com.gallopdevs.athanhelper.views;
 
 import android.Manifest;
 import android.app.NotificationManager;
@@ -23,8 +23,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.model.PrayTime;
 import com.gallopdevs.athanhelper.settings.SettingsActivity;
+import com.gallopdevs.athanhelper.settings.SharedPrefsUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,22 +42,20 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class TimerActivity extends AppCompatActivity {
+
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
 
-    CountDownTimer timer;
+    private static final String KEY_PREF_CALC_METHOD = "calculation_method";
+    private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
+    private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
 
-    String dawnTime = "";
-    String middayTime = "";
-    String afternoonTime = "";
-    String sunsetTime = "";
-    String nightTime = "";
-    String nextDawnTime = "";
+    private CountDownTimer timer;
 
-    int currentTimeIndex = 0;
+    private int currentTimeIndex = 0;
 
-    ArrayList<String> newTimes = new ArrayList<>();
-    ArrayList<String> nextDayTimes = new ArrayList<>();
+    private ArrayList<String> newTimes = new ArrayList<>();
+    private ArrayList<String> nextDayTimes = new ArrayList<>();
 
     long difference1 = 0;
     long difference2 = 0;
@@ -65,25 +65,12 @@ public class MainActivity extends AppCompatActivity {
     long difference6 = 0;
     long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
 
-    double latitude;
-    double longitude;
-
-    int calcMethod = 0;
-    int juristicMethod = 0;
-    int highLatitudes = 0;
-    int timeFormat = 0;
-
-    SimpleDateFormat offset;
-    PrayTime prayerTime;
-
-    final String KEY_PREF_CALC_METHOD = "calculation_method";
-    final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-    final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
+    private SimpleDateFormat offset;
+    private PrayTime prayerTime;
 
     final int DEFAULT_CALC_METHOD = 2;
     final int DEFAULT_JURISTIC_METHOD = 0;
     final int DEFAULT_HIGH_LATITUDES = 0;
-//    final int DEFAULT_TIME_FORMAT = 1;
 
     Calendar c = Calendar.getInstance();
     int month = c.get(Calendar.MONTH);
@@ -96,61 +83,57 @@ public class MainActivity extends AppCompatActivity {
     Toolbar myToolbar;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
-    @BindView(R.id.imageView)
-    ImageView imageView;
     @BindView(R.id.prayerTimer)
     TextView prayerTimer;
-    @BindView(R.id.nextPrayer)
-    TextView nextPrayer;
 
     private FusedLocationProviderClient mFusedLocationClient;
+    private double latitude;
+    private double longitude;
 
     Calendar nextDay = Calendar.getInstance();
 
     SharedPreferences sharedPreferences;
-    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            switch (key) {
-                case KEY_PREF_CALC_METHOD:
-                    String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-                    calcMethod = Integer.parseInt(calcMethodString);
-                    prayerTime.setCalcMethod(calcMethod);
-                    searchPrayerTimes();
-                    break;
-                case KEY_PREF_JURISTIC_METHOD:
-                    String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-                    juristicMethod = Integer.parseInt(juristicMethodString);
-                    prayerTime.setAsrJuristic(juristicMethod);
-                    searchPrayerTimes();
-                    break;
-                case KEY_PREF_HIGH_LATITUDES:
-                    String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-                    highLatitudes = Integer.parseInt(highLatitudesString);
-                    prayerTime.setAdjustHighLats(highLatitudes);
-                    searchPrayerTimes();
-                    break;
-            }
-            timer.cancel();
-            startNewTimer();
-        }
-    };
+//    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+//        @Override
+//        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//            switch (key) {
+//                case KEY_PREF_CALC_METHOD:
+//                    String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
+//                    prayerTime.setCalcMethod(Integer.parseInt(calcMethod));
+//                    searchPrayerTimes();
+//                    break;
+//                case KEY_PREF_JURISTIC_METHOD:
+//                    String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
+//                    prayerTime.setAsrJuristic(Integer.parseInt(juristicMethod));
+//                    searchPrayerTimes();
+//                    break;
+//                case KEY_PREF_HIGH_LATITUDES:
+//                    String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
+//                    prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudes));
+//                    searchPrayerTimes();
+//                    break;
+//            }
+//            timer.cancel();
+//            startNewTimer();
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
 
         setSupportActionBar(myToolbar);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        SharedPreferences.OnSharedPreferenceChangeListener listener = SharedPrefsUtil.getSharedPrefsInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         // set default settings
-        prayerTime = new PrayTime();
+        prayerTime = SharedPrefsUtil.getPrayerTime();
         prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
         prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
         prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
@@ -160,6 +143,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             requestPerms();
         }
+
+        searchPrayerTimes();
+        timer.cancel();
+        startNewTimer();
     }
 
     @Override
@@ -195,10 +182,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean hasPermissions() {
-        int res = 0;
         String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         for (String perms : permissions) {
-            res = checkCallingOrSelfPermission(perms);
+            int res = checkCallingOrSelfPermission(perms);
             if (!(res == PackageManager.PERMISSION_GRANTED)) {
                 return false;
             }
@@ -243,44 +229,35 @@ public class MainActivity extends AppCompatActivity {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
         final String currentTime = simpleDateFormat.format(cal.getTime());
 
-        // instantiate dates
-        Date dawnDate = null;
-        Date middayDate = null;
-        Date afternoonDate = null;
-        Date sunsetDate = null;
-        Date nightDate = null;
-        Date nextDawnDate = null;
-        Date currentTimeDate = null;
-
         // format times received from PrayTime model
-        dawnTime = newTimes.get(0) + ":00";
-        middayTime = newTimes.get(2) + ":00";
-        afternoonTime = newTimes.get(3) + ":00";
-        sunsetTime = newTimes.get(4) + ":00";
-        nightTime = newTimes.get(6) + ":00";
-        nextDawnTime = nextDayTimes.get(0) + ":00";
+        String dawnTime = newTimes.get(0) + ":00";
+        String middayTime = newTimes.get(2) + ":00";
+        String afternoonTime = newTimes.get(3) + ":00";
+        String sunsetTime = newTimes.get(4) + ":00";
+        String nightTime = newTimes.get(6) + ":00";
+        String nextDawnTime = nextDayTimes.get(0) + ":00";
         try {
             // get milliseconds from parsing dates
-            dawnDate = simpleDateFormat.parse(dawnTime);
+            Date dawnDate = simpleDateFormat.parse(dawnTime);
             long dawnMillis = dawnDate.getTime();
 
-            middayDate = simpleDateFormat.parse(middayTime);
+            Date middayDate = simpleDateFormat.parse(middayTime);
             long middayMillis = middayDate.getTime();
 
-            afternoonDate = simpleDateFormat.parse(afternoonTime);
+            Date afternoonDate = simpleDateFormat.parse(afternoonTime);
             long afMillis = afternoonDate.getTime();
 
-            sunsetDate = simpleDateFormat.parse(sunsetTime);
+            Date sunsetDate = simpleDateFormat.parse(sunsetTime);
             long sunsetMillis = sunsetDate.getTime();
 
-            nightDate = simpleDateFormat.parse(nightTime);
+            Date nightDate = simpleDateFormat.parse(nightTime);
             long nightMillis = nightDate.getTime();
 
-            nextDawnDate = simpleDateFormat.parse(nextDawnTime);
+            Date nextDawnDate = simpleDateFormat.parse(nextDawnTime);
             long nextDawnMillis = nextDawnDate.getTime();
 
             //get milliseconds from parsing currentTime
-            currentTimeDate = simpleDateFormat.parse(currentTime);
+            Date currentTimeDate = simpleDateFormat.parse(currentTime);
             long currentTimeMilliSeconds = currentTimeDate.getTime();
 
             //get intervals between times
@@ -352,8 +329,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSwipe() {
-        SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(swipeAdapter);
+        DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(dayViewAdapter);
     }
 
     @Override
