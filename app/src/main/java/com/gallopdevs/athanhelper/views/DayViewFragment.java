@@ -102,29 +102,22 @@ public class DayViewFragment extends Fragment {
             switch (key) {
                 case KEY_PREF_CALC_METHOD:
                     String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-                    calcMethod = Integer.parseInt(calcMethodString);
-                    prayerTime.setCalcMethod(calcMethod);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
+                    prayerTime.setCalcMethod(Integer.parseInt(calcMethodString));
                     break;
                 case KEY_PREF_JURISTIC_METHOD:
                     String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-                    juristicMethod = Integer.parseInt(juristicMethodString);
-                    prayerTime.setAsrJuristic(juristicMethod);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
+                    prayerTime.setAsrJuristic(Integer.parseInt(juristicMethodString));
                     break;
                 case KEY_PREF_HIGH_LATITUDES:
                     String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-                    highLatitudes = Integer.parseInt(highLatitudesString);
-                    prayerTime.setAdjustHighLats(highLatitudes);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
+                    prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudesString));
                     break;
                 case KEY_PREF_TIME_FORMATS:
                     String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
-                    timeFormat = Integer.parseInt(timeFormatsString);
-                    prayerTime.setTimeFormat(timeFormat);
-                    nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
+                    prayerTime.setTimeFormat(Integer.parseInt(timeFormatsString));
                     break;
             }
+            nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
             updateView();
         }
     };

@@ -15,21 +15,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.model.PrayTime;
 import com.gallopdevs.athanhelper.settings.SettingsActivity;
-import com.gallopdevs.athanhelper.settings.SharedPrefsUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,9 +40,14 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TimerActivity extends AppCompatActivity {
+public class TimerActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static final String TAG = "TimerActivity";
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
+    private static final int DEFAULT_CALC_METHOD = 2;
+    private static final int DEFAULT_JURISTIC_METHOD = 0;
+    private static final int DEFAULT_HIGH_LATITUDES = 0;
 
     private static final String KEY_PREF_CALC_METHOD = "calculation_method";
     private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
@@ -57,87 +60,38 @@ public class TimerActivity extends AppCompatActivity {
     private ArrayList<String> newTimes = new ArrayList<>();
     private ArrayList<String> nextDayTimes = new ArrayList<>();
 
-    long difference1 = 0;
-    long difference2 = 0;
-    long difference3 = 0;
-    long difference4 = 0;
-    long difference5 = 0;
-    long difference6 = 0;
-    long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
+    private long difference1 = 0;
+    private long difference2 = 0;
+    private long difference3 = 0;
+    private long difference4 = 0;
+    private long difference5 = 0;
+    private long difference6 = 0;
+    private long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
 
     private SimpleDateFormat offset;
     private PrayTime prayerTime;
 
-    final int DEFAULT_CALC_METHOD = 2;
-    final int DEFAULT_JURISTIC_METHOD = 0;
-    final int DEFAULT_HIGH_LATITUDES = 0;
+    private Calendar nextDay = Calendar.getInstance();
 
-    Calendar c = Calendar.getInstance();
-    int month = c.get(Calendar.MONTH);
-    int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-    int year = c.get(Calendar.YEAR);
-    int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
-    int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
-
-    @BindView(R.id.my_toolbar)
-    Toolbar myToolbar;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
     @BindView(R.id.prayerTimer)
     TextView prayerTimer;
+    @BindView(R.id.bottom_nav)
+    BottomNavigationViewEx bottomNav;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private double latitude;
     private double longitude;
-
-    Calendar nextDay = Calendar.getInstance();
-
-    SharedPreferences sharedPreferences;
-//    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-//        @Override
-//        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//            switch (key) {
-//                case KEY_PREF_CALC_METHOD:
-//                    String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-//                    prayerTime.setCalcMethod(Integer.parseInt(calcMethod));
-//                    searchPrayerTimes();
-//                    break;
-//                case KEY_PREF_JURISTIC_METHOD:
-//                    String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-//                    prayerTime.setAsrJuristic(Integer.parseInt(juristicMethod));
-//                    searchPrayerTimes();
-//                    break;
-//                case KEY_PREF_HIGH_LATITUDES:
-//                    String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-//                    prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudes));
-//                    searchPrayerTimes();
-//                    break;
-//            }
-//            timer.cancel();
-//            startNewTimer();
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
+        init();
 
-        setSupportActionBar(myToolbar);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        SharedPreferences.OnSharedPreferenceChangeListener listener = SharedPrefsUtil.getSharedPrefsInstance();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
-
-        // set default settings
-        prayerTime = SharedPrefsUtil.getPrayerTime();
-        prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
-        prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
-        prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
-
+        // ask for permissions
         if (hasPermissions()) {
             getLocation();
         } else {
@@ -145,17 +99,31 @@ public class TimerActivity extends AppCompatActivity {
         }
 
         searchPrayerTimes();
-        timer.cancel();
         startNewTimer();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        searchPrayerTimes();
-        getActionBar();
-        setupSwipe();
-        startNewTimer();
+    private void init() {
+        // bottom nav init
+        bottomNav.enableAnimation(false);
+        bottomNav.enableShiftingMode(false);
+        bottomNav.enableItemShiftingMode(false);
+
+        // location listener
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // settings listener
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        // set default settings
+        prayerTime = new PrayTime();
+        prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
+        prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
+        prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
+
+        // init swipeAdapter
+        DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(dayViewAdapter);
     }
 
     private void getLocation() {
@@ -218,6 +186,12 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void searchPrayerTimes() {
+        Calendar c = Calendar.getInstance();
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
+        int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
+        int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
         newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, timeZoneOffset);
         nextDay.set(year, month, dayOfMonth + 1);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
@@ -328,11 +302,6 @@ public class TimerActivity extends AppCompatActivity {
         return currentTimeIndex;
     }
 
-    private void setupSwipe() {
-        DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(dayViewAdapter);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -350,5 +319,26 @@ public class TimerActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case KEY_PREF_CALC_METHOD:
+                String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
+                prayerTime.setCalcMethod(Integer.parseInt(calcMethod));
+                break;
+            case KEY_PREF_JURISTIC_METHOD:
+                String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
+                prayerTime.setAsrJuristic(Integer.parseInt(juristicMethod));
+                break;
+            case KEY_PREF_HIGH_LATITUDES:
+                String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
+                prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudes));
+                break;
+        }
+        searchPrayerTimes();
+        timer.cancel();
+        startNewTimer();
     }
 }
