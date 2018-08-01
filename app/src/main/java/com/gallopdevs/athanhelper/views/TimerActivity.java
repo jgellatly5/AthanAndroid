@@ -42,7 +42,12 @@ import butterknife.ButterKnife;
 
 public class TimerActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final String TAG = "TimerActivity";
+
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
+    private static final int DEFAULT_CALC_METHOD = 2;
+    private static final int DEFAULT_JURISTIC_METHOD = 0;
+    private static final int DEFAULT_HIGH_LATITUDES = 0;
 
     private static final String KEY_PREF_CALC_METHOD = "calculation_method";
     private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
@@ -55,27 +60,18 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     private ArrayList<String> newTimes = new ArrayList<>();
     private ArrayList<String> nextDayTimes = new ArrayList<>();
 
-    long difference1 = 0;
-    long difference2 = 0;
-    long difference3 = 0;
-    long difference4 = 0;
-    long difference5 = 0;
-    long difference6 = 0;
-    long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
+    private long difference1 = 0;
+    private long difference2 = 0;
+    private long difference3 = 0;
+    private long difference4 = 0;
+    private long difference5 = 0;
+    private long difference6 = 0;
+    private long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
 
     private SimpleDateFormat offset;
     private PrayTime prayerTime;
 
-    final int DEFAULT_CALC_METHOD = 2;
-    final int DEFAULT_JURISTIC_METHOD = 0;
-    final int DEFAULT_HIGH_LATITUDES = 0;
-
-    Calendar c = Calendar.getInstance();
-    int month = c.get(Calendar.MONTH);
-    int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-    int year = c.get(Calendar.YEAR);
-    int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
-    int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
+    private Calendar nextDay = Calendar.getInstance();
 
     @BindView(R.id.viewPager)
     ViewPager viewPager;
@@ -88,23 +84,35 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     private double latitude;
     private double longitude;
 
-    private Calendar nextDay = Calendar.getInstance();
-
-    private SharedPreferences sharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
+        init();
 
+        // ask for permissions
+        if (hasPermissions()) {
+            getLocation();
+        } else {
+            requestPerms();
+        }
+
+        searchPrayerTimes();
+        startNewTimer();
+    }
+
+    private void init() {
+        // bottom nav init
         bottomNav.enableAnimation(false);
         bottomNav.enableShiftingMode(false);
         bottomNav.enableItemShiftingMode(false);
 
+        // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // settings listener
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // set default settings
@@ -113,19 +121,9 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
         prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
         prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
 
-        if (hasPermissions()) {
-            getLocation();
-        } else {
-            requestPerms();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        searchPrayerTimes();
-        setupSwipe();
-        startNewTimer();
+        // init swipeAdapter
+        DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(dayViewAdapter);
     }
 
     private void getLocation() {
@@ -188,6 +186,12 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     }
 
     private void searchPrayerTimes() {
+        Calendar c = Calendar.getInstance();
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
+        int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
+        int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
         newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, timeZoneOffset);
         nextDay.set(year, month, dayOfMonth + 1);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
@@ -296,11 +300,6 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
             }
         }
         return currentTimeIndex;
-    }
-
-    private void setupSwipe() {
-        DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(dayViewAdapter);
     }
 
     @Override
