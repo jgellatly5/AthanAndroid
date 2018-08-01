@@ -2,6 +2,7 @@ package com.gallopdevs.athanhelper.views;
 
 import android.Manifest;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -195,7 +196,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
         nextDayTimes = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
     }
 
-    public long[] getTimerDifference() {
+    private long[] getTimerDifference() {
 
         // get currentTime and set format
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);

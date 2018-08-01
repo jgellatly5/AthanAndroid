@@ -35,33 +35,26 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DayViewFragment extends Fragment {
+public class DayViewFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
-    PrayTime prayerTime = new PrayTime();
+    private static final int DEFAULT_CALC_METHOD = 2;
+    private static final int DEFAULT_JURISTIC_METHOD = 0;
+    private static final int DEFAULT_HIGH_LATITUDES = 0;
+    private static final int DEFAULT_TIME_FORMAT = 1;
 
-    final int DEFAULT_CALC_METHOD = 2;
-    final int DEFAULT_JURISTIC_METHOD = 0;
-    final int DEFAULT_HIGH_LATITUDES = 0;
-    final int DEFAULT_TIME_FORMAT = 1;
+    private final String KEY_PREF_CALC_METHOD = "calculation_method";
+    private final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
+    private final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
+    private final String KEY_PREF_TIME_FORMATS = "time_formats";
 
-    final String KEY_PREF_CALC_METHOD = "calculation_method";
-    final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-    final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
-    final String KEY_PREF_TIME_FORMATS = "time_formats";
+    private PrayTime prayerTime = new PrayTime();
 
-    int calcMethod = 0;
-    int juristicMethod = 0;
-    int highLatitudes = 0;
-    int timeFormat = 1;
+    private Calendar nextDay = Calendar.getInstance();
+    private int dstOffset = nextDay.get(Calendar.DST_OFFSET) / 3600000;
+    private int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
 
-    double latitude;
-    double longitude;
-
-    Calendar nextDay = Calendar.getInstance();
-    int dstOffset = nextDay.get(Calendar.DST_OFFSET) / 3600000;
-    int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
-    ArrayList<String> nextDayTimes = new ArrayList<>();
+    private ArrayList<String> nextDayTimes = new ArrayList<>();
 
     @BindView(R.id.dawnTextView)
     TextView dawnTextView;
@@ -90,41 +83,15 @@ public class DayViewFragment extends Fragment {
     Unbinder unbinder;
 
     private FusedLocationProviderClient mFusedLocationClient;
+    private double latitude;
+    private double longitude;
 
     public DayViewFragment() {
         // Required empty public constructor
     }
 
-    SharedPreferences sharedPreferences;
-    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            switch (key) {
-                case KEY_PREF_CALC_METHOD:
-                    String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-                    prayerTime.setCalcMethod(Integer.parseInt(calcMethodString));
-                    break;
-                case KEY_PREF_JURISTIC_METHOD:
-                    String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-                    prayerTime.setAsrJuristic(Integer.parseInt(juristicMethodString));
-                    break;
-                case KEY_PREF_HIGH_LATITUDES:
-                    String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-                    prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudesString));
-                    break;
-                case KEY_PREF_TIME_FORMATS:
-                    String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
-                    prayerTime.setTimeFormat(Integer.parseInt(timeFormatsString));
-                    break;
-            }
-            nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
-            updateView();
-        }
-    };
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         unbinder = ButterKnife.bind(this, view);
 
@@ -136,8 +103,10 @@ public class DayViewFragment extends Fragment {
             requestPerms();
         }
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+
+        // settings listener
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
         prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
@@ -147,6 +116,7 @@ public class DayViewFragment extends Fragment {
         Bundle bundle = getArguments();
         formatDate(bundle);
         formatPrayers(bundle);
+        updateView();
 
         return view;
     }
@@ -219,24 +189,22 @@ public class DayViewFragment extends Fragment {
 
         nextDay.set(year, month, dayOfMonth + count);
         nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
-
-        updateView();
     }
 
     private void updateView() {
-        String newDawmTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
+        String newDawnTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
         String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
         String newAfternoonTime = nextDayTimes.get(3).replaceFirst("^0+(?!$)", "");
         String newSunsetTime = nextDayTimes.get(5).replaceFirst("^0+(?!$)", "");
         String newNightTime = nextDayTimes.get(6).replaceFirst("^0+(?!$)", "");
-        if (timeFormat == 0) {
+        if (prayerTime.getTimeFormat() == 0) {
             dawnTimeTextView.setText(nextDayTimes.get(0));
             middayTimeTextView.setText(nextDayTimes.get(2));
             afternoonTimeTextView.setText(nextDayTimes.get(3));
             sunsetTimeTextView.setText(nextDayTimes.get(5));
             nightTimeTextView.setText(nextDayTimes.get(6));
         } else {
-            dawnTimeTextView.setText(newDawmTime);
+            dawnTimeTextView.setText(newDawnTime);
             middayTimeTextView.setText(newMiddayTime);
             afternoonTimeTextView.setText(newAfternoonTime);
             sunsetTimeTextView.setText(newSunsetTime);
@@ -308,5 +276,29 @@ public class DayViewFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case KEY_PREF_CALC_METHOD:
+                String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
+                prayerTime.setCalcMethod(Integer.parseInt(calcMethodString));
+                break;
+            case KEY_PREF_JURISTIC_METHOD:
+                String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
+                prayerTime.setAsrJuristic(Integer.parseInt(juristicMethodString));
+                break;
+            case KEY_PREF_HIGH_LATITUDES:
+                String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
+                prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudesString));
+                break;
+            case KEY_PREF_TIME_FORMATS:
+                String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
+                prayerTime.setTimeFormat(Integer.parseInt(timeFormatsString));
+                break;
+        }
+        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
+        updateView();
     }
 }
