@@ -68,10 +68,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     private long difference6 = 0;
     private long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
 
-    private SimpleDateFormat offset;
     private PrayTime prayerTime;
-
-    private Calendar nextDay = Calendar.getInstance();
 
     @BindView(R.id.viewPager)
     ViewPager viewPager;
@@ -186,22 +183,23 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     }
 
     private void searchPrayerTimes() {
-        Calendar c = Calendar.getInstance();
-        int month = c.get(Calendar.MONTH);
-        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-        int year = c.get(Calendar.YEAR);
-        int dstOffset = c.get(Calendar.DST_OFFSET) / 3600000;
-        int timeZoneOffset = c.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
-        newTimes = prayerTime.getPrayerTimes(c, latitude, longitude, timeZoneOffset);
-        nextDay.set(year, month, dayOfMonth + 1);
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000;
+        int timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
+        newTimes = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
+
+        calendar.set(year, month, dayOfMonth + 1);
+        nextDayTimes = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
     }
 
     public long[] getTimerDifference() {
+
         // get currentTime and set format
-        Calendar cal = Calendar.getInstance();
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        final String currentTime = simpleDateFormat.format(cal.getTime());
+        final String currentTime = simpleDateFormat.format(Calendar.getInstance().getTime());
 
         // format times received from PrayTime model
         String dawnTime = newTimes.get(0) + ":00";
@@ -212,27 +210,15 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
         String nextDawnTime = nextDayTimes.get(0) + ":00";
         try {
             // get milliseconds from parsing dates
-            Date dawnDate = simpleDateFormat.parse(dawnTime);
-            long dawnMillis = dawnDate.getTime();
-
-            Date middayDate = simpleDateFormat.parse(middayTime);
-            long middayMillis = middayDate.getTime();
-
-            Date afternoonDate = simpleDateFormat.parse(afternoonTime);
-            long afMillis = afternoonDate.getTime();
-
-            Date sunsetDate = simpleDateFormat.parse(sunsetTime);
-            long sunsetMillis = sunsetDate.getTime();
-
-            Date nightDate = simpleDateFormat.parse(nightTime);
-            long nightMillis = nightDate.getTime();
-
-            Date nextDawnDate = simpleDateFormat.parse(nextDawnTime);
-            long nextDawnMillis = nextDawnDate.getTime();
+            long dawnMillis = simpleDateFormat.parse(dawnTime).getTime();
+            long middayMillis = simpleDateFormat.parse(middayTime).getTime();
+            long afMillis = simpleDateFormat.parse(afternoonTime).getTime();
+            long sunsetMillis = simpleDateFormat.parse(sunsetTime).getTime();
+            long nightMillis = simpleDateFormat.parse(nightTime).getTime();
+            long nextDawnMillis = simpleDateFormat.parse(nextDawnTime).getTime();
 
             //get milliseconds from parsing currentTime
-            Date currentTimeDate = simpleDateFormat.parse(currentTime);
-            long currentTimeMilliSeconds = currentTimeDate.getTime();
+            long currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).getTime();
 
             //get intervals between times
             difference1 = dawnMillis - currentTimeMilliSeconds;
@@ -242,10 +228,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
             difference5 = nightMillis - currentTimeMilliSeconds;
             difference6 = nextDawnMillis - currentTimeMilliSeconds + 86400000;
 
-            // format for prayerTimer
-            offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
-            offset.setTimeZone(TimeZone.getTimeZone("GMT"));
-
+            // set index of each element in differences array
             differences[0] = difference1;
             differences[1] = difference2;
             differences[2] = difference3;
@@ -266,28 +249,30 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     }
 
     private void startNewTimer() {
-        timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                Date newDateTimer = new Date();
-                newDateTimer.setTime(millisUntilFinished);
-                prayerTimer.setText(offset.format(newDateTimer) + "s");
-            }
+        if (timer != null) {
+            timer.cancel();
+        } else {
+            timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    // format for prayerTimer
+                    SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                    offset.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    Date newDateTimer = new Date();
+                    newDateTimer.setTime(millisUntilFinished);
+                    prayerTimer.setText(offset.format(newDateTimer) + "s");
+                }
 
-            @Override
-            public void onFinish() {
-                prayerTimer.setText("00:00:00s");
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext())
-                                .setSmallIcon(R.drawable.crescent)
-                                .setContentTitle("Start Prayer: " + prayerTime.getTimeNames().get(currentTimeIndex + 1))
-                                .setContentText("Beginning timer until next prayer.");
-                int mNotificationId = 001;
-                NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-                startNewTimer();
-            }
-        }.start();
+                @Override
+                public void onFinish() {
+                    prayerTimer.setText("00:00:00s");
+
+                    // TODO send notification
+
+                    startNewTimer();
+                }
+            }.start();
+        }
     }
 
     private int getNextTime() {
@@ -300,25 +285,6 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
             }
         }
         return currentTimeIndex;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -338,7 +304,6 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
                 break;
         }
         searchPrayerTimes();
-        timer.cancel();
         startNewTimer();
     }
 }
