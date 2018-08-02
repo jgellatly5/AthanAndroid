@@ -1,9 +1,12 @@
 package com.gallopdevs.athanhelper.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -13,6 +16,10 @@ import java.util.Calendar;
 
 public class DayViewAdapter extends FragmentPagerAdapter {
 
+    private static final String TAG = "DayViewAdapter";
+
+    private static final int NUM_ITEMS = 7;
+
     public DayViewAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -21,7 +28,8 @@ public class DayViewAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int i) {
         Fragment fragment = new DayViewFragment();
         Bundle bundle = new Bundle();
-        int day = Calendar.DAY_OF_WEEK;
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_WEEK);
         bundle.putInt("day", day + i);
         bundle.putInt("count", i);
         fragment.setArguments(bundle);
@@ -30,6 +38,6 @@ public class DayViewAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 7;
+        return NUM_ITEMS;
     }
 }

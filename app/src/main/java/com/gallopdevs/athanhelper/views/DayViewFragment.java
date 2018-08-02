@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.model.PrayTime;
+import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,24 +36,11 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DayViewFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class DayViewFragment extends Fragment {
 
-    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
-    private static final int DEFAULT_CALC_METHOD = 2;
-    private static final int DEFAULT_JURISTIC_METHOD = 0;
-    private static final int DEFAULT_HIGH_LATITUDES = 0;
     private static final int DEFAULT_TIME_FORMAT = 1;
 
-    private final String KEY_PREF_CALC_METHOD = "calculation_method";
-    private final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-    private final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
-    private final String KEY_PREF_TIME_FORMATS = "time_formats";
-
-    private PrayTime prayerTime = new PrayTime();
-
-    private Calendar nextDay = Calendar.getInstance();
-    private int dstOffset = nextDay.get(Calendar.DST_OFFSET) / 3600000;
-    private int timeZoneOffset = nextDay.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
+    private PrayTime prayerTime;
 
     private ArrayList<String> nextDayTimes = new ArrayList<>();
 
@@ -82,10 +70,6 @@ public class DayViewFragment extends Fragment implements SharedPreferences.OnSha
     TextView dayTextView;
     Unbinder unbinder;
 
-    private FusedLocationProviderClient mFusedLocationClient;
-    private double latitude;
-    private double longitude;
-
     public DayViewFragment() {
         // Required empty public constructor
     }
@@ -95,103 +79,21 @@ public class DayViewFragment extends Fragment implements SharedPreferences.OnSha
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        if (hasPermissions()) {
-            getLocation();
-        } else {
-            requestPerms();
-        }
-
-
-        // settings listener
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-        prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
-        prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
-        prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
+        prayerTime = PrayTime.getInstance();
         prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
 
         Bundle bundle = getArguments();
-        formatDate(bundle);
-        formatPrayers(bundle);
-        updateView();
+        setDate(bundle);
+
+        updateView(bundle);
 
         return view;
     }
 
-    private void requestPerms() {
-        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(permissions, MY_PERMISSIONS_REQUEST_FINE_LOCATION);
-        }
-    }
-
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPerms();
-            return;
-        }
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    latitude = location.getLatitude();
-                    longitude = location.getLongitude();
-                }
-            }
-        });
-    }
-
-    private boolean hasPermissions() {
-        int res = 0;
-        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        for (String perms : permissions) {
-            res = getActivity().checkCallingOrSelfPermission(perms);
-            if (!(res == PackageManager.PERMISSION_GRANTED)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        boolean allowed = true;
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_FINE_LOCATION:
-                for (int res : grantResults) {
-                    allowed = allowed && (res == PackageManager.PERMISSION_GRANTED);
-                }
-                break;
-            default:
-                allowed = false;
-                break;
-        }
-        if (allowed) {
-            getLocation();
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Toast.makeText(getActivity(), "Location permissions denied", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
-    private void formatPrayers(Bundle bundle) {
+    private void updateView(Bundle bundle) {
         int count = bundle.getInt("count");
-        Calendar c = Calendar.getInstance();
-        int month = c.get(Calendar.MONTH);
-        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-        int year = c.get(Calendar.YEAR);
+        nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count);
 
-        nextDay.set(year, month, dayOfMonth + count);
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
-    }
-
-    private void updateView() {
         String newDawnTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
         String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
         String newAfternoonTime = nextDayTimes.get(3).replaceFirst("^0+(?!$)", "");
@@ -212,33 +114,32 @@ public class DayViewFragment extends Fragment implements SharedPreferences.OnSha
         }
     }
 
-    private void formatDate(Bundle bundle) {
+    private void setDate(Bundle bundle) {
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);
         int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
         int year = c.get(Calendar.YEAR);
-        int weekDay = bundle.getInt("day");
+
+        Calendar nextDay = Calendar.getInstance();
         int count = bundle.getInt("count");
         nextDay.set(year, month, dayOfMonth + count);
-        int numberDay = nextDay.get(Calendar.DAY_OF_MONTH);
-        int monthDay = nextDay.get(Calendar.MONTH) + 1;
 
+        int numberDay = nextDay.get(Calendar.DAY_OF_MONTH);
         String numberString = String.valueOf(numberDay);
 
         String monthString;
-
+        int monthDay = nextDay.get(Calendar.MONTH) + 1;
         if (monthDay < 10) {
             monthString = "0" + String.valueOf(monthDay);
         } else {
             monthString = String.valueOf(monthDay);
         }
 
+        int weekDay = bundle.getInt("day");
         if (weekDay >= 8) {
             weekDay = weekDay - 7;
         }
-
         String weekDayString;
-
         switch (weekDay) {
             case 1:
                 weekDayString = "Sunday";
@@ -276,29 +177,5 @@ public class DayViewFragment extends Fragment implements SharedPreferences.OnSha
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case KEY_PREF_CALC_METHOD:
-                String calcMethodString = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-                prayerTime.setCalcMethod(Integer.parseInt(calcMethodString));
-                break;
-            case KEY_PREF_JURISTIC_METHOD:
-                String juristicMethodString = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-                prayerTime.setAsrJuristic(Integer.parseInt(juristicMethodString));
-                break;
-            case KEY_PREF_HIGH_LATITUDES:
-                String highLatitudesString = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-                prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudesString));
-                break;
-            case KEY_PREF_TIME_FORMATS:
-                String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
-                prayerTime.setTimeFormat(Integer.parseInt(timeFormatsString));
-                break;
-        }
-        nextDayTimes = prayerTime.getPrayerTimes(nextDay, latitude, longitude, timeZoneOffset);
-        updateView();
     }
 }

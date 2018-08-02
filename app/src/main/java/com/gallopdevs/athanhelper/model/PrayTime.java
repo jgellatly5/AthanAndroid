@@ -87,7 +87,9 @@ public class PrayTime {
     private double[] prayerTimesCurrent;
     private int[] offsets;
 
-    public PrayTime() {
+    private static PrayTime prayerTime;
+
+    private PrayTime() {
         // Initialize vars
 
         this.setCalcMethod(0);
@@ -192,6 +194,13 @@ public class PrayTime {
         double[] Cvalues = {18,1,0,0,17};
         methodParams.put(Integer.valueOf(this.getCustom()), Cvalues);
 }
+
+    public static PrayTime getInstance() {
+        if (prayerTime == null) {
+            prayerTime = new PrayTime();
+        }
+        return prayerTime;
+    }
 
     // ---------------------- Trigonometric Functions -----------------------
     // range reduce angle in degrees.

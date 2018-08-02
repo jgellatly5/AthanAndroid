@@ -1,9 +1,6 @@
 package com.gallopdevs.athanhelper.views;
 
 import android.Manifest;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,18 +10,15 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.model.PrayTime;
-import com.gallopdevs.athanhelper.settings.SettingsActivity;
+import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
+import com.gallopdevs.athanhelper.utils.LocationOfPrayer;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,17 +43,17 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     private static final int DEFAULT_CALC_METHOD = 2;
     private static final int DEFAULT_JURISTIC_METHOD = 0;
     private static final int DEFAULT_HIGH_LATITUDES = 0;
+    private static final int DEFAULT_TIME_FORMAT = 1;
+    private static final int NEXT_DAY_TIMES = 1;
 
     private static final String KEY_PREF_CALC_METHOD = "calculation_method";
     private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
     private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
+    private static final String KEY_PREF_TIME_FORMATS = "time_formats";
 
     private CountDownTimer timer;
 
     private int currentTimeIndex = 0;
-
-    private ArrayList<String> newTimes = new ArrayList<>();
-    private ArrayList<String> nextDayTimes = new ArrayList<>();
 
     private long difference1 = 0;
     private long difference2 = 0;
@@ -79,6 +73,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     BottomNavigationViewEx bottomNav;
 
     private FusedLocationProviderClient mFusedLocationClient;
+    private LocationOfPrayer locationOfPrayer;
     private double latitude;
     private double longitude;
 
@@ -96,8 +91,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
             requestPerms();
         }
 
-        searchPrayerTimes();
-        startNewTimer();
+//        startNewTimer();
     }
 
     private void init() {
@@ -114,10 +108,11 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // set default settings
-        prayerTime = new PrayTime();
+        prayerTime = PrayTime.getInstance();
         prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
         prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
         prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
+        prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
 
         // init swipeAdapter
         DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
@@ -135,6 +130,9 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
                 if (location != null) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
+                    locationOfPrayer = LocationOfPrayer.getInstance();
+                    locationOfPrayer.setLatitude(latitude);
+                    locationOfPrayer.setLongitude(longitude);
                 }
             }
         });
@@ -177,26 +175,18 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Toast.makeText(this, "Location permissions denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "LocationOfPrayer permissions denied", Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
 
-    private void searchPrayerTimes() {
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        int dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000;
-        int timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset;
-        newTimes = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
 
-        calendar.set(year, month, dayOfMonth + 1);
-        nextDayTimes = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
-    }
 
     private long[] getTimerDifference() {
+
+        ArrayList<String> newTimes = CalendarPrayerTimes.getNewTimes();
+        ArrayList<String> nextDayTimes = CalendarPrayerTimes.getNextDayTimes(NEXT_DAY_TIMES);
 
         // get currentTime and set format
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -252,28 +242,27 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     private void startNewTimer() {
         if (timer != null) {
             timer.cancel();
-        } else {
-            timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    // format for prayerTimer
-                    SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
-                    offset.setTimeZone(TimeZone.getTimeZone("GMT"));
-                    Date newDateTimer = new Date();
-                    newDateTimer.setTime(millisUntilFinished);
-                    prayerTimer.setText(offset.format(newDateTimer) + "s");
-                }
-
-                @Override
-                public void onFinish() {
-                    prayerTimer.setText("00:00:00s");
-
-                    // TODO send notification
-
-                    startNewTimer();
-                }
-            }.start();
         }
+        timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // format for prayerTimer
+                SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                offset.setTimeZone(TimeZone.getTimeZone("GMT"));
+                Date newDateTimer = new Date();
+                newDateTimer.setTime(millisUntilFinished);
+                prayerTimer.setText(offset.format(newDateTimer) + "s");
+            }
+
+            @Override
+            public void onFinish() {
+                prayerTimer.setText("00:00:00s");
+
+                // TODO send notification
+
+                startNewTimer();
+            }
+        }.start();
     }
 
     private int getNextTime() {
@@ -303,8 +292,11 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
                 String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
                 prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudes));
                 break;
+            case KEY_PREF_TIME_FORMATS:
+                String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
+                prayerTime.setTimeFormat(Integer.parseInt(timeFormatsString));
+                break;
         }
-        searchPrayerTimes();
         startNewTimer();
     }
 }
