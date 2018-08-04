@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gallopdevs.athanhelper.views.TimerActivity">
+    tools:context="com.gallopdevs.athanhelper.clock.TimerActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -64,14 +64,20 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="30dp"
         android:layout_alignParentBottom="true"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/swipe_marker"
+        android:src="@drawable/swipe_marker"
+        android:layout_above="@id/sliding_tabs"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"/>
     
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+    <android.support.design.widget.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bottom_nav"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/menu_main"
-        app:itemIconTint="@color/colorPrimaryDark"
-        app:itemTextColor="@color/colorPrimaryDark"/>
+        android:id="@+id/sliding_tabs"/>
 
 </RelativeLayout>

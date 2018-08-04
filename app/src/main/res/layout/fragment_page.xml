@@ -3,61 +3,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gallopdevs.athanhelper.views.DayViewFragment">
+    tools:context="com.gallopdevs.athanhelper.clock.DayViewFragment">
 
     <TextView
-        android:id="@+id/dayTextView"
+        android:id="@+id/day_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:text="Monday, 03/17"
+        android:layout_marginBottom="@dimen/date_margin_bottom"
+        android:layout_marginTop="@dimen/date_margin_top"
+        android:text="@string/day_placeholder"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="15sp" />
+        android:textSize="@dimen/day_text_size" />
 
     <TableLayout
         android:id="@+id/table_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dayTextView"
+        android:layout_below="@id/day_text_view"
         android:layout_centerHorizontal="true">
 
         <TableRow
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:paddingBottom="@dimen/table_padding_bottom"
+            android:paddingTop="@dimen/table_padding_top">
 
             <TextView
-                android:id="@+id/dawnTextView"
+                android:id="@+id/dawn_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right|center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:text="Dawn"
+                android:gravity="start"
+                android:paddingLeft="@dimen/prayer_name_padding_left"
+                android:paddingRight="@dimen/prayer_name_padding_right"
+                android:text="@string/dawn"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp"
+                android:textSize="@dimen/prayer_name_text_size"
                 tools:ignore="RtlSymmetry" />
 
             <TextView
-                android:id="@+id/dawnTimeTextView"
+                android:id="@+id/dawn_time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right|center"
-                android:paddingLeft="30dp"
-                android:text="5:45"
+                android:gravity="top|end"
+                android:paddingLeft="@dimen/prayer_time_padding_left"
+                android:text="@string/dawn_time_placeholder"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/dawn_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:text="am"
-                android:textColor="@color/colorPrimaryDark" />
+                android:paddingLeft="@dimen/postfix_padding_left"
+                android:paddingTop="@dimen/postfix_padding_top"
+                android:text="@string/postfix_am"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/postfix_text_size" />
 
         </TableRow>
 
@@ -67,39 +70,42 @@
             android:src="@drawable/line" />
 
         <TableRow
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:paddingBottom="@dimen/table_padding_bottom"
+            android:paddingTop="@dimen/table_padding_bottom">
 
             <TextView
-                android:id="@+id/middayTextView"
+                android:id="@+id/midday_text_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:text="Mid-day"
+                android:layout_height="match_parent"
+                android:gravity="start"
+                android:paddingLeft="@dimen/prayer_name_padding_left"
+                android:paddingRight="@dimen/prayer_name_padding_right"
+                android:text="@string/mid_day"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp"
+                android:textSize="@dimen/prayer_name_text_size"
                 tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/middayTimeTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right|center"
-                android:paddingLeft="30dp"
-                android:text="12:20"
+                android:layout_height="match_parent"
+                android:gravity="end"
+                android:paddingLeft="@dimen/prayer_time_padding_left"
+                android:text="@string/midday_text_placeholder"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/midday_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:text="pm"
-                android:textColor="@color/colorPrimaryDark" />
+                android:paddingLeft="@dimen/postfix_padding_left"
+                android:paddingTop="@dimen/postfix_padding_top"
+                android:text="@string/postfix_pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/postfix_text_size" />
 
         </TableRow>
 
@@ -109,38 +115,41 @@
             android:src="@drawable/line" />
 
         <TableRow
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:paddingBottom="@dimen/table_padding_bottom"
+            android:paddingTop="@dimen/table_padding_top">
 
             <TextView
                 android:id="@+id/afternoonTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:text="Afternoon"
+                android:gravity="start"
+                android:paddingLeft="@dimen/prayer_name_padding_left"
+                android:paddingRight="@dimen/prayer_name_padding_right"
+                android:text="@string/afternoon"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/afternoonTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right|center"
-                android:paddingLeft="30dp"
-                android:text="3:37"
+                android:gravity="end"
+                android:paddingLeft="@dimen/postfix_padding_left"
+                android:text="@string/afternoon_time_placeholder"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/afternoon_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:text="pm"
-                android:textColor="@color/colorPrimaryDark" />
+                android:paddingLeft="@dimen/postfix_padding_left"
+                android:paddingTop="@dimen/postfix_padding_top"
+                android:text="@string/postfix_pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/postfix_text_size" />
 
         </TableRow>
 
@@ -150,38 +159,41 @@
             android:src="@drawable/line" />
 
         <TableRow
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:paddingBottom="@dimen/table_padding_bottom"
+            android:paddingTop="@dimen/table_padding_bottom">
 
             <TextView
                 android:id="@+id/sunsetTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:text="Sunset"
+                android:gravity="start"
+                android:paddingLeft="@dimen/prayer_name_padding_left"
+                android:paddingRight="@dimen/prayer_name_padding_right"
+                android:text="@string/sunset"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/sunsetTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right|center"
-                android:paddingLeft="30dp"
-                android:text="6:07"
+                android:gravity="end"
+                android:paddingLeft="@dimen/prayer_time_padding_left"
+                android:text="@string/sunset_time_placeholder"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/sunset_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:text="pm"
-                android:textColor="@color/colorPrimaryDark" />
+                android:paddingLeft="@dimen/postfix_padding_left"
+                android:paddingTop="@dimen/postfix_padding_top"
+                android:text="@string/postfix_pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/postfix_text_size" />
 
         </TableRow>
 
@@ -191,38 +203,41 @@
             android:src="@drawable/line" />
 
         <TableRow
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:paddingBottom="@dimen/table_padding_bottom"
+            android:paddingTop="@dimen/table_padding_bottom">
 
             <TextView
                 android:id="@+id/nightTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:text="Night"
+                android:gravity="start"
+                android:paddingLeft="@dimen/prayer_name_padding_left"
+                android:paddingRight="@dimen/prayer_name_padding_right"
+                android:text="@string/night"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/nightTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right|center"
-                android:paddingLeft="30dp"
-                android:text="7:07"
+                android:gravity="end"
+                android:paddingLeft="@dimen/prayer_time_padding_left"
+                android:text="@string/night_text_placeholder"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="@dimen/prayer_name_text_size" />
 
             <TextView
                 android:id="@+id/night_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:text="pm"
-                android:textColor="@color/colorPrimaryDark" />
+                android:paddingLeft="@dimen/postfix_padding_left"
+                android:paddingTop="@dimen/postfix_padding_top"
+                android:text="@string/postfix_pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/postfix_text_size" />
 
         </TableRow>
 

@@ -1,6 +1,7 @@
-package com.gallopdevs.athanhelper.views;
+package com.gallopdevs.athanhelper.clock;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,7 +24,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,14 +70,12 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     ViewPager viewPager;
     @BindView(R.id.prayerTimer)
     TextView prayerTimer;
-    @BindView(R.id.bottom_nav)
-    BottomNavigationViewEx bottomNav;
+    @BindView(R.id.sliding_tabs)
+    TabLayout slidingTabs;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private double latitude;
     private double longitude;
-
-    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,16 +90,16 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     }
 
     private void init() {
-        // bottom nav init
-        bottomNav.enableAnimation(false);
-        bottomNav.enableShiftingMode(false);
-        bottomNav.enableItemShiftingMode(false);
+        // tab layout init
+        slidingTabs.setTabGravity(TabLayout.GRAVITY_FILL);
+        slidingTabs.getTabAt(0).setIcon(R.drawable.clockcopy);
+        slidingTabs.getTabAt(1).setIcon(R.drawable.settings_button);
 
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // settings listener
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // set default settings
@@ -116,6 +115,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
         viewPager.setAdapter(dayViewAdapter);
     }
 
+    @SuppressLint("MissingPermission")
     private void getLocation() {
         if (hasPermissions()) {
             mFusedLocationClient.getLastLocation()

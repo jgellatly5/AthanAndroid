@@ -1,16 +1,11 @@
-package com.gallopdevs.athanhelper.views;
+package com.gallopdevs.athanhelper.clock;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by jgell on 5/23/2017.

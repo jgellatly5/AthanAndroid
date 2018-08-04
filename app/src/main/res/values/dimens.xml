@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="date_margin_bottom">10dp</dimen>
+    <dimen name="date_margin_top">20dp</dimen>
+    <dimen name="day_text_size">15sp</dimen>
+    <dimen name="table_padding_bottom">5dp</dimen>
+    <dimen name="table_padding_top">5dp</dimen>
+    <dimen name="prayer_name_padding_left">10dp</dimen>
+    <dimen name="prayer_name_padding_right">30dp</dimen>
+    <dimen name="prayer_name_text_size">24sp</dimen>
+    <dimen name="prayer_time_padding_left">60dp</dimen>
+    <dimen name="postfix_padding_left">2dp</dimen>
+    <dimen name="postfix_padding_top">4dp</dimen>
+    <dimen name="postfix_text_size">12sp</dimen>
+</resources>

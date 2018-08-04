@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.views;
+package com.gallopdevs.athanhelper.clock;
 
 
 import android.os.Bundle;
@@ -36,29 +36,19 @@ public class DayViewFragment extends Fragment {
 
     private ArrayList<String> nextDayTimes = new ArrayList<>();
 
-    @BindView(R.id.dawnTextView)
-    TextView dawnTextView;
-    @BindView(R.id.dawnTimeTextView)
+    @BindView(R.id.dawn_time_text_view)
     TextView dawnTimeTextView;
-    @BindView(R.id.middayTextView)
-    TextView middayTextView;
     @BindView(R.id.middayTimeTextView)
     TextView middayTimeTextView;
-    @BindView(R.id.afternoonTextView)
-    TextView afternoonTextView;
     @BindView(R.id.afternoonTimeTextView)
     TextView afternoonTimeTextView;
-    @BindView(R.id.sunsetTextView)
-    TextView sunsetTextView;
     @BindView(R.id.sunsetTimeTextView)
     TextView sunsetTimeTextView;
-    @BindView(R.id.nightTextView)
-    TextView nightTextView;
     @BindView(R.id.nightTimeTextView)
     TextView nightTimeTextView;
     @BindView(R.id.table_layout)
     TableLayout tableLayout;
-    @BindView(R.id.dayTextView)
+    @BindView(R.id.day_text_view)
     TextView dayTextView;
     @BindView(R.id.dawn_post_fix)
     TextView dawnPostFix;
