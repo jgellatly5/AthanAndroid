@@ -178,9 +178,9 @@ public class DayViewFragment extends Fragment {
                 break;
         }
         if (numberDay < 10) {
-            dayTextView.setText(weekDayString + " " + monthString + "/0" + numberString);
+            dayTextView.setText(weekDayString + ", " + monthString + "/0" + numberString);
         } else {
-            dayTextView.setText(weekDayString + " " + monthString + "/" + numberString);
+            dayTextView.setText(weekDayString + ", " + monthString + "/" + numberString);
         }
     }
 

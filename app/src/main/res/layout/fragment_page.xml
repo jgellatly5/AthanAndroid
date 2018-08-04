@@ -1,9 +1,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.gallopdevs.athanhelper.views.DayViewFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gallopdevs.athanhelper.views.DayViewFragment">
+
+    <TextView
+        android:id="@+id/dayTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:text="Monday, 03/17"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp" />
 
     <GridLayout
         android:id="@+id/gridLayout"
@@ -36,7 +47,7 @@
             android:textAlignment="textStart"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
-            tools:ignore="RtlSymmetry"/>
+            tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/dawnTimeTextView"
@@ -50,7 +61,7 @@
             android:text="5:45 am"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/middayTextView"
@@ -65,7 +76,7 @@
             android:textAlignment="textStart"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
-            tools:ignore="RtlSymmetry"/>
+            tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/middayTimeTextView"
@@ -79,7 +90,7 @@
             android:text="12:20 pm"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/afternoonTextView"
@@ -93,7 +104,7 @@
             android:text="Afternoon"
             android:textAlignment="textStart"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/afternoonTimeTextView"
@@ -107,7 +118,7 @@
             android:text="3:37 pm"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/sunsetTextView"
@@ -121,7 +132,7 @@
             android:text="Sunset"
             android:textAlignment="textStart"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/sunsetTimeTextView"
@@ -135,7 +146,7 @@
             android:text="6:07 pm"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/nightTextView"
@@ -149,7 +160,7 @@
             android:text="Night"
             android:textAlignment="textStart"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/nightTimeTextView"
@@ -163,18 +174,8 @@
             android:text="7:07 pm"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
     </GridLayout>
 
-    <TextView
-        android:id="@+id/dayTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:text="Monday 03/17"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="24sp"/>
 
 </RelativeLayout>
