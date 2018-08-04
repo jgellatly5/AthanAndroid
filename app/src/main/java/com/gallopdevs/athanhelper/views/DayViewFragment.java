@@ -7,14 +7,19 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +43,10 @@ import butterknife.Unbinder;
  */
 public class DayViewFragment extends Fragment {
 
+    private static final String TAG = "DayViewFragment";
+
     private static final int DEFAULT_TIME_FORMAT = 1;
+    private int count = 0;
 
     private PrayTime prayerTime;
 
@@ -68,7 +76,11 @@ public class DayViewFragment extends Fragment {
     GridLayout gridLayout;
     @BindView(R.id.dayTextView)
     TextView dayTextView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+
     Unbinder unbinder;
+
 
     public DayViewFragment() {
         // Required empty public constructor
@@ -79,20 +91,28 @@ public class DayViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+        gridLayout.setVisibility(GridView.INVISIBLE);
+
         prayerTime = PrayTime.getInstance();
         prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
 
         Bundle bundle = getArguments();
+        count = bundle.getInt("count");
         setDate(bundle);
-
-        updateView(bundle);
 
         return view;
     }
 
-    private void updateView(Bundle bundle) {
-        int count = bundle.getInt("count");
-        nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count);
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateView();
+    }
+
+    private void updateView() {
+        nextDayTimes = CalendarPrayerTimes.getNextDayTimes(getActivity(), count);
+        Log.d(TAG, "updateView: " + nextDayTimes.toString());
 
         String newDawnTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
         String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
@@ -112,6 +132,8 @@ public class DayViewFragment extends Fragment {
             sunsetTimeTextView.setText(newSunsetTime);
             nightTimeTextView.setText(newNightTime);
         }
+        gridLayout.setVisibility(GridLayout.VISIBLE);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
     }
 
     private void setDate(Bundle bundle) {

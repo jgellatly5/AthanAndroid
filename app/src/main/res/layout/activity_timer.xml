@@ -73,6 +73,5 @@
         app:menu="@menu/menu_main"
         app:itemIconTint="@color/colorPrimaryDark"
         app:itemTextColor="@color/colorPrimaryDark"/>
-    
-    
+
 </RelativeLayout>

@@ -4,13 +4,16 @@ public class LocationOfPrayer {
 
     private double latitude;
     private double longitude;
-    private static final LocationOfPrayer instance = new LocationOfPrayer();
+    private static LocationOfPrayer instance = null;
 
     private LocationOfPrayer() {
 
     }
 
     public static LocationOfPrayer getInstance() {
+        if (instance == null) {
+            instance = new LocationOfPrayer();
+        }
         return instance;
     }
 
