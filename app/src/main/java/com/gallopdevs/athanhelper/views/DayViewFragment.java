@@ -32,6 +32,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,8 +78,6 @@ public class DayViewFragment extends Fragment {
     GridLayout gridLayout;
     @BindView(R.id.dayTextView)
     TextView dayTextView;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
 
     Unbinder unbinder;
 
@@ -91,28 +91,19 @@ public class DayViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        progressBar.setVisibility(ProgressBar.VISIBLE);
-        gridLayout.setVisibility(GridView.INVISIBLE);
-
         prayerTime = PrayTime.getInstance();
         prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
 
         Bundle bundle = getArguments();
-        count = bundle.getInt("count");
         setDate(bundle);
+        updateView(bundle);
 
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateView();
-    }
-
-    private void updateView() {
-        nextDayTimes = CalendarPrayerTimes.getNextDayTimes(getActivity(), count);
-        Log.d(TAG, "updateView: " + nextDayTimes.toString());
+    private void updateView(Bundle bundle) {
+        count = bundle.getInt("count");
+        nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count);
 
         String newDawnTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
         String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
@@ -132,8 +123,6 @@ public class DayViewFragment extends Fragment {
             sunsetTimeTextView.setText(newSunsetTime);
             nightTimeTextView.setText(newNightTime);
         }
-        gridLayout.setVisibility(GridLayout.VISIBLE);
-        progressBar.setVisibility(ProgressBar.INVISIBLE);
     }
 
     private void setDate(Bundle bundle) {
