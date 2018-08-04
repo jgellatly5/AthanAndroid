@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,8 +75,8 @@ public class DayViewFragment extends Fragment {
     TextView nightTextView;
     @BindView(R.id.nightTimeTextView)
     TextView nightTimeTextView;
-    @BindView(R.id.gridLayout)
-    GridLayout gridLayout;
+    @BindView(R.id.table_layout)
+    TableLayout tableLayout;
     @BindView(R.id.dayTextView)
     TextView dayTextView;
 

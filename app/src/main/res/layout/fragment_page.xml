@@ -11,171 +11,176 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:text="Monday, 03/17"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
 
-    <GridLayout
-        android:id="@+id/gridLayout"
+    <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dayTextView"
+        android:id="@+id/table_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:columnCount="2"
-        android:rowCount="5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dayTextView"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1">
+        android:layout_below="@id/dayTextView">
 
-        <TextView
-            android:id="@+id/dawnTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:gravity="right|center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="Dawn"
-            android:textAlignment="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"
-            tools:ignore="RtlSymmetry" />
+        <TableRow>
 
-        <TextView
-            android:id="@+id/dawnTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="1"
-            android:layout_row="0"
-            android:gravity="right|center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="5:45 am"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+            <TextView
+                android:id="@+id/dawnTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:gravity="right|center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="Dawn"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/middayTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="0"
-            android:layout_row="1"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="Mid-day"
-            android:textAlignment="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp"
-            tools:ignore="RtlSymmetry" />
+            <TextView
+                android:id="@+id/dawnTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_row="0"
+                android:gravity="right|center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="5:45 am"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/middayTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="1"
-            android:layout_row="1"
-            android:gravity="right|center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="12:20 pm"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/afternoonTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="0"
-            android:layout_row="2"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="Afternoon"
-            android:textAlignment="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+        <TableRow>
 
-        <TextView
-            android:id="@+id/afternoonTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="1"
-            android:layout_row="2"
-            android:gravity="right|center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="3:37 pm"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+            <TextView
+                android:id="@+id/middayTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="0"
+                android:layout_row="1"
+                android:gravity="center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="Mid-day"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/sunsetTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="0"
-            android:layout_row="3"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="Sunset"
-            android:textAlignment="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+            <TextView
+                android:id="@+id/middayTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:gravity="right|center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="12:20 pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/sunsetTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="1"
-            android:layout_row="3"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="6:07 pm"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/nightTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="0"
-            android:layout_row="4"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="Night"
-            android:textAlignment="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
+        <TableRow>
 
-        <TextView
-            android:id="@+id/nightTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_column="1"
-            android:layout_row="4"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="7:07 pm"
-            android:textAlignment="textEnd"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="24sp" />
-    </GridLayout>
+            <TextView
+                android:id="@+id/afternoonTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="0"
+                android:layout_row="2"
+                android:gravity="center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="Afternoon"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
 
+            <TextView
+                android:id="@+id/afternoonTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_row="2"
+                android:gravity="right|center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="3:37 pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/sunsetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="0"
+                android:layout_row="3"
+                android:gravity="center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:textAlignment="textStart"
+                android:text="Sunset"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/sunsetTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_row="3"
+                android:gravity="right|center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="6:07 pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/nightTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="0"
+                android:layout_row="4"
+                android:gravity="center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="Night"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/nightTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_column="1"
+                android:layout_row="4"
+                android:gravity="right|center"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="7:07 pm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
+
+        </TableRow>
+
+    </TableLayout>
 
 </RelativeLayout>
