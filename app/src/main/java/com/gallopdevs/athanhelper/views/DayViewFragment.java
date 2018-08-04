@@ -1,40 +1,20 @@
 package com.gallopdevs.athanhelper.views;
 
 
-import android.Manifest;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.model.PrayTime;
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +29,7 @@ public class DayViewFragment extends Fragment {
     private static final String TAG = "DayViewFragment";
 
     private static final int DEFAULT_TIME_FORMAT = 1;
+
     private int count = 0;
 
     private PrayTime prayerTime;
@@ -79,6 +60,16 @@ public class DayViewFragment extends Fragment {
     TableLayout tableLayout;
     @BindView(R.id.dayTextView)
     TextView dayTextView;
+    @BindView(R.id.dawn_post_fix)
+    TextView dawnPostFix;
+    @BindView(R.id.midday_post_fix)
+    TextView middayPostFix;
+    @BindView(R.id.afternoon_post_fix)
+    TextView afternoonPostFix;
+    @BindView(R.id.sunset_post_fix)
+    TextView sunsetPostFix;
+    @BindView(R.id.night_post_fix)
+    TextView nightPostFix;
 
     Unbinder unbinder;
 
@@ -97,12 +88,12 @@ public class DayViewFragment extends Fragment {
 
         Bundle bundle = getArguments();
         setDate(bundle);
-        updateView(bundle);
+        updateTimes(bundle);
 
         return view;
     }
 
-    private void updateView(Bundle bundle) {
+    private void updateTimes(Bundle bundle) {
         count = bundle.getInt("count");
         nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count);
 
@@ -111,6 +102,13 @@ public class DayViewFragment extends Fragment {
         String newAfternoonTime = nextDayTimes.get(3).replaceFirst("^0+(?!$)", "");
         String newSunsetTime = nextDayTimes.get(5).replaceFirst("^0+(?!$)", "");
         String newNightTime = nextDayTimes.get(6).replaceFirst("^0+(?!$)", "");
+
+        String[] splitDawnTime = newDawnTime.split(" ");
+        String[] splitMiddayTime = newMiddayTime.split(" ");
+        String[] splitAfternoonTime = newAfternoonTime.split(" ");
+        String[] splitSunsetTime = newSunsetTime.split(" ");
+        String[] splitNightTime = newNightTime.split(" ");
+
         if (prayerTime.getTimeFormat() == 0) {
             dawnTimeTextView.setText(nextDayTimes.get(0));
             middayTimeTextView.setText(nextDayTimes.get(2));
@@ -118,11 +116,16 @@ public class DayViewFragment extends Fragment {
             sunsetTimeTextView.setText(nextDayTimes.get(5));
             nightTimeTextView.setText(nextDayTimes.get(6));
         } else {
-            dawnTimeTextView.setText(newDawnTime);
-            middayTimeTextView.setText(newMiddayTime);
-            afternoonTimeTextView.setText(newAfternoonTime);
-            sunsetTimeTextView.setText(newSunsetTime);
-            nightTimeTextView.setText(newNightTime);
+            dawnTimeTextView.setText(splitDawnTime[0]);
+            dawnPostFix.setText(splitDawnTime[1]);
+            middayTimeTextView.setText(splitMiddayTime[0]);
+            middayPostFix.setText(splitMiddayTime[1]);
+            afternoonTimeTextView.setText(splitAfternoonTime[0]);
+            afternoonPostFix.setText(splitAfternoonTime[1]);
+            sunsetTimeTextView.setText(splitSunsetTime[0]);
+            sunsetPostFix.setText(splitSunsetTime[1]);
+            nightTimeTextView.setText(splitNightTime[0]);
+            nightPostFix.setText(splitNightTime[1]);
         }
     }
 

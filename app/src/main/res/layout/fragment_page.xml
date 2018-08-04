@@ -11,20 +11,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
         android:text="Monday, 03/17"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="18sp" />
+        android:textSize="15sp" />
 
     <TableLayout
+        android:id="@+id/table_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/table_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/dayTextView">
+        android:layout_below="@id/dayTextView"
+        android:layout_centerHorizontal="true">
 
-        <TableRow>
+        <TableRow
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/dawnTextView"
@@ -50,20 +52,23 @@
                 android:textSize="24sp" />
 
             <TextView
+                android:id="@+id/dawn_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:text="am"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/Line"/>
+            android:src="@drawable/line" />
 
-        <TableRow>
+        <TableRow
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/middayTextView"
@@ -89,20 +94,23 @@
                 android:textSize="24sp" />
 
             <TextView
+                android:id="@+id/midday_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:text="pm"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/Line"/>
+            android:src="@drawable/line" />
 
-        <TableRow>
+        <TableRow
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/afternoonTextView"
@@ -127,20 +135,23 @@
                 android:textSize="24sp" />
 
             <TextView
+                android:id="@+id/afternoon_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:text="pm"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/Line"/>
+            android:src="@drawable/line" />
 
-        <TableRow>
+        <TableRow
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/sunsetTextView"
@@ -149,8 +160,8 @@
                 android:gravity="center"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
-                android:textAlignment="textStart"
                 android:text="Sunset"
+                android:textAlignment="textStart"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp" />
 
@@ -165,20 +176,23 @@
                 android:textSize="24sp" />
 
             <TextView
+                android:id="@+id/sunset_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:text="pm"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/Line"/>
+            android:src="@drawable/line" />
 
-        <TableRow>
+        <TableRow
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/nightTextView"
@@ -203,11 +217,12 @@
                 android:textSize="24sp" />
 
             <TextView
+                android:id="@+id/night_post_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="top"
                 android:text="pm"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:textColor="@color/colorPrimaryDark" />
 
         </TableRow>
 
