@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +37,11 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-public class TimerActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ClockFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String TAG = "TimerActivity";
+    private static final String TAG = "ClockFragment";
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
     private static final int DEFAULT_CALC_METHOD = 2;
@@ -66,40 +69,41 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
 
     private PrayTime prayerTime;
 
-    @BindView(R.id.viewPager)
+    @BindView(R.id.view_pager_fragment)
     ViewPager viewPager;
     @BindView(R.id.prayerTimer)
     TextView prayerTimer;
-    @BindView(R.id.sliding_tabs)
-    TabLayout slidingTabs;
+
+    Unbinder unbinder;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private double latitude;
     private double longitude;
 
+    public ClockFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timer);
-        ButterKnife.bind(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_clock, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
         init();
 
         getLocation();
 
-//        startNewTimer();
+        return view;
     }
 
-    private void init() {
-        // tab layout init
-        slidingTabs.setTabGravity(TabLayout.GRAVITY_FILL);
-        slidingTabs.getTabAt(0).setIcon(R.drawable.clockcopy);
-        slidingTabs.getTabAt(1).setIcon(R.drawable.settings_button);
 
+
+    private void init() {
         // location listener
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // settings listener
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // set default settings
@@ -111,7 +115,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     }
 
     private void initSwipeAdapter() {
-        DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
+        DayViewAdapter dayViewAdapter = new DayViewAdapter(getActivity().getSupportFragmentManager());
         viewPager.setAdapter(dayViewAdapter);
     }
 
@@ -131,21 +135,20 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
                                 CalendarPrayerTimes.setLongitude(longitude);
                                 initSwipeAdapter();
                             } else {
-                                Toast.makeText(TimerActivity.this, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(TimerActivity.this, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show();
                             Log.e(TAG, "onFailure: " + e.getMessage());
                         }
                     });
         } else {
             requestPerms();
         }
-
     }
 
     private void requestPerms() {
@@ -158,7 +161,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
     private boolean hasPermissions() {
         String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         for (String perms : permissions) {
-            int res = checkCallingOrSelfPermission(perms);
+            int res = getActivity().checkCallingOrSelfPermission(perms);
             if (!(res == PackageManager.PERMISSION_GRANTED)) {
                 return false;
             }
@@ -185,7 +188,7 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Toast.makeText(this, "LocationOfPrayer permissions denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "LocationOfPrayer permissions denied", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -306,5 +309,11 @@ public class TimerActivity extends AppCompatActivity implements SharedPreference
                 break;
         }
 //        startNewTimer();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

@@ -5,10 +5,10 @@
         android:id="@+id/clock"
         android:visible="true"
         app:showAsAction="always"
-        android:icon="@drawable/clockcopy"></item>
+        android:icon="@drawable/clock_icon"></item>
     <item
         android:id="@+id/settings"
         android:visible="true"
         app:showAsAction="always"
-        android:icon="@drawable/settings_button"></item>
+        android:icon="@drawable/settings_icon"></item>
 </menu>

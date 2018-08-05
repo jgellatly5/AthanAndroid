@@ -63,7 +63,6 @@ public class DayViewFragment extends Fragment {
 
     Unbinder unbinder;
 
-
     public DayViewFragment() {
         // Required empty public constructor
     }

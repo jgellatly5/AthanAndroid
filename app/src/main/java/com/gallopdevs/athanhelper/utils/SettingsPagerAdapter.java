@@ -4,18 +4,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class SettingsPagerAdapter extends FragmentPagerAdapter {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SettingsPagerAdapter extends FragmentPagerAdapter{
+
+    private final List<Fragment> fragmentList = new ArrayList<>();
+
     public SettingsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return null;
+        return fragmentList.get(position);
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return fragmentList.size();
+    }
+
+    public void addFrag(Fragment fragment) {
+        fragmentList.add(fragment);
     }
 }
