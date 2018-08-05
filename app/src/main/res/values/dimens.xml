@@ -12,4 +12,10 @@
     <dimen name="postfix_padding_left">2dp</dimen>
     <dimen name="postfix_padding_top">4dp</dimen>
     <dimen name="postfix_text_size">12sp</dimen>
+    <dimen name="settings_image_right_margin">10dp</dimen>
+    <dimen name="settings_image_margin_top">30dp</dimen>
+    <dimen name="settings_row_margin_bottom">30dp</dimen>
+    <dimen name="settings_row_margin_left">50dp</dimen>
+    <dimen name="settings_row_margin_right">50dp</dimen>
+    <dimen name="settings_row_margin_top">30dp</dimen>
 </resources>

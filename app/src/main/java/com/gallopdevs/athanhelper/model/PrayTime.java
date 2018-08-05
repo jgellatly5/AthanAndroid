@@ -332,7 +332,7 @@ public class PrayTime {
     // References:
     // http://www.ummah.net/astronomy/saltime
     // http://aa.usno.navy.mil/faq/docs/SunApprox.html
-    // compute declination angle of sun and equation of time
+    // compute declination angle of sun_icon and equation of time
     private double[] sunPosition(double jd) {
 
         double D = jd - 2451545;
@@ -360,7 +360,7 @@ public class PrayTime {
         return eq;
     }
 
-    // compute declination angle of sun
+    // compute declination angle of sun_icon
     private double sunDeclination(double jd) {
         double d = sunPosition(jd)[0];
         return d;
