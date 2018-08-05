@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/tab_layout_activity"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:scaleY="-1"/>
 
 </RelativeLayout>
