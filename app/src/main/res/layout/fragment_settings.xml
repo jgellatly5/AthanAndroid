@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -30,6 +31,14 @@
                 android:layout_height="wrap_content"
                 android:text="Notifications"
                 android:textColor="@color/colorPrimaryDark"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/notification_switch"
+                app:track="@drawable/switch_track_custom"
+                app:thumbTint="@color/colorPrimary"
+                android:layout_marginLeft="30dp"/>
 
         </TableRow>
 
