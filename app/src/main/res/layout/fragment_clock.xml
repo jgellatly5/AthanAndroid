@@ -14,7 +14,7 @@
         android:src="@drawable/athan" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/moon_icon"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_alignParentLeft="true"
@@ -27,7 +27,7 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/prayerTimer"
+        android:id="@+id/prayer_timer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/view_pager_fragment"
@@ -42,12 +42,12 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/nextPrayer"
+        android:id="@+id/next_prayer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/prayerTimer"
-        android:layout_alignLeft="@+id/prayerTimer"
-        android:layout_alignStart="@+id/prayerTimer"
+        android:layout_above="@+id/prayer_timer_text"
+        android:layout_alignLeft="@+id/prayer_timer_text"
+        android:layout_alignStart="@+id/prayer_timer_text"
         android:fontFamily="sans-serif"
         android:text="Next Prayer"
         android:textAllCaps="true"
@@ -60,7 +60,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/moon_icon"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"/>
 
@@ -71,5 +71,11 @@
         android:layout_below="@id/view_pager_fragment"
         android:layout_centerHorizontal="true"
         android:src="@drawable/swipe_marker" />
+
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/progress_bar"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

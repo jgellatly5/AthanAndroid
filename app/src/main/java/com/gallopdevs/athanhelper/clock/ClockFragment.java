@@ -16,16 +16,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
-import com.gallopdevs.athanhelper.model.PrayTime;
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,6 +55,7 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
     private static final String KEY_PREF_TIME_FORMATS = "time_formats";
 
+
     private CountDownTimer timer;
 
     private int currentTimeIndex = 0;
@@ -66,10 +70,18 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
 
     @BindView(R.id.view_pager_fragment)
     ViewPager viewPager;
-    @BindView(R.id.prayerTimer)
+    @BindView(R.id.prayer_timer_text)
     TextView prayerTimer;
+    @BindView(R.id.next_prayer_text)
+    TextView nextPrayer;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.moon_icon)
+    ImageView moonIcon;
 
     Unbinder unbinder;
+
+    private Boolean progressDisplayStatus = true;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private double latitude;
@@ -92,6 +104,9 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     }
 
     private void init() {
+        // hide elements
+        displayElements(progressDisplayStatus);
+
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
@@ -101,6 +116,18 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
 
         // set default settings
         CalendarPrayerTimes.configureSettings();
+    }
+
+    private void displayElements(Boolean isProgressDisplayed) {
+        if (isProgressDisplayed) {
+            moonIcon.setVisibility(ImageView.INVISIBLE);
+            prayerTimer.setVisibility(TextView.INVISIBLE);
+            nextPrayer.setVisibility(TextView.INVISIBLE);
+        } else {
+            moonIcon.setVisibility(ImageView.VISIBLE);
+            prayerTimer.setVisibility(TextView.VISIBLE);
+            nextPrayer.setVisibility(TextView.VISIBLE);
+        }
     }
 
     private void initSwipeAdapter() {
@@ -122,6 +149,10 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
                                 Log.d(TAG, "onSuccessTimerActivity: latitude: " + String.valueOf(latitude) + " longitude: " + String.valueOf(longitude));
                                 CalendarPrayerTimes.setLatitude(latitude);
                                 CalendarPrayerTimes.setLongitude(longitude);
+
+                                progressBar.setVisibility(ProgressBar.INVISIBLE);
+                                progressDisplayStatus = false;
+                                displayElements(progressDisplayStatus);
 
                                 startNewTimer();
                                 initSwipeAdapter();
