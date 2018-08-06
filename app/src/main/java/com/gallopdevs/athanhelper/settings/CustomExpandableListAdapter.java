@@ -28,6 +28,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         this.expandableListDetail = expandableListDetail;
     }
 
+    public void setImageVisibility() {
+
+        View convertView = LayoutInflater.from(context).inflate(R.layout.list_settings_items, null);
+        ImageView indicator = convertView.findViewById(R.id.selection_indicator);
+        indicator.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         return this.expandableListDetail.get(this.expandableListHeader.get(groupPosition)).get(childPosition);
@@ -48,6 +55,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_settings_items, null);
         }
 
+//        ImageView imageView = convertView.findViewById(R.id.selection_indicator);
+//        imageView.setVisibility(View.VISIBLE);
         TextView textListChild = convertView.findViewById(R.id.item);
         textListChild.setText(childText);
         return convertView;

@@ -63,8 +63,8 @@ public class SettingsFragment extends Fragment {
                 View convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_settings_items, null);
                 View childView = adapter.getChildView(groupPosition, childPosition, false, convertView, null);
 //                ImageView indicator = childView.findViewById(R.id.selection_indicator);
-//                Log.d(TAG, "onChildClick: indicator: " + indicator);
-////                indicator.setVisibility(ImageView.INVISIBLE);
+//                indicator.setVisibility(View.VISIBLE);
+                adapter.setImageVisibility();
                 TextView textView = childView.findViewById(R.id.item);
                 String text = textView.getText().toString();
                 Log.d(TAG, "onChildClick: " + text);
