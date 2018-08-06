@@ -49,20 +49,19 @@
         android:id="@+id/view_pager_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/moon_icon"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_marginTop="30dp"/>
 
-    <ImageView
-        android:id="@+id/swipe_marker"
+    <android.support.design.widget.TabLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view_pager_fragment"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/swipe_marker" />
+        app:tabBackground="@drawable/tab_selector"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        android:id="@+id/tab_dots"/>
 
     <ProgressBar
         android:layout_width="50dp"

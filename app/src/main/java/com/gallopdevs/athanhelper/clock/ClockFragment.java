@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -78,6 +79,8 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     ProgressBar progressBar;
     @BindView(R.id.moon_icon)
     ImageView moonIcon;
+    @BindView(R.id.tab_dots)
+    TabLayout tabDots;
 
     Unbinder unbinder;
 
@@ -133,6 +136,7 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private void initSwipeAdapter() {
         DayViewAdapter dayViewAdapter = new DayViewAdapter(getActivity().getSupportFragmentManager());
         viewPager.setAdapter(dayViewAdapter);
+        tabDots.setupWithViewPager(viewPager, true);
     }
 
     @SuppressLint("MissingPermission")
