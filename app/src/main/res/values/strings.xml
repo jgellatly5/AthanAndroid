@@ -77,11 +77,4 @@
         <item>2</item>
     </string-array>
 
-    <integer-array name="img_id_arr">
-        <item>@drawable/grey_oval</item>
-        <item>@drawable/grey_oval</item>
-        <item>@drawable/grey_oval</item>
-        <item>@drawable/grey_oval</item>
-    </integer-array>
-
 </resources>

@@ -41,6 +41,4 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
 
     implementation 'com.android.support:design:27.1.1'
-
-    implementation 'com.chabbal:slidingdotsplash:1.0.2'
 }
