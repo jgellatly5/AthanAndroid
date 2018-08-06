@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <TableLayout
+        android:id="@+id/table_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/settings_image_margin_top">
 
         <TableRow
-            android:layout_marginTop="@dimen/settings_row_margin_top"
             android:layout_marginBottom="@dimen/settings_row_margin_bottom"
             android:layout_marginLeft="@dimen/settings_row_margin_left"
-            android:layout_marginRight="@dimen/settings_row_margin_right">
+            android:layout_marginRight="@dimen/settings_row_margin_right"
+            android:layout_marginTop="@dimen/settings_row_margin_top">
 
             <ImageView
                 android:id="@+id/notification_icon"
@@ -33,12 +34,12 @@
                 android:textColor="@color/colorPrimaryDark"/>
 
             <android.support.v7.widget.SwitchCompat
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/notification_switch"
-                app:track="@drawable/switch_track_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
                 app:thumbTint="@color/colorPrimary"
-                android:layout_marginLeft="30dp"/>
+                app:track="@drawable/switch_track_custom"/>
 
         </TableRow>
 
@@ -47,90 +48,15 @@
             android:layout_height="wrap_content"
             android:src="@drawable/line"/>
 
-        <TableRow
-            android:layout_marginTop="@dimen/settings_row_margin_top"
-            android:layout_marginBottom="@dimen/settings_row_margin_bottom"
-            android:layout_marginLeft="@dimen/settings_row_margin_left"
-            android:layout_marginRight="@dimen/settings_row_margin_right">
-
-            <ImageView
-                android:id="@+id/calculation_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/settings_image_right_margin"
-                android:src="@drawable/sum_icon"
-                />
-
-            <TextView
-                android:id="@+id/calculation_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Calculation Method"
-                android:textColor="@color/colorPrimaryDark"/>
-
-        </TableRow>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/line"/>
-
-        <TableRow
-            android:layout_marginTop="@dimen/settings_row_margin_top"
-            android:layout_marginBottom="@dimen/settings_row_margin_bottom"
-            android:layout_marginLeft="@dimen/settings_row_margin_left"
-            android:layout_marginRight="@dimen/settings_row_margin_right">
-
-            <ImageView
-                android:id="@+id/asr_method_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/settings_image_right_margin"
-                android:src="@drawable/sun_icon"
-                />
-
-            <TextView
-                android:id="@+id/asr_method_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Asr Method"
-                android:textColor="@color/colorPrimaryDark"/>
-
-        </TableRow>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/line"/>
-
-        <TableRow
-            android:layout_marginTop="@dimen/settings_row_margin_top"
-            android:layout_marginBottom="@dimen/settings_row_margin_bottom"
-            android:layout_marginLeft="@dimen/settings_row_margin_left"
-            android:layout_marginRight="@dimen/settings_row_margin_right">
-
-            <ImageView
-                android:id="@+id/latitudes_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/settings_image_right_margin"
-                android:src="@drawable/sun_icon"
-                />
-
-            <TextView
-                android:id="@+id/latitudes_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Latitudes Method"
-                android:textColor="@color/colorPrimaryDark"/>
-
-        </TableRow>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/line"/>
+        <ExpandableListView
+            android:id="@+id/expandable_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indicatorRight="?android:attr/expandableListPreferredItemIndicatorRight"
+            android:layout_below="@id/table_layout"></ExpandableListView>
 
     </TableLayout>
+
+
 
 </RelativeLayout>
