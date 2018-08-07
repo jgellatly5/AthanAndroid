@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +62,16 @@ public class DayViewFragment extends Fragment {
     TextView sunsetPostFix;
     @BindView(R.id.night_post_fix)
     TextView nightPostFix;
+    @BindView(R.id.green_oval_dawn)
+    ImageView greenOvalDawn;
+    @BindView(R.id.green_oval_midday)
+    ImageView greenOvalMidday;
+    @BindView(R.id.green_oval_afternoon)
+    ImageView greenOvalAfternoon;
+    @BindView(R.id.green_oval_sunset)
+    ImageView greenOvalSunset;
+    @BindView(R.id.green_oval_night)
+    ImageView greenOvalNight;
 
     Unbinder unbinder;
 
@@ -98,24 +110,17 @@ public class DayViewFragment extends Fragment {
         String[] splitSunsetTime = newSunsetTime.split(" ");
         String[] splitNightTime = newNightTime.split(" ");
 
-        if (prayerTime.getTimeFormat() == 0) {
-            dawnTimeTextView.setText(nextDayTimes.get(0));
-            middayTimeTextView.setText(nextDayTimes.get(2));
-            afternoonTimeTextView.setText(nextDayTimes.get(3));
-            sunsetTimeTextView.setText(nextDayTimes.get(5));
-            nightTimeTextView.setText(nextDayTimes.get(6));
-        } else {
-            dawnTimeTextView.setText(splitDawnTime[0]);
-            dawnPostFix.setText(splitDawnTime[1]);
-            middayTimeTextView.setText(splitMiddayTime[0]);
-            middayPostFix.setText(splitMiddayTime[1]);
-            afternoonTimeTextView.setText(splitAfternoonTime[0]);
-            afternoonPostFix.setText(splitAfternoonTime[1]);
-            sunsetTimeTextView.setText(splitSunsetTime[0]);
-            sunsetPostFix.setText(splitSunsetTime[1]);
-            nightTimeTextView.setText(splitNightTime[0]);
-            nightPostFix.setText(splitNightTime[1]);
-        }
+        dawnTimeTextView.setText(splitDawnTime[0]);
+        dawnPostFix.setText(splitDawnTime[1]);
+        middayTimeTextView.setText(splitMiddayTime[0]);
+        middayPostFix.setText(splitMiddayTime[1]);
+        afternoonTimeTextView.setText(splitAfternoonTime[0]);
+        afternoonPostFix.setText(splitAfternoonTime[1]);
+        sunsetTimeTextView.setText(splitSunsetTime[0]);
+        sunsetPostFix.setText(splitSunsetTime[1]);
+        nightTimeTextView.setText(splitNightTime[0]);
+        nightPostFix.setText(splitNightTime[1]);
+        setOvalVisibility(ClockFragment.getNextTime());
     }
 
     private void setDate(Bundle bundle) {
@@ -175,6 +180,17 @@ public class DayViewFragment extends Fragment {
         } else {
             dayTextView.setText(weekDayString + ", " + monthString + "/" + numberString);
         }
+    }
+
+    private void setOvalVisibility(int item) {
+        List<ImageView> timeViewList = new ArrayList<>();
+        timeViewList.add(greenOvalDawn);
+        timeViewList.add(greenOvalMidday);
+        timeViewList.add(greenOvalAfternoon);
+        timeViewList.add(greenOvalSunset);
+        timeViewList.add(greenOvalNight);
+
+        timeViewList.get(item).setVisibility(View.VISIBLE);
     }
 
     @Override

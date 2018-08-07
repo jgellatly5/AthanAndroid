@@ -34,7 +34,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/green_oval"/>
+                    android:src="@drawable/green_oval"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/dawn_text_view"
@@ -89,7 +90,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/green_oval"/>
+                    android:src="@drawable/green_oval"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/midday_text_view"
@@ -145,7 +147,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/green_oval"
                     android:id="@+id/green_oval_afternoon"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/afternoonTextView"
@@ -200,7 +203,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/green_oval"
                     android:id="@+id/green_oval_sunset"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/sunsetTextView"
@@ -253,7 +257,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/green_oval_night"
                     android:src="@drawable/green_oval"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/nightTextView"

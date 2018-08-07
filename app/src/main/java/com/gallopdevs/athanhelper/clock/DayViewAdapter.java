@@ -27,8 +27,10 @@ public class DayViewAdapter extends FragmentPagerAdapter {
         Bundle bundle = new Bundle();
         Calendar c = Calendar.getInstance();
         int day = c.get(Calendar.DAY_OF_WEEK);
+        int indicator = ClockFragment.getNextTime();
         bundle.putInt("day", day + i);
         bundle.putInt("count", i);
+        bundle.putInt("indicator", indicator);
         fragment.setArguments(bundle);
         return fragment;
     }

@@ -59,15 +59,15 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
 
     private CountDownTimer timer;
 
-    private int currentTimeIndex = 0;
+    private static int currentTimeIndex = 0;
 
-    private long difference1 = 0;
-    private long difference2 = 0;
-    private long difference3 = 0;
-    private long difference4 = 0;
-    private long difference5 = 0;
-    private long difference6 = 0;
-    private long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
+    private static long difference1 = 0;
+    private static long difference2 = 0;
+    private static long difference3 = 0;
+    private static long difference4 = 0;
+    private static long difference5 = 0;
+    private static long difference6 = 0;
+    private static long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
 
     @BindView(R.id.view_pager_fragment)
     ViewPager viewPager;
@@ -147,10 +147,8 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                Log.d(TAG, "onSuccessTimerActivity: this is happening");
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
-                                Log.d(TAG, "onSuccessTimerActivity: latitude: " + String.valueOf(latitude) + " longitude: " + String.valueOf(longitude));
                                 CalendarPrayerTimes.setLatitude(latitude);
                                 CalendarPrayerTimes.setLongitude(longitude);
 
@@ -302,7 +300,7 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
         }.start();
     }
 
-    private int getNextTime() {
+    public static int getNextTime() {
         for (int i = 0; i < differences.length; i++) {
             if (differences[i] < 0) {
                 currentTimeIndex = i + 1;
