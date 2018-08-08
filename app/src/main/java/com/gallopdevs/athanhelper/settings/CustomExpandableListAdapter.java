@@ -1,8 +1,6 @@
 package com.gallopdevs.athanhelper.settings;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,16 @@ import android.widget.TextView;
 
 import com.gallopdevs.athanhelper.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
+
+    @BindView(R.id.arrow_right)
+    ImageView arrowDown;
 
     private Context context;
     private List<String> expandableListHeader;
@@ -89,20 +92,28 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
+
+
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_settings_header, null);
+        }
+        ButterKnife.bind(this, convertView);
+
+        if (isExpanded) {
+            arrowDown.setImageResource(R.drawable.arrow_down);
+        } else {
+            arrowDown.setImageResource(R.drawable.arrow_right);
         }
 
         TextView lblListHeader = convertView.findViewById(R.id.header_settings);
         ImageView imageIcon = convertView.findViewById(R.id.image_header);
         imageIcon.setImageResource(getImageDrawable(groupPosition));
+        String headerTitle = (String) getGroup(groupPosition);
         lblListHeader.setText(headerTitle);
 
         return convertView;
     }
-
 
 
     @Override

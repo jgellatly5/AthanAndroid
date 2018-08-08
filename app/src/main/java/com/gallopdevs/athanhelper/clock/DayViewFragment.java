@@ -190,6 +190,10 @@ public class DayViewFragment extends Fragment {
         timeViewList.add(greenOvalSunset);
         timeViewList.add(greenOvalNight);
 
+        if (item >= 5) {
+            item -= 5;
+        }
+
         timeViewList.get(item).setVisibility(View.VISIBLE);
     }
 
