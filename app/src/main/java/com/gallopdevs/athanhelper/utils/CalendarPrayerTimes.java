@@ -40,10 +40,6 @@ public class CalendarPrayerTimes {
         prayerTime.setAdjustHighLats(value);
     }
 
-    public static void updateTimeFormat(int value) {
-        prayerTime.setTimeFormat(value);
-    }
-
     private static ArrayList<String> newTimes = new ArrayList<>();
     private static ArrayList<String> nextDayTimes = new ArrayList<>();
 

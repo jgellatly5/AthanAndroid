@@ -20,6 +20,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @BindView(R.id.arrow_right)
     ImageView arrowDown;
+    @BindView(R.id.header_settings)
+    TextView lblListHeader;
+    @BindView(R.id.image_header)
+    ImageView imageIcon;
 
     private Context context;
     private List<String> expandableListHeader;
@@ -58,8 +62,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_settings_items, null);
         }
 
-//        ImageView imageView = convertView.findViewById(R.id.selection_indicator);
-//        imageView.setVisibility(View.VISIBLE);
+        ImageView imageView = convertView.findViewById(R.id.selection_indicator);
+        imageView.setImageResource(R.drawable.green_oval);
         TextView textListChild = convertView.findViewById(R.id.item);
         textListChild.setText(childText);
         return convertView;
@@ -92,8 +96,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-
-
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_settings_header, null);
@@ -106,8 +108,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             arrowDown.setImageResource(R.drawable.arrow_right);
         }
 
-        TextView lblListHeader = convertView.findViewById(R.id.header_settings);
-        ImageView imageIcon = convertView.findViewById(R.id.image_header);
         imageIcon.setImageResource(getImageDrawable(groupPosition));
         String headerTitle = (String) getGroup(groupPosition);
         lblListHeader.setText(headerTitle);

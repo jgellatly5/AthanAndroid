@@ -54,8 +54,6 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private static final String KEY_PREF_CALC_METHOD = "calculation_method";
     private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
     private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
-    private static final String KEY_PREF_TIME_FORMATS = "time_formats";
-
 
     private CountDownTimer timer;
 
@@ -327,11 +325,8 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
                 String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
                 CalendarPrayerTimes.updateHighLats(Integer.parseInt(highLatitudes));
                 break;
-            case KEY_PREF_TIME_FORMATS:
-                String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
-                CalendarPrayerTimes.updateTimeFormat(Integer.parseInt(timeFormatsString));
-                break;
         }
+        Toast.makeText(getActivity(), "Shared Prefs changed", Toast.LENGTH_SHORT).show();
         startNewTimer();
         initSwipeAdapter();
     }
