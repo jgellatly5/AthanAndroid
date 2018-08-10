@@ -44,10 +44,7 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private static final String TAG = "ClockFragment";
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
-    private static final int DEFAULT_CALC_METHOD = 2;
-    private static final int DEFAULT_JURISTIC_METHOD = 0;
-    private static final int DEFAULT_HIGH_LATITUDES = 0;
-    private static final int DEFAULT_TIME_FORMAT = 1;
+
     private static final int NEXT_DAY_TIMES = 1;
 
     private static final String KEY_PREF_CALC_METHOD = "calculation_method";
@@ -66,8 +63,6 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private long difference5 = 0;
     private long difference6 = 0;
     private long[] differences = {difference1, difference2, difference3, difference4, difference5, difference6};
-
-    private PrayTime prayerTime;
 
     @BindView(R.id.view_pager_fragment)
     ViewPager viewPager;
@@ -96,8 +91,6 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
         return view;
     }
 
-
-
     private void init() {
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -107,11 +100,7 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // set default settings
-        prayerTime = PrayTime.getInstance();
-        prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
-        prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
-        prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
-        prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
+        CalendarPrayerTimes.configureSettings();
     }
 
     private void initSwipeAdapter() {
@@ -133,6 +122,8 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
                                 Log.d(TAG, "onSuccessTimerActivity: latitude: " + String.valueOf(latitude) + " longitude: " + String.valueOf(longitude));
                                 CalendarPrayerTimes.setLatitude(latitude);
                                 CalendarPrayerTimes.setLongitude(longitude);
+
+                                startNewTimer();
                                 initSwipeAdapter();
                             } else {
                                 Toast.makeText(getActivity(), "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show();
@@ -293,22 +284,23 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
         switch (key) {
             case KEY_PREF_CALC_METHOD:
                 String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-                prayerTime.setCalcMethod(Integer.parseInt(calcMethod));
+                CalendarPrayerTimes.updateCalcMethod(Integer.parseInt(calcMethod));
                 break;
             case KEY_PREF_JURISTIC_METHOD:
                 String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-                prayerTime.setAsrJuristic(Integer.parseInt(juristicMethod));
+                CalendarPrayerTimes.updateAsrJuristic(Integer.parseInt(juristicMethod));
                 break;
             case KEY_PREF_HIGH_LATITUDES:
                 String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-                prayerTime.setAdjustHighLats(Integer.parseInt(highLatitudes));
+                CalendarPrayerTimes.updateHighLats(Integer.parseInt(highLatitudes));
                 break;
             case KEY_PREF_TIME_FORMATS:
                 String timeFormatsString = sharedPreferences.getString(KEY_PREF_TIME_FORMATS, "");
-                prayerTime.setTimeFormat(Integer.parseInt(timeFormatsString));
+                CalendarPrayerTimes.updateTimeFormat(Integer.parseInt(timeFormatsString));
                 break;
         }
-//        startNewTimer();
+        startNewTimer();
+        initSwipeAdapter();
     }
 
     @Override

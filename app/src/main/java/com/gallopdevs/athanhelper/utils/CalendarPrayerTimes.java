@@ -14,7 +14,35 @@ public class CalendarPrayerTimes {
 
     private static final String TAG = "CalendarPrayerTimes";
 
+    private static final int DEFAULT_CALC_METHOD = 2;
+    private static final int DEFAULT_JURISTIC_METHOD = 0;
+    private static final int DEFAULT_HIGH_LATITUDES = 0;
+    private static final int DEFAULT_TIME_FORMAT = 0;
+
     private static PrayTime prayerTime = PrayTime.getInstance();
+
+    public static void configureSettings() {
+        prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
+        prayerTime.setAsrJuristic(DEFAULT_JURISTIC_METHOD);
+        prayerTime.setAdjustHighLats(DEFAULT_HIGH_LATITUDES);
+        prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
+    }
+
+    public static void updateCalcMethod(int value) {
+        prayerTime.setCalcMethod(value);
+    }
+
+    public static void updateAsrJuristic(int value) {
+        prayerTime.setAsrJuristic(value);
+    }
+
+    public static void updateHighLats(int value) {
+        prayerTime.setAdjustHighLats(value);
+    }
+
+    public static void updateTimeFormat(int value) {
+        prayerTime.setTimeFormat(value);
+    }
 
     private static ArrayList<String> newTimes = new ArrayList<>();
     private static ArrayList<String> nextDayTimes = new ArrayList<>();
