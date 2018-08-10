@@ -1,12 +1,14 @@
 package com.gallopdevs.athanhelper.settings;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 
@@ -17,6 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
+
+    private static final String TAG = "CustomExpandableListAda";
 
     @BindView(R.id.arrow_right)
     ImageView arrowDown;
@@ -35,13 +39,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         this.expandableListDetail = expandableListDetail;
     }
 
-    public void setImageVisibility() {
-
-        View convertView = LayoutInflater.from(context).inflate(R.layout.list_settings_items, null);
-        ImageView indicator = convertView.findViewById(R.id.selection_indicator);
-        indicator.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         return this.expandableListDetail.get(this.expandableListHeader.get(groupPosition)).get(childPosition);
@@ -53,7 +50,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild,
+    public View getChildView(int groupPosition, final int childPosition, final boolean isLastChild,
                              View convertView, ViewGroup parent) {
         final String childText = (String) getChild(groupPosition, childPosition);
 
@@ -62,8 +59,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_settings_items, null);
         }
 
-        ImageView imageView = convertView.findViewById(R.id.selection_indicator);
-        imageView.setImageResource(R.drawable.green_oval);
+        final ImageView imageView = convertView.findViewById(R.id.selection_indicator);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageView.setVisibility(View.VISIBLE);
+            }
+        });
         TextView textListChild = convertView.findViewById(R.id.item);
         textListChild.setText(childText);
         return convertView;
@@ -114,7 +117,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
         return convertView;
     }
-
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {

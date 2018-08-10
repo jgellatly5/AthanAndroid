@@ -9,7 +9,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/selection_indicator"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="100dp"/>
+        android:layout_marginLeft="100dp"
+        android:visibility="invisible"
+        android:src="@drawable/green_oval"/>
     
     <TextView
         android:id="@+id/item"

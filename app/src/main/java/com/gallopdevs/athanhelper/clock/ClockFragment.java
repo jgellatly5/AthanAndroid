@@ -2,6 +2,7 @@ package com.gallopdevs.athanhelper.clock;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -54,6 +55,8 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private static final String KEY_PREF_CALC_METHOD = "calculation_method";
     private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
     private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
+
+    private SharedPreferences sharedPreferences;
 
     private CountDownTimer timer;
 
@@ -110,10 +113,6 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
 
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        // settings listener
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // set default settings
         CalendarPrayerTimes.configureSettings();
@@ -314,14 +313,17 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case KEY_PREF_CALC_METHOD:
+                Log.d(TAG, "onSharedPreferenceChanged: changing calc method");
                 String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
                 CalendarPrayerTimes.updateCalcMethod(Integer.parseInt(calcMethod));
                 break;
             case KEY_PREF_JURISTIC_METHOD:
+                Log.d(TAG, "onSharedPreferenceChanged: changing juristic method");
                 String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
                 CalendarPrayerTimes.updateAsrJuristic(Integer.parseInt(juristicMethod));
                 break;
             case KEY_PREF_HIGH_LATITUDES:
+                Log.d(TAG, "onSharedPreferenceChanged: changing high lats");
                 String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
                 CalendarPrayerTimes.updateHighLats(Integer.parseInt(highLatitudes));
                 break;
@@ -329,6 +331,20 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
         Toast.makeText(getActivity(), "Shared Prefs changed", Toast.LENGTH_SHORT).show();
         startNewTimer();
         initSwipeAdapter();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // settings listener
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override

@@ -43,6 +43,9 @@ public class SettingsFragment extends Fragment {
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
 
+    private String chosenMethod;
+    private String setMethodText;
+
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -68,14 +71,10 @@ public class SettingsFragment extends Fragment {
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
                 View convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_settings_items, null);
                 View childView = adapter.getChildView(groupPosition, childPosition, false, convertView, null);
-//                ImageView indicator = childView.findViewById(R.id.selection_indicator);
-//                indicator.setImageResource(R.drawable.green_oval);
-//                adapter.setImageVisibility();
+
                 TextView textView = childView.findViewById(R.id.item);
-                String setMethodText = textView.getText().toString();
-                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                String chosenMethod = "";
+                setMethodText = textView.getText().toString();
+
                 switch (groupPosition) {
                     case 0:
                         chosenMethod = KEY_PREF_CALC_METHOD;
@@ -87,6 +86,9 @@ public class SettingsFragment extends Fragment {
                         chosenMethod = KEY_PREF_HIGH_LATITUDES;
                         break;
                 }
+                Log.d(TAG, "onChildClick: chosenMethod: " + chosenMethod);
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString(chosenMethod, setMethodText);
                 editor.commit();
                 return false;
