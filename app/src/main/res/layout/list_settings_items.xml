@@ -10,8 +10,8 @@
         android:id="@+id/selection_indicator"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="100dp"
-        android:visibility="invisible"
-        android:src="@drawable/green_oval"/>
+        android:src="@drawable/green_oval"
+        android:visibility="invisible"/>
     
     <TextView
         android:id="@+id/item"

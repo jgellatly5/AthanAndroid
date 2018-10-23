@@ -44,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class ClockFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ClockFragment extends Fragment {
 
     private static final String TAG = "ClockFragment";
 
@@ -57,6 +57,7 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
 
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     private CountDownTimer timer;
 
@@ -110,6 +111,35 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     private void init() {
         // hide elements
         displayElements(progressDisplayStatus);
+
+        // settings listener
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                switch (key) {
+                    case KEY_PREF_CALC_METHOD:
+                        Log.d(TAG, "onSharedPreferenceChanged: changing calc method");
+                        String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
+                        CalendarPrayerTimes.updateCalcMethod(Integer.parseInt(calcMethod));
+                        break;
+                    case KEY_PREF_JURISTIC_METHOD:
+                        Log.d(TAG, "onSharedPreferenceChanged: changing juristic method");
+                        String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
+                        CalendarPrayerTimes.updateAsrJuristic(Integer.parseInt(juristicMethod));
+                        break;
+                    case KEY_PREF_HIGH_LATITUDES:
+                        Log.d(TAG, "onSharedPreferenceChanged: changing high lats");
+                        String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
+                        CalendarPrayerTimes.updateHighLats(Integer.parseInt(highLatitudes));
+                        break;
+                }
+                Toast.makeText(getActivity(), "Shared Prefs changed", Toast.LENGTH_SHORT).show();
+                startNewTimer();
+                initSwipeAdapter();
+            }
+        };
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -310,46 +340,21 @@ public class ClockFragment extends Fragment implements SharedPreferences.OnShare
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case KEY_PREF_CALC_METHOD:
-                Log.d(TAG, "onSharedPreferenceChanged: changing calc method");
-                String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-                CalendarPrayerTimes.updateCalcMethod(Integer.parseInt(calcMethod));
-                break;
-            case KEY_PREF_JURISTIC_METHOD:
-                Log.d(TAG, "onSharedPreferenceChanged: changing juristic method");
-                String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-                CalendarPrayerTimes.updateAsrJuristic(Integer.parseInt(juristicMethod));
-                break;
-            case KEY_PREF_HIGH_LATITUDES:
-                Log.d(TAG, "onSharedPreferenceChanged: changing high lats");
-                String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-                CalendarPrayerTimes.updateHighLats(Integer.parseInt(highLatitudes));
-                break;
-        }
-        Toast.makeText(getActivity(), "Shared Prefs changed", Toast.LENGTH_SHORT).show();
-        startNewTimer();
-        initSwipeAdapter();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        // settings listener
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
         unbinder.unbind();
     }
 }

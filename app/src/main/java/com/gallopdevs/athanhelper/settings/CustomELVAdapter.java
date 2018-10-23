@@ -1,6 +1,7 @@
 package com.gallopdevs.athanhelper.settings;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
+import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +20,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
+public class CustomELVAdapter extends BaseExpandableListAdapter {
 
-    private static final String TAG = "CustomExpandableListAda";
+    private static final String TAG = "CustomELVAdapter";
+
+    private static final String KEY_PREF_CALC_METHOD = "calculation_method";
+    private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
+    private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
 
     @BindView(R.id.arrow_right)
     ImageView arrowDown;
@@ -33,7 +39,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     private List<String> expandableListHeader;
     private HashMap<String, List<String>> expandableListDetail;
 
-    public CustomExpandableListAdapter(Context context, List<String> expandableListHeader, HashMap<String, List<String>> expandableListDetail) {
+    private String chosenMethod = "";
+
+    public CustomELVAdapter(Context context, List<String> expandableListHeader, HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
         this.expandableListHeader = expandableListHeader;
         this.expandableListDetail = expandableListDetail;
@@ -50,23 +58,47 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition, final boolean isLastChild,
+    public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild,
                              View convertView, ViewGroup parent) {
-        final String childText = (String) getChild(groupPosition, childPosition);
-
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_settings_items, null);
         }
 
         final ImageView imageView = convertView.findViewById(R.id.selection_indicator);
-
+        final String childText = (String) getChild(groupPosition, childPosition);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imageView.setVisibility(View.VISIBLE);
+                switch (groupPosition) {
+                    case 0:
+                        Log.w(TAG, "onClick: childPosition: " + childPosition);
+                        chosenMethod = KEY_PREF_CALC_METHOD;
+                        CalendarPrayerTimes.updateCalcMethod(childPosition);
+                        Toast.makeText(context, "Updating Calc Method", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Log.w(TAG, "onClick: childPosition: " + childPosition);
+                        chosenMethod = KEY_PREF_JURISTIC_METHOD;
+                        CalendarPrayerTimes.updateAsrJuristic(childPosition);
+                        Toast.makeText(context, "Updating Juristic Method", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        Log.w(TAG, "onClick: childPosition: " + childPosition);
+                        chosenMethod = KEY_PREF_HIGH_LATITUDES;
+                        CalendarPrayerTimes.updateHighLats(childPosition);
+                        Toast.makeText(context, "Updating HighLats", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                SharedPreferences saveSharedPref = context.getSharedPreferences(chosenMethod, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = saveSharedPref.edit();
+                editor.putString(chosenMethod, childText);
+                editor.apply();
+                Log.d(TAG, "onClick: saving sharedpref");
             }
         });
+
         TextView textListChild = convertView.findViewById(R.id.item);
         textListChild.setText(childText);
         return convertView;
