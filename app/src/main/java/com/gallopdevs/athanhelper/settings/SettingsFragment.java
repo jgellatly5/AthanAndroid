@@ -32,6 +32,16 @@ public class SettingsFragment extends Fragment {
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
 
+    public interface SettingsListener {
+        void onSettingsChanged();
+    }
+
+    private SettingsListener listener;
+
+    public void setSettingsChangedListener(SettingsListener listener) {
+        this.listener = listener;
+    }
+
     public SettingsFragment() {
         // Required empty public constructor
     }

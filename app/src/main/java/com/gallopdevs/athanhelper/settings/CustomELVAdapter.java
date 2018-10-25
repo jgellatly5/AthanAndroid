@@ -12,7 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
+import com.gallopdevs.athanhelper.clock.ClockFragment;
+import com.gallopdevs.athanhelper.clock.DayViewAdapter;
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
+import com.gallopdevs.athanhelper.utils.SettingsPagerAdapter;
+import com.gallopdevs.athanhelper.utils.SwiperActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +28,6 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
 
     private static final String TAG = "CustomELVAdapter";
 
-    private static final String KEY_PREF_CALC_METHOD = "calculation_method";
-    private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-    private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
-
     @BindView(R.id.arrow_right)
     ImageView arrowDown;
     @BindView(R.id.header_settings)
@@ -38,8 +38,6 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expandableListHeader;
     private HashMap<String, List<String>> expandableListDetail;
-
-    private String chosenMethod = "";
 
     public CustomELVAdapter(Context context, List<String> expandableListHeader, HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
@@ -74,31 +72,22 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
                 switch (groupPosition) {
                     case 0:
                         Log.w(TAG, "onClick: childPosition: " + childPosition);
-                        chosenMethod = KEY_PREF_CALC_METHOD;
                         CalendarPrayerTimes.updateCalcMethod(childPosition);
                         Toast.makeText(context, "Updating Calc Method", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
                         Log.w(TAG, "onClick: childPosition: " + childPosition);
-                        chosenMethod = KEY_PREF_JURISTIC_METHOD;
                         CalendarPrayerTimes.updateAsrJuristic(childPosition);
                         Toast.makeText(context, "Updating Juristic Method", Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
                         Log.w(TAG, "onClick: childPosition: " + childPosition);
-                        chosenMethod = KEY_PREF_HIGH_LATITUDES;
                         CalendarPrayerTimes.updateHighLats(childPosition);
                         Toast.makeText(context, "Updating HighLats", Toast.LENGTH_SHORT).show();
                         break;
                 }
-                SharedPreferences saveSharedPref = context.getSharedPreferences(chosenMethod, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = saveSharedPref.edit();
-                editor.putString(chosenMethod, childText);
-                editor.apply();
-                Log.d(TAG, "onClick: saving sharedpref");
             }
         });
-
         TextView textListChild = convertView.findViewById(R.id.item);
         textListChild.setText(childText);
         return convertView;
@@ -156,7 +145,7 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
     }
 
     private int getImageDrawable(int index) {
-        int[] drawables = {R.drawable.sum_icon, R.drawable.sun_icon, R.drawable.bell_icon};
+        int[] drawables = {R.drawable.sum_icon, R.drawable.sun_icon, R.drawable.compass_icon};
         return drawables[index];
     }
 }

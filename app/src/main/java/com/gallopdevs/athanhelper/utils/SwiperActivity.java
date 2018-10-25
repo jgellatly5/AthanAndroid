@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.clock.ClockFragment;
+import com.gallopdevs.athanhelper.settings.CustomELVAdapter;
 import com.gallopdevs.athanhelper.settings.SettingsFragment;
 
 import butterknife.BindView;
@@ -26,34 +27,7 @@ public class SwiperActivity extends AppCompatActivity {
     @BindView(R.id.tab_layout_activity)
     TabLayout tabLayout;
 
-    private static final String KEY_PREF_CALC_METHOD = "calculation_method";
-    private static final String KEY_PREF_JURISTIC_METHOD = "juristic_method";
-    private static final String KEY_PREF_HIGH_LATITUDES = "high_latitudes";
-
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            switch (key) {
-                case KEY_PREF_CALC_METHOD:
-                    Log.d(TAG, "onSharedPreferenceChanged: changing calc method");
-                    String calcMethod = sharedPreferences.getString(KEY_PREF_CALC_METHOD, "");
-                    CalendarPrayerTimes.updateCalcMethod(Integer.parseInt(calcMethod));
-                    break;
-                case KEY_PREF_JURISTIC_METHOD:
-                    Log.d(TAG, "onSharedPreferenceChanged: changing juristic method");
-                    String juristicMethod = sharedPreferences.getString(KEY_PREF_JURISTIC_METHOD, "");
-                    CalendarPrayerTimes.updateAsrJuristic(Integer.parseInt(juristicMethod));
-                    break;
-                case KEY_PREF_HIGH_LATITUDES:
-                    Log.d(TAG, "onSharedPreferenceChanged: changing high lats");
-                    String highLatitudes = sharedPreferences.getString(KEY_PREF_HIGH_LATITUDES, "");
-                    CalendarPrayerTimes.updateHighLats(Integer.parseInt(highLatitudes));
-                    break;
-            }
-            Toast.makeText(SwiperActivity.this, "Shared Pref changing", Toast.LENGTH_SHORT).show();
-        }
-    };
+    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,23 +35,23 @@ public class SwiperActivity extends AppCompatActivity {
         setContentView(R.layout.activity_swiper);
         ButterKnife.bind(this);
 
-        SettingsPagerAdapter adapter = new SettingsPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new ClockFragment());
-        adapter.addFrag(new SettingsFragment());
-        viewPager.setAdapter(adapter);
+        settingsFragment = new SettingsFragment();
+        final SettingsPagerAdapter settingsPagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
+        settingsPagerAdapter.addFrag(new ClockFragment());
+        settingsPagerAdapter.addFrag(settingsFragment);
+        viewPager.setAdapter(settingsPagerAdapter);
+
+        settingsFragment.setSettingsChangedListener(new SettingsFragment.SettingsListener() {
+            @Override
+            public void onSettingsChanged() {
+                Toast.makeText(SwiperActivity.this, "Adding new fragment", Toast.LENGTH_SHORT).show();
+//                settingsPagerAdapter.addFrag(new ClockFragment());
+            }
+        });
 
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.getTabAt(0).setIcon(R.drawable.clock_icon);
         tabLayout.getTabAt(1).setIcon(R.drawable.settings_icon);
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 }

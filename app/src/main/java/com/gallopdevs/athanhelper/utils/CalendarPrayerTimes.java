@@ -9,6 +9,7 @@ import com.google.android.gms.common.util.CrashUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.PriorityQueue;
 
 public class CalendarPrayerTimes {
 
