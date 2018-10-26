@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,9 @@ public class SettingsFragment extends Fragment {
         void onSettingsChanged();
     }
 
-    private SettingsListener listener;
+    public SettingsListener listener;
 
-    public void setSettingsChangedListener(SettingsListener listener) {
+    public void setOnSettingsListener(SettingsListener listener) {
         this.listener = listener;
     }
 
@@ -94,6 +95,15 @@ public class SettingsFragment extends Fragment {
         listDataChild.put(listDataHeader.get(0), calculationMethodItems);
         listDataChild.put(listDataHeader.get(1), asrMethodItems);
         listDataChild.put(listDataHeader.get(2), latitudesMethodItems);
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause: should be listening");
+        super.onPause();
+        if (listener != null) {
+            listener.onSettingsChanged();
+        }
     }
 
     @Override

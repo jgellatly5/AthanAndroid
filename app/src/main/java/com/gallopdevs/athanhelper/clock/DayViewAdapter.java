@@ -41,4 +41,9 @@ public class DayViewAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return NUM_ITEMS;
     }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
 }

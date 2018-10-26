@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.clock.ClockFragment;
+import com.gallopdevs.athanhelper.clock.DayViewAdapter;
 import com.gallopdevs.athanhelper.settings.CustomELVAdapter;
 import com.gallopdevs.athanhelper.settings.SettingsFragment;
 
@@ -27,31 +28,40 @@ public class SwiperActivity extends AppCompatActivity {
     @BindView(R.id.tab_layout_activity)
     TabLayout tabLayout;
 
-    private SettingsFragment settingsFragment;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swiper);
         ButterKnife.bind(this);
 
-        settingsFragment = new SettingsFragment();
-        final SettingsPagerAdapter settingsPagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
-        settingsPagerAdapter.addFrag(new ClockFragment());
-        settingsPagerAdapter.addFrag(settingsFragment);
+        final DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
+        SettingsPagerAdapter settingsPagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
+        settingsPagerAdapter.addFrag(new ClockFragment(dayViewAdapter));
+        settingsPagerAdapter.addFrag(new SettingsFragment());
         viewPager.setAdapter(settingsPagerAdapter);
-
-        settingsFragment.setSettingsChangedListener(new SettingsFragment.SettingsListener() {
-            @Override
-            public void onSettingsChanged() {
-                Toast.makeText(SwiperActivity.this, "Adding new fragment", Toast.LENGTH_SHORT).show();
-//                settingsPagerAdapter.addFrag(new ClockFragment());
-            }
-        });
 
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.getTabAt(0).setIcon(R.drawable.clock_icon);
         tabLayout.getTabAt(1).setIcon(R.drawable.settings_icon);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    dayViewAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }

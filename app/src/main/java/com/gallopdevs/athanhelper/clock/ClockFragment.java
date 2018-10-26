@@ -44,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+@SuppressLint("ValidFragment")
 public class ClockFragment extends Fragment {
 
     private static final String TAG = "ClockFragment";
@@ -85,12 +86,15 @@ public class ClockFragment extends Fragment {
     private double latitude;
     private double longitude;
 
-    public ClockFragment() {
-        // Required empty public constructor
+    private DayViewAdapter dayViewAdapter;
+
+    @SuppressLint("ValidFragment")
+    public ClockFragment(DayViewAdapter dayViewAdapter) {
+        this.dayViewAdapter = dayViewAdapter;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clock, container, false);
         unbinder = ButterKnife.bind(this, view);
 
@@ -125,7 +129,6 @@ public class ClockFragment extends Fragment {
     }
 
     private void initSwipeAdapter() {
-        DayViewAdapter dayViewAdapter = new DayViewAdapter(getActivity().getSupportFragmentManager());
         viewPager.setAdapter(dayViewAdapter);
         tabDots.setupWithViewPager(viewPager, true);
     }
