@@ -62,14 +62,7 @@ public class SwiperActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
-                    String currentTime = simpleDateFormat.format(Calendar.getInstance().getTime());
-                    long currentTimeMilliSeconds = 0;
-                    try {
-                        currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
                     long[] getTimeDifference = clockFragment.getTimerDifference(currentTimeMilliSeconds);
                     long countDownTime = getTimeDifference[ClockFragment.getNextTime()];
                     dayViewAdapter.notifyDataSetChanged();

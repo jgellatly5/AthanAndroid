@@ -155,15 +155,7 @@ public class ClockFragment extends Fragment {
                                 progressDisplayStatus = false;
                                 displayElements(progressDisplayStatus);
 
-                                String currentTime = simpleDateFormat.format(Calendar.getInstance().getTime());
-                                long currentTimeMilliSeconds = 0;
-                                try {
-                                    currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).getTime();
-                                    Log.w(TAG, "getLocation: currentTimeMillisSeconds: " + currentTimeMilliSeconds);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-
+                                long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
                                 startNewTimer(getTimerDifference(currentTimeMilliSeconds)[getNextTime()]);
                                 initSwipeAdapter();
                             } else {
@@ -297,8 +289,10 @@ public class ClockFragment extends Fragment {
                 prayerTimer.setText("00:00:00s");
 
                 // TODO send notification
-                // TODO call new countDownTime here
-                startNewTimer(countDownTime);
+                long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
+                long[] getTimeDifference = getTimerDifference(currentTimeMilliSeconds);
+                long newCountDownTime = getTimeDifference[getNextTime()];
+                startNewTimer(newCountDownTime);
             }
         }.start();
     }

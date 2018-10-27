@@ -7,8 +7,11 @@ import android.util.Log;
 import com.gallopdevs.athanhelper.model.PrayTime;
 import com.google.android.gms.common.util.CrashUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.PriorityQueue;
 
 public class CalendarPrayerTimes {
@@ -21,6 +24,18 @@ public class CalendarPrayerTimes {
     private static final int DEFAULT_TIME_FORMAT = 0;
 
     private static PrayTime prayerTime = PrayTime.getInstance();
+
+    public static long getCurrentTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        String currentTime = simpleDateFormat.format(Calendar.getInstance().getTime());
+        long currentTimeMilliSeconds = 0;
+        try {
+            currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return currentTimeMilliSeconds;
+    }
 
     public static void configureSettings() {
         prayerTime.setCalcMethod(DEFAULT_CALC_METHOD);
