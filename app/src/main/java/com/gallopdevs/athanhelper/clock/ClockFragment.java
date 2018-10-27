@@ -2,6 +2,8 @@ package com.gallopdevs.athanhelper.clock;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +15,9 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +58,7 @@ public class ClockFragment extends Fragment {
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
 
     private static final int NEXT_DAY_TIMES = 1;
+    private static final String CHANNEL_ID = "Notification";
 
     private CountDownTimer timer;
 
@@ -288,7 +294,16 @@ public class ClockFragment extends Fragment {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
 
-                // TODO send notification
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                        .setSmallIcon(R.drawable.moon)
+                        .setContentTitle("Athan")
+                        .setContentText("Next prayer time.")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+
+                int notificationId = 0;
+                notificationManager.notify(notificationId, builder.build());
+
                 long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
                 long[] getTimeDifference = getTimerDifference(currentTimeMilliSeconds);
                 long newCountDownTime = getTimeDifference[getNextTime()];

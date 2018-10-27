@@ -18,4 +18,7 @@
     <string name="postfix_am">am</string>
     <string name="postfix_pm">pm</string>
 
+    <string name="channel_name">Timer Notifications</string>
+    <string name="channel_description">Show prayer that has just completed.</string>
+
 </resources>
