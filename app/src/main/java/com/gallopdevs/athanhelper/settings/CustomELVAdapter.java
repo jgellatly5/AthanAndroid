@@ -39,6 +39,8 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
     private List<String> expandableListHeader;
     private HashMap<String, List<String>> expandableListDetail;
 
+    int lastPosition = 0;
+
     public CustomELVAdapter(Context context, List<String> expandableListHeader, HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
         this.expandableListHeader = expandableListHeader;
@@ -64,6 +66,9 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
         }
 
         final ImageView imageView = convertView.findViewById(R.id.selection_indicator);
+        if (lastPosition != childPosition) {
+            imageView.setVisibility(View.INVISIBLE);
+        }
         final String childText = (String) getChild(groupPosition, childPosition);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,17 +78,20 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
                     case 0:
                         Log.w(TAG, "onClick: childPosition: " + childPosition);
                         CalendarPrayerTimes.updateCalcMethod(childPosition);
-                        Toast.makeText(context, "Updating Calc Method", Toast.LENGTH_SHORT).show();
+                        lastPosition = childPosition;
+                        notifyDataSetChanged();
                         break;
                     case 1:
                         Log.w(TAG, "onClick: childPosition: " + childPosition);
                         CalendarPrayerTimes.updateAsrJuristic(childPosition);
-                        Toast.makeText(context, "Updating Juristic Method", Toast.LENGTH_SHORT).show();
+                        lastPosition = childPosition;
+                        notifyDataSetChanged();
                         break;
                     case 2:
                         Log.w(TAG, "onClick: childPosition: " + childPosition);
                         CalendarPrayerTimes.updateHighLats(childPosition);
-                        Toast.makeText(context, "Updating HighLats", Toast.LENGTH_SHORT).show();
+                        lastPosition = childPosition;
+                        notifyDataSetChanged();
                         break;
                 }
             }
