@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
+import com.gallopdevs.athanhelper.model.PrayTime;
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -87,6 +88,7 @@ public class ClockFragment extends Fragment {
     private double longitude;
 
     private DayViewAdapter dayViewAdapter;
+    private SimpleDateFormat simpleDateFormat;
 
     @SuppressLint("ValidFragment")
     public ClockFragment(DayViewAdapter dayViewAdapter) {
@@ -112,8 +114,11 @@ public class ClockFragment extends Fragment {
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        // set default settings
+        // set default settings for PrayTime instance
         CalendarPrayerTimes.configureSettings();
+
+        // set date format
+        simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
     }
 
     private void displayElements(Boolean isProgressDisplayed) {
@@ -150,7 +155,16 @@ public class ClockFragment extends Fragment {
                                 progressDisplayStatus = false;
                                 displayElements(progressDisplayStatus);
 
-                                startNewTimer();
+                                String currentTime = simpleDateFormat.format(Calendar.getInstance().getTime());
+                                long currentTimeMilliSeconds = 0;
+                                try {
+                                    currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).getTime();
+                                    Log.w(TAG, "getLocation: currentTimeMillisSeconds: " + currentTimeMilliSeconds);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                startNewTimer(getTimerDifference(currentTimeMilliSeconds)[getNextTime()]);
                                 initSwipeAdapter();
                             } else {
                                 Toast.makeText(getActivity(), "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show();
@@ -212,14 +226,10 @@ public class ClockFragment extends Fragment {
         }
     }
 
-    private long[] getTimerDifference() {
-
+    public long[] getTimerDifference(long currentTime) {
+        CalendarPrayerTimes.updateTimeFormat();
         ArrayList<String> newTimes = CalendarPrayerTimes.getNewTimes();
         ArrayList<String> nextDayTimes = CalendarPrayerTimes.getNextDayTimes(NEXT_DAY_TIMES);
-
-        // get currentTime and set format
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        final String currentTime = simpleDateFormat.format(Calendar.getInstance().getTime());
 
         // format times received from PrayTime model
         String dawnTime = newTimes.get(0) + ":00";
@@ -237,16 +247,13 @@ public class ClockFragment extends Fragment {
             long nightMillis = simpleDateFormat.parse(nightTime).getTime();
             long nextDawnMillis = simpleDateFormat.parse(nextDawnTime).getTime();
 
-            //get milliseconds from parsing currentTime
-            long currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).getTime();
-
             //get intervals between times
-            difference1 = dawnMillis - currentTimeMilliSeconds;
-            difference2 = middayMillis - currentTimeMilliSeconds;
-            difference3 = afMillis - currentTimeMilliSeconds;
-            difference4 = sunsetMillis - currentTimeMilliSeconds;
-            difference5 = nightMillis - currentTimeMilliSeconds;
-            difference6 = nextDawnMillis - currentTimeMilliSeconds + 86400000;
+            difference1 = dawnMillis - currentTime;
+            difference2 = middayMillis - currentTime;
+            difference3 = afMillis - currentTime;
+            difference4 = sunsetMillis - currentTime;
+            difference5 = nightMillis - currentTime;
+            difference6 = nextDawnMillis - currentTime + 86400000;
 
             // set index of each element in differences array
             differences[0] = difference1;
@@ -257,7 +264,7 @@ public class ClockFragment extends Fragment {
             differences[5] = difference6;
             return differences;
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(TAG, "getTimerDifference: cannot parse the dates: " + e.getMessage());
         }
         differences[0] = difference1;
         differences[1] = difference2;
@@ -268,14 +275,16 @@ public class ClockFragment extends Fragment {
         return differences;
     }
 
-    private void startNewTimer() {
+    public void startNewTimer(final long countDownTime) {
+        Log.d(TAG, "in startNewTimer");
         if (timer != null) {
             timer.cancel();
+            Log.e(TAG, "startNewTimer: canceled timer");
         }
-        timer = new CountDownTimer(getTimerDifference()[getNextTime()], 1000) {
+        Log.e(TAG, "startNewTimer: countDownTime: " + countDownTime);
+        timer = new CountDownTimer(countDownTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                // format for prayerTimer
                 SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
                 offset.setTimeZone(TimeZone.getTimeZone("GMT"));
                 Date newDateTimer = new Date();
@@ -288,8 +297,8 @@ public class ClockFragment extends Fragment {
                 prayerTimer.setText("00:00:00s");
 
                 // TODO send notification
-
-                startNewTimer();
+                // TODO call new countDownTime here
+                startNewTimer(countDownTime);
             }
         }.start();
     }

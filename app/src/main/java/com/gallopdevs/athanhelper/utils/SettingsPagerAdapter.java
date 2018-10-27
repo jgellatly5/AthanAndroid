@@ -1,6 +1,7 @@
 package com.gallopdevs.athanhelper.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingsPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener{
+public class SettingsPagerAdapter extends FragmentPagerAdapter{
 
     private static final String TAG = "SettingsPagerAdapter";
 
@@ -37,17 +38,7 @@ public class SettingsPagerAdapter extends FragmentPagerAdapter implements ViewPa
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        Log.d(TAG, "onPageSelected: " + String.valueOf(position));
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 }

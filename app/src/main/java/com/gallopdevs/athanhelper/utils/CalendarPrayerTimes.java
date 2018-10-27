@@ -41,8 +41,9 @@ public class CalendarPrayerTimes {
         prayerTime.setAdjustHighLats(value);
     }
 
-    private static ArrayList<String> newTimes = new ArrayList<>();
-    private static ArrayList<String> nextDayTimes = new ArrayList<>();
+    public static void updateTimeFormat() {
+        prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
+    }
 
     private static Calendar calendar = Calendar.getInstance();
     private static int month = calendar.get(Calendar.MONTH);
@@ -55,14 +56,12 @@ public class CalendarPrayerTimes {
     private static double longitude;
 
     public static ArrayList<String> getNewTimes() {
-        newTimes = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
-        return newTimes;
+        return prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
     }
 
     public static ArrayList<String> getNextDayTimes(int i) {
         calendar.set(year, month, dayOfMonth + i);
-        nextDayTimes = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
-        return nextDayTimes;
+        return prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset);
     }
 
     public static void setLatitude(double latitude) {

@@ -16,6 +16,11 @@ import com.gallopdevs.athanhelper.clock.DayViewAdapter;
 import com.gallopdevs.athanhelper.settings.CustomELVAdapter;
 import com.gallopdevs.athanhelper.settings.SettingsFragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,8 +40,11 @@ public class SwiperActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         final DayViewAdapter dayViewAdapter = new DayViewAdapter(getSupportFragmentManager());
-        SettingsPagerAdapter settingsPagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
-        settingsPagerAdapter.addFrag(new ClockFragment(dayViewAdapter));
+        final SettingsPagerAdapter settingsPagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
+
+        final ClockFragment clockFragment = new ClockFragment(dayViewAdapter);
+
+        settingsPagerAdapter.addFrag(clockFragment);
         settingsPagerAdapter.addFrag(new SettingsFragment());
         viewPager.setAdapter(settingsPagerAdapter);
 
@@ -54,7 +62,18 @@ public class SwiperActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                    String currentTime = simpleDateFormat.format(Calendar.getInstance().getTime());
+                    long currentTimeMilliSeconds = 0;
+                    try {
+                        currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).getTime();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    long[] getTimeDifference = clockFragment.getTimerDifference(currentTimeMilliSeconds);
+                    long countDownTime = getTimeDifference[ClockFragment.getNextTime()];
                     dayViewAdapter.notifyDataSetChanged();
+                    clockFragment.startNewTimer(countDownTime);
                 }
             }
 
