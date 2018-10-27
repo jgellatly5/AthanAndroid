@@ -294,15 +294,7 @@ public class ClockFragment extends Fragment {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                        .setSmallIcon(R.drawable.moon)
-                        .setContentTitle("Athan")
-                        .setContentText("Next prayer time.")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-
-                int notificationId = 0;
-                notificationManager.notify(notificationId, builder.build());
+                createNotification();
 
                 long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
                 long[] getTimeDifference = getTimerDifference(currentTimeMilliSeconds);
@@ -310,6 +302,18 @@ public class ClockFragment extends Fragment {
                 startNewTimer(newCountDownTime);
             }
         }.start();
+    }
+
+    private void createNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.moon)
+                .setContentTitle("Athan")
+                .setContentText("Next prayer time.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+
+        int notificationId = 0;
+        notificationManager.notify(notificationId, builder.build());
     }
 
     public static int getNextTime() {
