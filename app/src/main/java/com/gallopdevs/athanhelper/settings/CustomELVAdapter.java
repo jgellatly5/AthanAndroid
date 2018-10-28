@@ -1,7 +1,6 @@
 package com.gallopdevs.athanhelper.settings;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
-import com.gallopdevs.athanhelper.clock.ClockFragment;
-import com.gallopdevs.athanhelper.clock.DayViewAdapter;
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
-import com.gallopdevs.athanhelper.utils.SettingsPagerAdapter;
-import com.gallopdevs.athanhelper.utils.SwiperActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +33,8 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
     private List<String> expandableListHeader;
     private HashMap<String, List<String>> expandableListDetail;
 
-    int lastPosition = 0;
+    private int lastChildPosition = 0;
+    private int lastGroupPosition = 0;
 
     public CustomELVAdapter(Context context, List<String> expandableListHeader, HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
@@ -64,10 +59,11 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_settings_items, null);
         }
-
         final ImageView imageView = convertView.findViewById(R.id.selection_indicator);
-        if (lastPosition != childPosition) {
-            imageView.setVisibility(View.INVISIBLE);
+        if (lastGroupPosition == groupPosition) {
+            if (lastChildPosition != childPosition) {
+                imageView.setVisibility(View.INVISIBLE);
+            }
         }
         final String childText = (String) getChild(groupPosition, childPosition);
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -76,21 +72,21 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
                 imageView.setVisibility(View.VISIBLE);
                 switch (groupPosition) {
                     case 0:
-                        Log.w(TAG, "onClick: childPosition: " + childPosition);
                         CalendarPrayerTimes.updateCalcMethod(childPosition);
-                        lastPosition = childPosition;
+                        lastChildPosition = childPosition;
+                        lastGroupPosition = groupPosition;
                         notifyDataSetChanged();
                         break;
                     case 1:
-                        Log.w(TAG, "onClick: childPosition: " + childPosition);
                         CalendarPrayerTimes.updateAsrJuristic(childPosition);
-                        lastPosition = childPosition;
+                        lastChildPosition = childPosition;
+                        lastGroupPosition = groupPosition;
                         notifyDataSetChanged();
                         break;
                     case 2:
-                        Log.w(TAG, "onClick: childPosition: " + childPosition);
                         CalendarPrayerTimes.updateHighLats(childPosition);
-                        lastPosition = childPosition;
+                        lastChildPosition = childPosition;
+                        lastGroupPosition = groupPosition;
                         notifyDataSetChanged();
                         break;
                 }
