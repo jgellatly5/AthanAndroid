@@ -294,7 +294,9 @@ public class ClockFragment extends Fragment {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
 
-                createNotification();
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                boolean enableNotifications = sharedPref.getBoolean("enableNotifications", false);
+                if (enableNotifications) createNotification();
 
                 long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
                 long[] getTimeDifference = getTimerDifference(currentTimeMilliSeconds);

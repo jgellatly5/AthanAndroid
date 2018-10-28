@@ -1,14 +1,18 @@
 package com.gallopdevs.athanhelper.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 
@@ -26,22 +30,13 @@ public class SettingsFragment extends Fragment {
 
     @BindView(R.id.expandable_list_view)
     ExpandableListView expandableListView;
+    @BindView(R.id.notification_switch)
+    SwitchCompat notificationSwitch;
 
-    Unbinder unbinder;
+    private Unbinder unbinder;
 
-    private CustomELVAdapter adapter;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-
-    public interface SettingsListener {
-        void onSettingsChanged();
-    }
-
-    public SettingsListener listener;
-
-    public void setOnSettingsListener(SettingsListener listener) {
-        this.listener = listener;
-    }
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -57,11 +52,25 @@ public class SettingsFragment extends Fragment {
 
         initAdapter();
 
+        initSwitchNotificationListener();
+
         return view;
     }
 
+    private void initSwitchNotificationListener() {
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("enableNotifications", b);
+                editor.apply();
+            }
+        });
+    }
+
     private void initAdapter() {
-        adapter = new CustomELVAdapter(getActivity(), listDataHeader, listDataChild);
+        CustomELVAdapter adapter = new CustomELVAdapter(getActivity(), listDataHeader, listDataChild);
         expandableListView.setAdapter(adapter);
     }
 
@@ -95,15 +104,6 @@ public class SettingsFragment extends Fragment {
         listDataChild.put(listDataHeader.get(0), calculationMethodItems);
         listDataChild.put(listDataHeader.get(1), asrMethodItems);
         listDataChild.put(listDataHeader.get(2), latitudesMethodItems);
-    }
-
-    @Override
-    public void onPause() {
-        Log.d(TAG, "onPause: should be listening");
-        super.onPause();
-        if (listener != null) {
-            listener.onSettingsChanged();
-        }
     }
 
     @Override
