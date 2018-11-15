@@ -4,7 +4,9 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -31,6 +34,7 @@ import android.widget.Toast;
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.model.PrayTime;
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes;
+import com.gallopdevs.athanhelper.utils.SwiperActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -74,8 +79,10 @@ public class ClockFragment extends Fragment {
 
     @BindView(R.id.view_pager_fragment)
     ViewPager viewPager;
-    @BindView(R.id.prayer_timer_text)
+
+//    @BindView(R.id.prayer_timer_text)
     TextView prayerTimer;
+
     @BindView(R.id.next_prayer_text)
     TextView nextPrayer;
     @BindView(R.id.progress_bar)
@@ -106,9 +113,13 @@ public class ClockFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_clock, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        prayerTimer = view.findViewById(R.id.prayer_timer_text);
+
         init();
 
         getLocation();
+
+        Log.w(TAG, "onCreateView: creatingView");
 
         return view;
     }
@@ -280,7 +291,7 @@ public class ClockFragment extends Fragment {
             Log.e(TAG, "startNewTimer: canceled timer");
         }
         Log.e(TAG, "startNewTimer: countDownTime: " + countDownTime);
-        timer = new CountDownTimer(countDownTime, 1000) {
+        timer = new CountDownTimer(10000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -290,14 +301,16 @@ public class ClockFragment extends Fragment {
                 prayerTimer.setText(offset.format(newDateTimer) + "s");
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
 
-                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+//                getActivity().getSupportFragmentManager().beginTransaction().remove(ClockFragment.this).commit();
+
+                SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getPreferences(Context.MODE_PRIVATE);
                 boolean enableNotifications = sharedPref.getBoolean("enableNotifications", false);
                 if (enableNotifications) createNotification();
-
                 long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
                 long[] getTimeDifference = getTimerDifference(currentTimeMilliSeconds);
                 long newCountDownTime = getTimeDifference[getNextTime()];
@@ -307,11 +320,20 @@ public class ClockFragment extends Fragment {
     }
 
     private void createNotification() {
+        Intent intent = new Intent(getActivity(), SwiperActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.moon)
                 .setContentTitle("Athan")
                 .setContentText("Next prayer time.")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
 
         int notificationId = 0;
@@ -334,5 +356,6 @@ public class ClockFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        Log.w(TAG, "onDestroyView: destroying view");
     }
 }

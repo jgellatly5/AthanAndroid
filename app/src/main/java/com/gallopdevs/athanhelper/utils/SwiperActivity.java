@@ -2,28 +2,19 @@ package com.gallopdevs.athanhelper.utils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.gallopdevs.athanhelper.R;
 import com.gallopdevs.athanhelper.clock.ClockFragment;
 import com.gallopdevs.athanhelper.clock.DayViewAdapter;
-import com.gallopdevs.athanhelper.settings.CustomELVAdapter;
 import com.gallopdevs.athanhelper.settings.SettingsFragment;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
