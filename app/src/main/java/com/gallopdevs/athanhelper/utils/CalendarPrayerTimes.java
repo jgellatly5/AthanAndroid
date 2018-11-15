@@ -23,7 +23,10 @@ public class CalendarPrayerTimes {
     private static final int DEFAULT_HIGH_LATITUDES = 0;
     private static final int DEFAULT_TIME_FORMAT = 0;
 
-    private static PrayTime prayerTime = PrayTime.getInstance();
+    public static PrayTime prayerTime = PrayTime.getInstance();
+
+
+
 
     public static long getCurrentTime() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);

@@ -119,7 +119,13 @@ public class ClockFragment extends Fragment {
 
         getLocation();
 
-        Log.w(TAG, "onCreateView: creatingView");
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+        int calcMethod = sharedPreferences.getInt("calcMethod", 0);
+        int asrMethod = sharedPreferences.getInt("asrMethod", 0);
+        int latitudes = sharedPreferences.getInt("latitudes", 0);
+        Log.w(TAG, "onCreateView: calcMethod" + calcMethod);
+        Log.w(TAG, "onCreateView: asrMethod" + asrMethod);
+        Log.w(TAG, "onCreateView: latitudes" + latitudes);
 
         return view;
     }
@@ -291,7 +297,7 @@ public class ClockFragment extends Fragment {
             Log.e(TAG, "startNewTimer: canceled timer");
         }
         Log.e(TAG, "startNewTimer: countDownTime: " + countDownTime);
-        timer = new CountDownTimer(10000, 1000) {
+        timer = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -306,10 +312,9 @@ public class ClockFragment extends Fragment {
             public void onFinish() {
                 prayerTimer.setText("00:00:00s");
 
-//                getActivity().getSupportFragmentManager().beginTransaction().remove(ClockFragment.this).commit();
-
-                SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
                 boolean enableNotifications = sharedPref.getBoolean("enableNotifications", false);
+                Log.w(TAG, "onFinish: sharedPrefs: enableNotifications: " + enableNotifications);
                 if (enableNotifications) createNotification();
                 long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
                 long[] getTimeDifference = getTimerDifference(currentTimeMilliSeconds);
@@ -321,16 +326,20 @@ public class ClockFragment extends Fragment {
 
     private void createNotification() {
         Intent intent = new Intent(getActivity(), SwiperActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
 
+        ArrayList<String> prayerNames = new ArrayList<>();
+        prayerNames.add("Dawn");
+        prayerNames.add("Mid-Day");
+        prayerNames.add("Afternoon");
+        prayerNames.add("Sunset");
+        prayerNames.add("Night");
+
+        // TODO get right prayer names
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.moon)
                 .setContentTitle("Athan")
-                .setContentText("Next prayer time.")
+                .setContentText("Next prayer time: " + prayerNames.get(getNextTime() - 1))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);

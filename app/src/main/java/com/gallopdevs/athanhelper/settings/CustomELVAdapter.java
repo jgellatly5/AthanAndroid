@@ -1,6 +1,7 @@
 package com.gallopdevs.athanhelper.settings;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,26 +66,54 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
                 imageView.setVisibility(View.INVISIBLE);
             }
         }
+
+        // TODO test this
+        SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        if (groupPosition == 0) {
+            if (sharedPreferences.getInt("calcMethod", 0) == childPosition) {
+                imageView.setVisibility(View.VISIBLE);
+            }
+        }
+        if (groupPosition == 1) {
+            if (sharedPreferences.getInt("asrMethod", 0) == childPosition) {
+                imageView.setVisibility(View.VISIBLE);
+            }
+        }
+        if (groupPosition == 2) {
+            if (sharedPreferences.getInt("latitudes", 0) == childPosition) {
+                imageView.setVisibility(View.VISIBLE);
+            }
+        }
+
+
         final String childText = (String) getChild(groupPosition, childPosition);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imageView.setVisibility(View.VISIBLE);
+                SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 switch (groupPosition) {
                     case 0:
                         CalendarPrayerTimes.updateCalcMethod(childPosition);
+                        editor.putInt("calcMethod", childPosition);
+                        editor.apply();
                         lastChildPosition = childPosition;
                         lastGroupPosition = groupPosition;
                         notifyDataSetChanged();
                         break;
                     case 1:
                         CalendarPrayerTimes.updateAsrJuristic(childPosition);
+                        editor.putInt("asrMethod", childPosition);
+                        editor.apply();
                         lastChildPosition = childPosition;
                         lastGroupPosition = groupPosition;
                         notifyDataSetChanged();
                         break;
                     case 2:
                         CalendarPrayerTimes.updateHighLats(childPosition);
+                        editor.putInt("latitudes", childPosition);
+                        editor.apply();
                         lastChildPosition = childPosition;
                         lastGroupPosition = groupPosition;
                         notifyDataSetChanged();
