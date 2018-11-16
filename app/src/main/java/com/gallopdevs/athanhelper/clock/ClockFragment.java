@@ -297,7 +297,7 @@ public class ClockFragment extends Fragment {
             Log.e(TAG, "startNewTimer: canceled timer");
         }
         Log.e(TAG, "startNewTimer: countDownTime: " + countDownTime);
-        timer = new CountDownTimer(3000, 1000) {
+        timer = new CountDownTimer(countDownTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 SimpleDateFormat offset = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -339,7 +339,7 @@ public class ClockFragment extends Fragment {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.moon)
                 .setContentTitle("Athan")
-                .setContentText("Next prayer time: " + prayerNames.get(getNextTime() - 1))
+                .setContentText("Next prayer time: " + prayerNames.get(getNextTime()))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);

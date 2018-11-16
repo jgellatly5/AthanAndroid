@@ -67,29 +67,36 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
             }
         }
 
-        // TODO test this
         SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         if (groupPosition == 0) {
             if (sharedPreferences.getInt("calcMethod", 0) == childPosition) {
+                Log.e(TAG, "getChildView: making calcMethod " + childPosition + " visible");
                 imageView.setVisibility(View.VISIBLE);
+            } else {
+                imageView.setVisibility(View.INVISIBLE);
             }
         }
         if (groupPosition == 1) {
             if (sharedPreferences.getInt("asrMethod", 0) == childPosition) {
+                Log.e(TAG, "getChildView: making asrMethod " + childPosition + " visible");
                 imageView.setVisibility(View.VISIBLE);
+            } else {
+                imageView.setVisibility(View.INVISIBLE);
             }
         }
         if (groupPosition == 2) {
             if (sharedPreferences.getInt("latitudes", 0) == childPosition) {
+                Log.e(TAG, "getChildView: making latitudes " + childPosition + " visible");
                 imageView.setVisibility(View.VISIBLE);
+            } else {
+                imageView.setVisibility(View.INVISIBLE);
             }
         }
 
-
-        final String childText = (String) getChild(groupPosition, childPosition);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.w(TAG, "onClick: groupPosition: " + groupPosition + ", childPosition: " + childPosition);
                 imageView.setVisibility(View.VISIBLE);
                 SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -122,6 +129,7 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
             }
         });
         TextView textListChild = convertView.findViewById(R.id.item);
+        String childText = (String) getChild(groupPosition, childPosition);
         textListChild.setText(childText);
         return convertView;
     }
