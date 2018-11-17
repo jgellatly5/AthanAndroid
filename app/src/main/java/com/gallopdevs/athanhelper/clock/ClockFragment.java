@@ -79,10 +79,8 @@ public class ClockFragment extends Fragment {
 
     @BindView(R.id.view_pager_fragment)
     ViewPager viewPager;
-
-//    @BindView(R.id.prayer_timer_text)
+    @BindView(R.id.prayer_timer_text)
     TextView prayerTimer;
-
     @BindView(R.id.next_prayer_text)
     TextView nextPrayer;
     @BindView(R.id.progress_bar)
@@ -113,21 +111,23 @@ public class ClockFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_clock, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        prayerTimer = view.findViewById(R.id.prayer_timer_text);
+        loadSettings();
 
         init();
 
         getLocation();
 
+        return view;
+    }
+
+    private void loadSettings() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
         int calcMethod = sharedPreferences.getInt("calcMethod", 0);
         int asrMethod = sharedPreferences.getInt("asrMethod", 0);
         int latitudes = sharedPreferences.getInt("latitudes", 0);
-        Log.w(TAG, "onCreateView: calcMethod" + calcMethod);
-        Log.w(TAG, "onCreateView: asrMethod" + asrMethod);
-        Log.w(TAG, "onCreateView: latitudes" + latitudes);
-
-        return view;
+        CalendarPrayerTimes.updateCalcMethod(calcMethod);
+        CalendarPrayerTimes.updateAsrJuristic(asrMethod);
+        CalendarPrayerTimes.updateHighLats(latitudes);
     }
 
     private void init() {
@@ -291,12 +291,9 @@ public class ClockFragment extends Fragment {
     }
 
     public void startNewTimer(final long countDownTime) {
-        Log.d(TAG, "in startNewTimer");
         if (timer != null) {
             timer.cancel();
-            Log.e(TAG, "startNewTimer: canceled timer");
         }
-        Log.e(TAG, "startNewTimer: countDownTime: " + countDownTime);
         timer = new CountDownTimer(countDownTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -335,7 +332,6 @@ public class ClockFragment extends Fragment {
         prayerNames.add("Sunset");
         prayerNames.add("Night");
 
-        // TODO get right prayer names
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.moon)
                 .setContentTitle("Athan")
@@ -365,6 +361,5 @@ public class ClockFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        Log.w(TAG, "onDestroyView: destroying view");
     }
 }

@@ -70,7 +70,6 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
         SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         if (groupPosition == 0) {
             if (sharedPreferences.getInt("calcMethod", 0) == childPosition) {
-                Log.e(TAG, "getChildView: making calcMethod " + childPosition + " visible");
                 imageView.setVisibility(View.VISIBLE);
             } else {
                 imageView.setVisibility(View.INVISIBLE);
@@ -78,7 +77,6 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
         }
         if (groupPosition == 1) {
             if (sharedPreferences.getInt("asrMethod", 0) == childPosition) {
-                Log.e(TAG, "getChildView: making asrMethod " + childPosition + " visible");
                 imageView.setVisibility(View.VISIBLE);
             } else {
                 imageView.setVisibility(View.INVISIBLE);
@@ -86,7 +84,6 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
         }
         if (groupPosition == 2) {
             if (sharedPreferences.getInt("latitudes", 0) == childPosition) {
-                Log.e(TAG, "getChildView: making latitudes " + childPosition + " visible");
                 imageView.setVisibility(View.VISIBLE);
             } else {
                 imageView.setVisibility(View.INVISIBLE);
@@ -96,7 +93,6 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.w(TAG, "onClick: groupPosition: " + groupPosition + ", childPosition: " + childPosition);
                 imageView.setVisibility(View.VISIBLE);
                 SharedPreferences sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();

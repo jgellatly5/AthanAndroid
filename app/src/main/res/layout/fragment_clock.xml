@@ -11,12 +11,12 @@
         android:layout_height="150dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/athan_title"
         android:layout_marginTop="21dp"
         android:contentDescription="moon"
         android:src="@drawable/moon"
         app:srcCompat="@drawable/moon"
-        tools:ignore="HardcodedText" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"/>
 
     <TextView
         android:id="@+id/prayer_timer_text"
@@ -28,6 +28,7 @@
         android:layout_marginBottom="48dp"
         android:layout_marginEnd="26dp"
         android:layout_marginRight="26dp"
+        android:paddingLeft="10dp"
         android:text="00:12:40s"
         android:textColor="@android:color/background_dark"
         android:textSize="40sp"
@@ -38,12 +39,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/prayer_timer_text"
-        android:layout_alignLeft="@+id/prayer_timer_text"
         android:layout_alignStart="@+id/prayer_timer_text"
+        android:layout_alignLeft="@+id/prayer_timer_text"
         android:fontFamily="sans-serif"
+        android:paddingLeft="10dp"
         android:text="Next Prayer"
         android:textAllCaps="true"
-        android:textSize="18sp" />
+        android:textSize="18sp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager_fragment"
