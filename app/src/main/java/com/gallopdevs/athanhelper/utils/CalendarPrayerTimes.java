@@ -1,18 +1,12 @@
 package com.gallopdevs.athanhelper.utils;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-
 import com.gallopdevs.athanhelper.model.PrayTime;
-import com.google.android.gms.common.util.CrashUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.PriorityQueue;
 
 public class CalendarPrayerTimes {
 
@@ -23,10 +17,7 @@ public class CalendarPrayerTimes {
     private static final int DEFAULT_HIGH_LATITUDES = 0;
     private static final int DEFAULT_TIME_FORMAT = 0;
 
-    public static PrayTime prayerTime = PrayTime.getInstance();
-
-
-
+    private static PrayTime prayerTime = PrayTime.getInstance();
 
     public static long getCurrentTime() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);

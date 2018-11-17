@@ -2,6 +2,7 @@ package com.gallopdevs.athanhelper.clock;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +32,6 @@ public class DayViewFragment extends Fragment {
     private static final String TAG = "DayViewFragment";
 
     private static final int DEFAULT_TIME_FORMAT = 1;
-
-    private int count = 0;
-
-    private PrayTime prayerTime;
-
-    private ArrayList<String> nextDayTimes = new ArrayList<>();
 
     @BindView(R.id.dawn_time_text_view)
     TextView dawnTimeTextView;
@@ -80,11 +75,11 @@ public class DayViewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        prayerTime = PrayTime.getInstance();
+        PrayTime prayerTime = PrayTime.getInstance();
         prayerTime.setTimeFormat(DEFAULT_TIME_FORMAT);
 
         Bundle bundle = getArguments();
@@ -95,8 +90,8 @@ public class DayViewFragment extends Fragment {
     }
 
     private void updateTimes(Bundle bundle) {
-        count = bundle.getInt("count");
-        nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count);
+        int count = bundle.getInt("count");
+        ArrayList<String> nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count);
 
         String newDawnTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
         String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
