@@ -221,7 +221,9 @@ public class ClockFragment extends Fragment {
                 break;
         }
         if (allowed) {
-            timer.cancel();
+            if (timer != null) {
+                timer.cancel();
+            }
             getLocation();
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
