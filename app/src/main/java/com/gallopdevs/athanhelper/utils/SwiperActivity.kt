@@ -2,11 +2,13 @@ package com.gallopdevs.athanhelper.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.DayViewAdapter
@@ -45,6 +47,7 @@ class SwiperActivity : AppCompatActivity() {
                     val getTimeDifference = clockFragment.getTimerDifference(currentTimeMilliSeconds)
                     val countDownTime = getTimeDifference[ClockFragment.getNextTime()]
                     dayViewAdapter.notifyDataSetChanged()
+                    Log.w(TAG, "Start new timer after page selected")
                     clockFragment.startNewTimer(countDownTime)
                 }
             }

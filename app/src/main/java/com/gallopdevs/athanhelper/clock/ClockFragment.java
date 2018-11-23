@@ -119,6 +119,7 @@ public class ClockFragment extends Fragment {
         CalendarPrayerTimes.INSTANCE.updateCalcMethod(calcMethod);
         CalendarPrayerTimes.INSTANCE.updateAsrJuristic(asrMethod);
         CalendarPrayerTimes.INSTANCE.updateHighLats(latitudes);
+        CalendarPrayerTimes.INSTANCE.updateTimeFormat();
     }
 
     private void init() {
@@ -170,6 +171,7 @@ public class ClockFragment extends Fragment {
                                 displayElements(progressDisplayStatus);
 
                                 long currentTimeMilliSeconds = CalendarPrayerTimes.INSTANCE.getCurrentTime();
+                                Log.w(TAG, "onSuccess: startNewTimer in get location");
                                 startNewTimer(getTimerDifference(currentTimeMilliSeconds)[getNextTime()]);
                                 initSwipeAdapter();
                             } else {
@@ -234,13 +236,18 @@ public class ClockFragment extends Fragment {
         }
     }
 
+    private void checkSettings() {
+
+    }
+
     public long[] getTimerDifference(long currentTime) {
-        CalendarPrayerTimes.INSTANCE.updateTimeFormat();
+        loadSettings();
         ArrayList<String> newTimes = CalendarPrayerTimes.INSTANCE.getNewTimes();
         ArrayList<String> nextDayTimes = CalendarPrayerTimes.INSTANCE.getNextDayTimes(NEXT_DAY_TIMES);
 
         // format times received from PrayTime model
         String dawnTime = newTimes.get(0) + ":00";
+        Log.w(TAG, "getTimerDifference: dawnTime: " + dawnTime);
         String middayTime = newTimes.get(2) + ":00";
         String afternoonTime = newTimes.get(3) + ":00";
         String sunsetTime = newTimes.get(4) + ":00";
@@ -284,6 +291,7 @@ public class ClockFragment extends Fragment {
     }
 
     public void startNewTimer(final long countDownTime) {
+        Log.w(TAG, "startNewTimer: countDownTime: " + countDownTime);
         if (timer != null) {
             timer.cancel();
         }
