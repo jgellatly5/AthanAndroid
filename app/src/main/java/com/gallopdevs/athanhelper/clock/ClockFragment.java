@@ -116,9 +116,9 @@ public class ClockFragment extends Fragment {
         int calcMethod = sharedPreferences.getInt("calcMethod", 0);
         int asrMethod = sharedPreferences.getInt("asrMethod", 0);
         int latitudes = sharedPreferences.getInt("latitudes", 0);
-        CalendarPrayerTimes.updateCalcMethod(calcMethod);
-        CalendarPrayerTimes.updateAsrJuristic(asrMethod);
-        CalendarPrayerTimes.updateHighLats(latitudes);
+        CalendarPrayerTimes.INSTANCE.updateCalcMethod(calcMethod);
+        CalendarPrayerTimes.INSTANCE.updateAsrJuristic(asrMethod);
+        CalendarPrayerTimes.INSTANCE.updateHighLats(latitudes);
     }
 
     private void init() {
@@ -129,7 +129,7 @@ public class ClockFragment extends Fragment {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // set default settings for PrayTime instance
-        CalendarPrayerTimes.configureSettings();
+        CalendarPrayerTimes.INSTANCE.configureSettings();
 
         // set date format
         simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -162,14 +162,14 @@ public class ClockFragment extends Fragment {
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
-                                CalendarPrayerTimes.setLatitude(latitude);
-                                CalendarPrayerTimes.setLongitude(longitude);
+                                CalendarPrayerTimes.INSTANCE.setLatitude(latitude);
+                                CalendarPrayerTimes.INSTANCE.setLongitude(longitude);
 
                                 progressBar.setVisibility(ProgressBar.INVISIBLE);
                                 progressDisplayStatus = false;
                                 displayElements(progressDisplayStatus);
 
-                                long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
+                                long currentTimeMilliSeconds = CalendarPrayerTimes.INSTANCE.getCurrentTime();
                                 startNewTimer(getTimerDifference(currentTimeMilliSeconds)[getNextTime()]);
                                 initSwipeAdapter();
                             } else {
@@ -235,9 +235,9 @@ public class ClockFragment extends Fragment {
     }
 
     public long[] getTimerDifference(long currentTime) {
-        CalendarPrayerTimes.updateTimeFormat();
-        ArrayList<String> newTimes = CalendarPrayerTimes.getNewTimes();
-        ArrayList<String> nextDayTimes = CalendarPrayerTimes.getNextDayTimes(NEXT_DAY_TIMES);
+        CalendarPrayerTimes.INSTANCE.updateTimeFormat();
+        ArrayList<String> newTimes = CalendarPrayerTimes.INSTANCE.getNewTimes();
+        ArrayList<String> nextDayTimes = CalendarPrayerTimes.INSTANCE.getNextDayTimes(NEXT_DAY_TIMES);
 
         // format times received from PrayTime model
         String dawnTime = newTimes.get(0) + ":00";
@@ -306,7 +306,7 @@ public class ClockFragment extends Fragment {
                 boolean enableNotifications = sharedPref.getBoolean("enableNotifications", false);
                 Log.w(TAG, "onFinish: sharedPrefs: enableNotifications: " + enableNotifications);
                 if (enableNotifications) createNotification();
-                long currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime();
+                long currentTimeMilliSeconds = CalendarPrayerTimes.INSTANCE.getCurrentTime();
                 long[] getTimeDifference = getTimerDifference(currentTimeMilliSeconds);
                 long newCountDownTime = getTimeDifference[getNextTime()];
                 startNewTimer(newCountDownTime);

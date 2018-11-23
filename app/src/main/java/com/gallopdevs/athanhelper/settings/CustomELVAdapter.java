@@ -97,7 +97,7 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 switch (groupPosition) {
                     case 0:
-                        CalendarPrayerTimes.updateCalcMethod(childPosition);
+                        CalendarPrayerTimes.INSTANCE.updateCalcMethod(childPosition);
                         editor.putInt("calcMethod", childPosition);
                         editor.apply();
                         lastChildPosition = childPosition;
@@ -105,7 +105,7 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
                         notifyDataSetChanged();
                         break;
                     case 1:
-                        CalendarPrayerTimes.updateAsrJuristic(childPosition);
+                        CalendarPrayerTimes.INSTANCE.updateAsrJuristic(childPosition);
                         editor.putInt("asrMethod", childPosition);
                         editor.apply();
                         lastChildPosition = childPosition;
@@ -113,7 +113,7 @@ public class CustomELVAdapter extends BaseExpandableListAdapter {
                         notifyDataSetChanged();
                         break;
                     case 2:
-                        CalendarPrayerTimes.updateHighLats(childPosition);
+                        CalendarPrayerTimes.INSTANCE.updateHighLats(childPosition);
                         editor.putInt("latitudes", childPosition);
                         editor.apply();
                         lastChildPosition = childPosition;

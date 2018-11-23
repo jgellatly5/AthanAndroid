@@ -24,7 +24,6 @@ class SwiperActivity : AppCompatActivity() {
 
         val dayViewAdapter = DayViewAdapter(supportFragmentManager)
         val settingsPagerAdapter = SettingsPagerAdapter(supportFragmentManager)
-
         val clockFragment = ClockFragment(dayViewAdapter)
 
         settingsPagerAdapter.addFrag(clockFragment)
@@ -42,7 +41,7 @@ class SwiperActivity : AppCompatActivity() {
             }
             override fun onPageSelected(position: Int) {
                 if (position == 0) {
-                    val currentTimeMilliSeconds = CalendarPrayerTimes.getCurrentTime()
+                    val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
                     val getTimeDifference = clockFragment.getTimerDifference(currentTimeMilliSeconds)
                     val countDownTime = getTimeDifference[ClockFragment.getNextTime()]
                     dayViewAdapter.notifyDataSetChanged()

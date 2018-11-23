@@ -91,7 +91,7 @@ public class DayViewFragment extends Fragment {
 
     private void updateTimes(Bundle bundle) {
         int count = bundle.getInt("count");
-        ArrayList<String> nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count);
+        ArrayList<String> nextDayTimes = CalendarPrayerTimes.INSTANCE.getNextDayTimes(count);
 
         String newDawnTime = nextDayTimes.get(0).replaceFirst("^0+(?!$)", "");
         String newMiddayTime = nextDayTimes.get(2).replaceFirst("^0+(?!$)", "");
