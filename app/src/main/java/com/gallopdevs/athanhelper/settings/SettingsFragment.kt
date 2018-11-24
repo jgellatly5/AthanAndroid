@@ -40,7 +40,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        val adapter = CustomELVAdapter(activity, listDataHeader, listDataChild)
+        val adapter = CustomELVAdapter(context, listDataHeader, listDataChild)
         expandable_list_view.setAdapter(adapter)
     }
 
