@@ -50,9 +50,10 @@ import butterknife.Unbinder;
 public class ClockFragment extends Fragment {
 
     private static final String TAG = "ClockFragment";
-
+    private static final int DEFAULT_CALC_METHOD = 2;
+    private static final int DEFAULT_JURISTIC_METHOD = 0;
+    private static final int DEFAULT_HIGH_LATITUDES = 0;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
-
     private static final int NEXT_DAY_TIMES = 1;
     private static final String CHANNEL_ID = "Notification";
 
@@ -102,10 +103,8 @@ public class ClockFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_clock, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        loadSettings();
-
         init();
-
+        loadSettings();
         getLocation();
 
         return view;
@@ -113,9 +112,12 @@ public class ClockFragment extends Fragment {
 
     private void loadSettings() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
-        int calcMethod = sharedPreferences.getInt("calcMethod", 0);
-        int asrMethod = sharedPreferences.getInt("asrMethod", 0);
-        int latitudes = sharedPreferences.getInt("latitudes", 0);
+        int calcMethod = sharedPreferences.getInt("calcMethod", DEFAULT_CALC_METHOD);
+        int asrMethod = sharedPreferences.getInt("asrMethod", DEFAULT_JURISTIC_METHOD);
+        int latitudes = sharedPreferences.getInt("latitudes", DEFAULT_HIGH_LATITUDES);
+        Log.w(TAG, "loadSettings: calcMethod: " + calcMethod);
+        Log.w(TAG, "loadSettings: asrMethod: " + asrMethod);
+        Log.w(TAG, "loadSettings: latitudes: " + latitudes);
         CalendarPrayerTimes.INSTANCE.updateCalcMethod(calcMethod);
         CalendarPrayerTimes.INSTANCE.updateAsrJuristic(asrMethod);
         CalendarPrayerTimes.INSTANCE.updateHighLats(latitudes);
@@ -128,9 +130,6 @@ public class ClockFragment extends Fragment {
 
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        // set default settings for PrayTime instance
-        CalendarPrayerTimes.INSTANCE.configureSettings();
 
         // set date format
         simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -234,10 +233,6 @@ public class ClockFragment extends Fragment {
                 }
             }
         }
-    }
-
-    private void checkSettings() {
-
     }
 
     public long[] getTimerDifference(long currentTime) {

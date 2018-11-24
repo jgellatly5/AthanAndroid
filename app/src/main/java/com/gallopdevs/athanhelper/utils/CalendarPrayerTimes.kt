@@ -1,22 +1,13 @@
 package com.gallopdevs.athanhelper.utils
 
 import com.gallopdevs.athanhelper.model.PrayTime
-
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
 object CalendarPrayerTimes {
-
     private val TAG = "CalendarPrayerTimes"
-
-    private val DEFAULT_CALC_METHOD = 2
-    private val DEFAULT_JURISTIC_METHOD = 0
-    private val DEFAULT_HIGH_LATITUDES = 0
     private val DEFAULT_TIME_FORMAT = 0
-
     private val prayerTime = PrayTime.getInstance()
 
     val currentTime: Long
@@ -42,14 +33,8 @@ object CalendarPrayerTimes {
     private var latitude: Double = 0.toDouble()
     private var longitude: Double = 0.toDouble()
 
-    val newTimes: ArrayList<String>
-        get() = prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset.toDouble())
-
-    fun configureSettings() {
-        prayerTime.calcMethod = DEFAULT_CALC_METHOD
-        prayerTime.asrJuristic = DEFAULT_JURISTIC_METHOD
-        prayerTime.adjustHighLats = DEFAULT_HIGH_LATITUDES
-        prayerTime.timeFormat = DEFAULT_TIME_FORMAT
+    fun getNewTimes(): ArrayList<String> {
+        return prayerTime.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
     }
 
     fun updateCalcMethod(value: Int) {
@@ -69,8 +54,7 @@ object CalendarPrayerTimes {
     }
 
     fun getNextDayTimes(i: Int): ArrayList<String> {
-        calendar.set(year, month, dayOfMonth + i)
-        return prayerTime.getPrayerTimes(calendar, latitude, longitude, timeZoneOffset.toDouble())
+        return prayerTime.getDatePrayerTimes(year, month + 1, dayOfMonth + i, latitude, longitude, timeZoneOffset.toDouble())
     }
 
     fun setLatitude(latitude: Double) {
