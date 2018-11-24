@@ -21,7 +21,7 @@ class DayViewAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         val bundle = Bundle()
         val c = Calendar.getInstance()
         val day = c.get(Calendar.DAY_OF_WEEK)
-        val indicator = ClockFragment.getNextTime()
+        val indicator = ClockFragment.nextTime
         bundle.putInt("day", day + i)
         bundle.putInt("count", i)
         bundle.putInt("indicator", indicator)

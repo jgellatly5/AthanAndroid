@@ -7,13 +7,11 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.DayViewAdapter
 import com.gallopdevs.athanhelper.settings.SettingsFragment
 import kotlinx.android.synthetic.main.activity_swiper.*
-
 
 class SwiperActivity : AppCompatActivity() {
     private val TAG = "SwiperActivity"
@@ -44,9 +42,8 @@ class SwiperActivity : AppCompatActivity() {
                 if (position == 0) {
                     val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
                     val getTimeDifference = clockFragment.getTimerDifference(currentTimeMilliSeconds)
-                    val countDownTime = getTimeDifference[ClockFragment.getNextTime()]
+                    val countDownTime = getTimeDifference[ClockFragment.nextTime]
                     dayViewAdapter.notifyDataSetChanged()
-                    Log.w(TAG, "Start new timer after page selected")
                     clockFragment.startNewTimer(countDownTime)
                 }
             }

@@ -56,7 +56,7 @@ class DayViewFragment : Fragment() {
         sunset_post_fix.text = splitSunsetTime[1]
         night_time_text_view.text = splitNightTime[0]
         night_post_fix.text = splitNightTime[1]
-        setOvalVisibility(ClockFragment.getNextTime())
+        setOvalVisibility(ClockFragment.nextTime)
     }
 
     private fun setDate(bundle: Bundle) {
