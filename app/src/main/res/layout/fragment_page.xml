@@ -110,7 +110,7 @@
 
 
             <TextView
-                android:id="@+id/middayTimeTextView"
+                android:id="@+id/midday_time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="end"
@@ -166,7 +166,7 @@
 
 
             <TextView
-                android:id="@+id/afternoonTimeTextView"
+                android:id="@+id/afternoon_time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -220,7 +220,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/sunsetTimeTextView"
+                android:id="@+id/sunset_time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -276,7 +276,7 @@
 
 
             <TextView
-                android:id="@+id/nightTimeTextView"
+                android:id="@+id/night_time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"

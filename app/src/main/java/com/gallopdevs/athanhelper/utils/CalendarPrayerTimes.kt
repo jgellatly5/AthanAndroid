@@ -33,10 +33,6 @@ object CalendarPrayerTimes {
     private var latitude: Double = 0.toDouble()
     private var longitude: Double = 0.toDouble()
 
-    fun getNewTimes(): ArrayList<String> {
-        return prayerTime.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
-    }
-
     fun updateCalcMethod(value: Int) {
         prayerTime.calcMethod = value
     }
@@ -51,6 +47,10 @@ object CalendarPrayerTimes {
 
     fun updateTimeFormat() {
         prayerTime.timeFormat = DEFAULT_TIME_FORMAT
+    }
+
+    fun getNewTimes(): ArrayList<String> {
+        return prayerTime.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
     }
 
     fun getNextDayTimes(i: Int): ArrayList<String> {
