@@ -1,18 +1,18 @@
 package com.gallopdevs.athanhelper.clock
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayTime
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes
 import kotlinx.android.synthetic.main.fragment_page.*
 import java.util.*
 
-class DayViewFragment : androidx.fragment.app.Fragment() {
+class DayViewFragment : Fragment() {
     private val TAG = "DayViewFragment"
     private val DEFAULT_TIME_FORMAT = 1
 

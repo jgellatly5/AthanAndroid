@@ -9,10 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +17,10 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes
 import com.gallopdevs.athanhelper.utils.SwiperActivity
@@ -33,7 +33,7 @@ import java.util.*
 
 @SuppressLint("ValidFragment")
 class ClockFragment @SuppressLint("ValidFragment")
-constructor(private val dayViewAdapter: DayViewAdapter) : androidx.fragment.app.Fragment() {
+constructor(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
     private var timer: CountDownTimer? = null
     private var progressDisplayStatus: Boolean? = true

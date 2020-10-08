@@ -4,13 +4,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.DayViewAdapter
 import com.gallopdevs.athanhelper.settings.SettingsFragment
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_swiper.*
 
 class SwiperActivity : AppCompatActivity() {
@@ -34,10 +34,11 @@ class SwiperActivity : AppCompatActivity() {
         tab_layout_activity.getTabAt(0)!!.setIcon(R.drawable.clock_icon)
         tab_layout_activity.getTabAt(1)!!.setIcon(R.drawable.settings_icon)
 
-        view_pager_activity.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+        view_pager_activity.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
             }
+
             override fun onPageSelected(position: Int) {
                 if (position == 0) {
                     val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
@@ -47,6 +48,7 @@ class SwiperActivity : AppCompatActivity() {
                     clockFragment.startNewTimer(countDownTime)
                 }
             }
+
             override fun onPageScrollStateChanged(state: Int) {
 
             }
@@ -65,7 +67,7 @@ class SwiperActivity : AppCompatActivity() {
             channel.description = description
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            val notificationManager = getSystemService<NotificationManager>(NotificationManager::class.java)
+            val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
     }
