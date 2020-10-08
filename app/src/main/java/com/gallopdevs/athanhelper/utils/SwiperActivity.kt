@@ -4,9 +4,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.DayViewAdapter
@@ -34,7 +34,7 @@ class SwiperActivity : AppCompatActivity() {
         tab_layout_activity.getTabAt(0)!!.setIcon(R.drawable.clock_icon)
         tab_layout_activity.getTabAt(1)!!.setIcon(R.drawable.settings_icon)
 
-        view_pager_activity.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        view_pager_activity.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
             }

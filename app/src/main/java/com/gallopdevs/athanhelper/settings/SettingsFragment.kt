@@ -2,7 +2,7 @@ package com.gallopdevs.athanhelper.settings
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.gallopdevs.athanhelper.R
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.util.*
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : androidx.fragment.app.Fragment() {
     private val TAG = "SettingsFragment"
     private lateinit var listDataHeader: MutableList<String>
     private lateinit var listDataChild: HashMap<String, List<String>>

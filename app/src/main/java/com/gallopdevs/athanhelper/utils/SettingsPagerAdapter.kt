@@ -1,16 +1,16 @@
 package com.gallopdevs.athanhelper.utils
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.PagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import java.util.*
 
-class SettingsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class SettingsPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
     private val TAG = "SettingsPagerAdapter"
-    private val fragmentList = ArrayList<Fragment>()
+    private val fragmentList = ArrayList<androidx.fragment.app.Fragment>()
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
         return fragmentList[position]
     }
 
@@ -18,11 +18,11 @@ class SettingsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return fragmentList.size
     }
 
-    fun addFrag(fragment: Fragment) {
+    fun addFrag(fragment: androidx.fragment.app.Fragment) {
         fragmentList.add(fragment)
     }
 
     override fun getItemPosition(`object`: Any): Int {
-        return PagerAdapter.POSITION_NONE
+        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
     }
 }

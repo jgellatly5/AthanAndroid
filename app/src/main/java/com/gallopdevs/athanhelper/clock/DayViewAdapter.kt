@@ -1,10 +1,10 @@
 package com.gallopdevs.athanhelper.clock
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.PagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 
 import java.util.Calendar
 
@@ -12,11 +12,11 @@ import java.util.Calendar
  * Created by jgell on 5/23/2017.
  */
 
-class DayViewAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class DayViewAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
     private val TAG = "DayViewAdapter"
     private val NUM_ITEMS = 7
 
-    override fun getItem(i: Int): Fragment {
+    override fun getItem(i: Int): androidx.fragment.app.Fragment {
         val fragment = DayViewFragment()
         val bundle = Bundle()
         val c = Calendar.getInstance()
@@ -34,6 +34,6 @@ class DayViewAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     override fun getItemPosition(`object`: Any): Int {
-        return PagerAdapter.POSITION_NONE
+        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
     }
 }
