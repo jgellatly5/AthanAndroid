@@ -236,13 +236,13 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
     companion object {
 
-        private val TAG = "ClockFragment"
-        private val DEFAULT_CALC_METHOD = 2
-        private val DEFAULT_JURISTIC_METHOD = 0
-        private val DEFAULT_HIGH_LATITUDES = 0
-        private val MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1
-        private val NEXT_DAY_TIMES = 1
-        private val CHANNEL_ID = "Notification"
+        private const val TAG = "ClockFragment"
+        private const val DEFAULT_CALC_METHOD = 2
+        private const val DEFAULT_JURISTIC_METHOD = 0
+        private const val DEFAULT_HIGH_LATITUDES = 0
+        private const val MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1
+        private const val NEXT_DAY_TIMES = 1
+        private const val CHANNEL_ID = "Notification"
 
         private var currentTimeIndex = 0
 

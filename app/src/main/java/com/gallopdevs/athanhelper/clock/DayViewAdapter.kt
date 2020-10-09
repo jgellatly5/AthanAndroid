@@ -10,7 +10,6 @@ import java.util.*
  */
 
 class DayViewAdapter(fm: FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
-    private val TAG = "DayViewAdapter"
     private val NUM_ITEMS = 7
 
     override fun getItem(i: Int): Fragment {
