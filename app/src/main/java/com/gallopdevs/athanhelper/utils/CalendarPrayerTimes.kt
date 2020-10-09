@@ -8,7 +8,7 @@ import java.util.*
 object CalendarPrayerTimes {
     private val TAG = "CalendarPrayerTimes"
     private val DEFAULT_TIME_FORMAT = 0
-    private val prayerTime = PrayTime.getInstance()
+    private val prayerTime = PrayTime.instance
 
     val currentTime: Long
         get() {
@@ -34,27 +34,27 @@ object CalendarPrayerTimes {
     private var longitude: Double = 0.toDouble()
 
     fun updateCalcMethod(value: Int) {
-        prayerTime.calcMethod = value
+        prayerTime?.calcMethod = value
     }
 
     fun updateAsrJuristic(value: Int) {
-        prayerTime.asrJuristic = value
+        prayerTime?.asrJuristic = value
     }
 
     fun updateHighLats(value: Int) {
-        prayerTime.adjustHighLats = value
+        prayerTime?.adjustHighLats = value
     }
 
     fun updateTimeFormat() {
-        prayerTime.timeFormat = DEFAULT_TIME_FORMAT
+        prayerTime?.timeFormat = DEFAULT_TIME_FORMAT
     }
 
     fun getNewTimes(): ArrayList<String> {
-        return prayerTime.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
+        return prayerTime!!.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
     }
 
     fun getNextDayTimes(i: Int): ArrayList<String> {
-        return prayerTime.getDatePrayerTimes(year, month + 1, dayOfMonth + i, latitude, longitude, timeZoneOffset.toDouble())
+        return prayerTime!!.getDatePrayerTimes(year, month + 1, dayOfMonth + i, latitude, longitude, timeZoneOffset.toDouble())
     }
 
     fun setLatitude(latitude: Double) {
