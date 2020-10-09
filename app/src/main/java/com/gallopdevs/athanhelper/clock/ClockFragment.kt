@@ -34,10 +34,8 @@ import java.util.*
 class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private lateinit var simpleDateFormat: SimpleDateFormat
 
     private var timer: CountDownTimer? = null
-    private var progressDisplayStatus: Boolean = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_clock, container, false)
@@ -46,29 +44,11 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // hide elements
-        displayElements(progressDisplayStatus)
-
         // location listener
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
 
-        // set date format
-        simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
-
         loadSettings()
         getLocation()
-    }
-
-    private fun displayElements(isProgressDisplayed: Boolean) {
-        if (isProgressDisplayed) {
-            moon_icon.visibility = ImageView.INVISIBLE
-            prayer_timer_text.visibility = TextView.INVISIBLE
-            next_prayer_text.visibility = TextView.INVISIBLE
-        } else {
-            moon_icon.visibility = ImageView.VISIBLE
-            prayer_timer_text.visibility = TextView.VISIBLE
-            next_prayer_text.visibility = TextView.VISIBLE
-        }
     }
 
     private fun loadSettings() {
@@ -93,8 +73,9 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
                             CalendarPrayerTimes.setLongitude(location.longitude)
 
                             progress_bar.visibility = ProgressBar.INVISIBLE
-                            progressDisplayStatus = false
-                            displayElements(progressDisplayStatus)
+                            moon_icon.visibility = ImageView.VISIBLE
+                            prayer_timer_text.visibility = TextView.VISIBLE
+                            next_prayer_text.visibility = TextView.VISIBLE
 
                             val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
                             startNewTimer(getTimerDifference(currentTimeMilliSeconds)[nextTime])
@@ -145,7 +126,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         }
         if (allowed) {
             if (timer != null) {
-                timer!!.cancel()
+                timer?.cancel()
             }
             getLocation()
         } else {
@@ -171,6 +152,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         val nextDawnTime = nextDayTimes[0] + ":00"
         try {
             // get milliseconds from parsing dates
+            val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
             val dawnMillis = simpleDateFormat.parse(dawnTime).time
             val middayMillis = simpleDateFormat.parse(middayTime).time
             val afMillis = simpleDateFormat.parse(afternoonTime).time
@@ -209,7 +191,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
     fun startNewTimer(countDownTime: Long) {
         if (timer != null) {
-            timer!!.cancel()
+            timer?.cancel()
         }
         timer = object : CountDownTimer(countDownTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
