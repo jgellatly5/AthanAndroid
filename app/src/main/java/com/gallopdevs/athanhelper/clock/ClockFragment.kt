@@ -79,7 +79,9 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
                             val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
                             startNewTimer(getTimerDifference(currentTimeMilliSeconds)[nextTime])
-                            initSwipeAdapter()
+
+                            view_pager_fragment.adapter = dayViewAdapter
+                            tab_dots.setupWithViewPager(view_pager_fragment, true)
                         } else {
                             Toast.makeText(activity, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
                         }
@@ -89,19 +91,10 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
                         Log.e(TAG, "onFailure: " + e.message)
                     }
         } else {
-            requestPerms()
-        }
-    }
-
-    private fun initSwipeAdapter() {
-        view_pager_fragment.adapter = dayViewAdapter
-        tab_dots.setupWithViewPager(view_pager_fragment, true)
-    }
-
-    private fun requestPerms() {
-        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(permissions, MY_PERMISSIONS_REQUEST_FINE_LOCATION)
+            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(permissions, MY_PERMISSIONS_REQUEST_FINE_LOCATION)
+            }
         }
     }
 
