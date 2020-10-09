@@ -31,12 +31,10 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-@SuppressLint("ValidFragment")
-class ClockFragment @SuppressLint("ValidFragment")
-constructor(private val dayViewAdapter: DayViewAdapter) : Fragment() {
+class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
     private var timer: CountDownTimer? = null
-    private var progressDisplayStatus: Boolean? = true
+    private var progressDisplayStatus: Boolean = true
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var latitude: Double = 0.toDouble()
     private var longitude: Double = 0.toDouble()
@@ -48,7 +46,16 @@ constructor(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
+
+        // hide elements
+        displayElements(progressDisplayStatus)
+
+        // location listener
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
+
+        // set date format
+        simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
+
         loadSettings()
         getLocation()
     }
@@ -62,17 +69,6 @@ constructor(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         CalendarPrayerTimes.updateAsrJuristic(asrMethod)
         CalendarPrayerTimes.updateHighLats(latitudes)
         CalendarPrayerTimes.updateTimeFormat()
-    }
-
-    private fun init() {
-        // hide elements
-        displayElements(progressDisplayStatus!!)
-
-        // location listener
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
-
-        // set date format
-        simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
     }
 
     private fun displayElements(isProgressDisplayed: Boolean) {
@@ -105,7 +101,7 @@ constructor(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
                             progress_bar.visibility = ProgressBar.INVISIBLE
                             progressDisplayStatus = false
-                            displayElements(progressDisplayStatus!!)
+                            displayElements(progressDisplayStatus)
 
                             val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
                             startNewTimer(getTimerDifference(currentTimeMilliSeconds)[nextTime])
