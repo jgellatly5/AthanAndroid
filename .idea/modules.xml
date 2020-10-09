@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AthanAndroid.iml" filepath="$PROJECT_DIR$/AthanAndroid.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/AthanAndroid-app.iml" filepath="$PROJECT_DIR$/app/AthanAndroid-app.iml" group="AthanAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/Jordan-AthanAndroid.iml" filepath="$PROJECT_DIR$/Jordan-AthanAndroid.iml" group="AthanAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AthanAndroid.iml" filepath="$PROJECT_DIR$/.idea/AthanAndroid.iml" group="AthanAndroid" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="AthanAndroid/app" />
     </modules>
   </component>
 </project>
