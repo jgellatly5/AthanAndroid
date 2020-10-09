@@ -33,12 +33,11 @@ import java.util.*
 
 class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var simpleDateFormat: SimpleDateFormat
+
     private var timer: CountDownTimer? = null
     private var progressDisplayStatus: Boolean = true
-    private var mFusedLocationClient: FusedLocationProviderClient? = null
-    private var latitude: Double = 0.toDouble()
-    private var longitude: Double = 0.toDouble()
-    private var simpleDateFormat: SimpleDateFormat? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_clock, container, false)
@@ -60,17 +59,6 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         getLocation()
     }
 
-    private fun loadSettings() {
-        val sharedPreferences = activity!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val calcMethod = sharedPreferences.getInt("calcMethod", DEFAULT_CALC_METHOD)
-        val asrMethod = sharedPreferences.getInt("asrMethod", DEFAULT_JURISTIC_METHOD)
-        val latitudes = sharedPreferences.getInt("latitudes", DEFAULT_HIGH_LATITUDES)
-        CalendarPrayerTimes.updateCalcMethod(calcMethod)
-        CalendarPrayerTimes.updateAsrJuristic(asrMethod)
-        CalendarPrayerTimes.updateHighLats(latitudes)
-        CalendarPrayerTimes.updateTimeFormat()
-    }
-
     private fun displayElements(isProgressDisplayed: Boolean) {
         if (isProgressDisplayed) {
             moon_icon.visibility = ImageView.INVISIBLE
@@ -83,21 +71,26 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         }
     }
 
-    private fun initSwipeAdapter() {
-        view_pager_fragment.adapter = dayViewAdapter
-        tab_dots.setupWithViewPager(view_pager_fragment, true)
+    private fun loadSettings() {
+        // TODO remove !! from activity reference
+        val sharedPreferences = activity!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val calcMethod = sharedPreferences.getInt("calcMethod", DEFAULT_CALC_METHOD)
+        val asrMethod = sharedPreferences.getInt("asrMethod", DEFAULT_JURISTIC_METHOD)
+        val latitudes = sharedPreferences.getInt("latitudes", DEFAULT_HIGH_LATITUDES)
+        CalendarPrayerTimes.updateCalcMethod(calcMethod)
+        CalendarPrayerTimes.updateAsrJuristic(asrMethod)
+        CalendarPrayerTimes.updateHighLats(latitudes)
+        CalendarPrayerTimes.updateTimeFormat()
     }
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         if (hasPermissions()) {
-            mFusedLocationClient!!.lastLocation
+            mFusedLocationClient.lastLocation
                     .addOnSuccessListener { location ->
                         if (location != null) {
-                            latitude = location.latitude
-                            longitude = location.longitude
-                            CalendarPrayerTimes.setLatitude(latitude)
-                            CalendarPrayerTimes.setLongitude(longitude)
+                            CalendarPrayerTimes.setLatitude(location.latitude)
+                            CalendarPrayerTimes.setLongitude(location.longitude)
 
                             progress_bar.visibility = ProgressBar.INVISIBLE
                             progressDisplayStatus = false
@@ -117,6 +110,11 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         } else {
             requestPerms()
         }
+    }
+
+    private fun initSwipeAdapter() {
+        view_pager_fragment.adapter = dayViewAdapter
+        tab_dots.setupWithViewPager(view_pager_fragment, true)
     }
 
     private fun requestPerms() {
@@ -173,12 +171,12 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         val nextDawnTime = nextDayTimes[0] + ":00"
         try {
             // get milliseconds from parsing dates
-            val dawnMillis = simpleDateFormat!!.parse(dawnTime).time
-            val middayMillis = simpleDateFormat!!.parse(middayTime).time
-            val afMillis = simpleDateFormat!!.parse(afternoonTime).time
-            val sunsetMillis = simpleDateFormat!!.parse(sunsetTime).time
-            val nightMillis = simpleDateFormat!!.parse(nightTime).time
-            val nextDawnMillis = simpleDateFormat!!.parse(nextDawnTime).time
+            val dawnMillis = simpleDateFormat.parse(dawnTime).time
+            val middayMillis = simpleDateFormat.parse(middayTime).time
+            val afMillis = simpleDateFormat.parse(afternoonTime).time
+            val sunsetMillis = simpleDateFormat.parse(sunsetTime).time
+            val nightMillis = simpleDateFormat.parse(nightTime).time
+            val nextDawnMillis = simpleDateFormat.parse(nextDawnTime).time
 
             //get intervals between times
             difference1 = dawnMillis - currentTime
