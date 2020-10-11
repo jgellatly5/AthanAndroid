@@ -34,66 +34,59 @@ class CustomELVAdapter(
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_items, null)
         }
-        val imageView = convertView?.findViewById<ImageView>(R.id.selection_indicator)
+        val selectionIndicator = convertView?.findViewById<ImageView>(R.id.selection_indicator)
         if (lastGroupPosition == groupPosition) {
             if (lastChildPosition != childPosition) {
-                imageView?.visibility = View.INVISIBLE
+                selectionIndicator?.visibility = View.INVISIBLE
             }
         }
 
         val sharedPreferences = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        if (groupPosition == 0) {
-            if (sharedPreferences?.getInt("calcMethod", 0) == childPosition) {
-                imageView?.visibility = View.VISIBLE
-            } else {
-                imageView?.visibility = View.INVISIBLE
+        when (groupPosition) {
+            0 -> {
+                if (sharedPreferences?.getInt("calcMethod", 0) == childPosition) {
+                    selectionIndicator?.visibility = View.VISIBLE
+                } else {
+                    selectionIndicator?.visibility = View.INVISIBLE
+                }
             }
-        }
-        if (groupPosition == 1) {
-            if (sharedPreferences?.getInt("asrMethod", 0) == childPosition) {
-                imageView?.visibility = View.VISIBLE
-            } else {
-                imageView?.visibility = View.INVISIBLE
+            1 -> {
+                if (sharedPreferences?.getInt("asrMethod", 0) == childPosition) {
+                    selectionIndicator?.visibility = View.VISIBLE
+                } else {
+                    selectionIndicator?.visibility = View.INVISIBLE
+                }
             }
-        }
-        if (groupPosition == 2) {
-            if (sharedPreferences?.getInt("latitudes", 0) == childPosition) {
-                imageView?.visibility = View.VISIBLE
-            } else {
-                imageView?.visibility = View.INVISIBLE
+            2 -> {
+                if (sharedPreferences?.getInt("latitudes", 0) == childPosition) {
+                    selectionIndicator?.visibility = View.VISIBLE
+                } else {
+                    selectionIndicator?.visibility = View.INVISIBLE
+                }
             }
         }
 
         convertView?.setOnClickListener {
-            imageView?.visibility = View.VISIBLE
-            val sharedPreferences = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            selectionIndicator?.visibility = View.VISIBLE
             val editor = sharedPreferences?.edit()
             when (groupPosition) {
                 0 -> {
                     CalendarPrayerTimes.updateCalcMethod(childPosition)
                     editor?.putInt("calcMethod", childPosition)
-                    editor?.apply()
-                    lastChildPosition = childPosition
-                    lastGroupPosition = groupPosition
-                    notifyDataSetChanged()
                 }
                 1 -> {
                     CalendarPrayerTimes.updateAsrJuristic(childPosition)
                     editor?.putInt("asrMethod", childPosition)
-                    editor?.apply()
-                    lastChildPosition = childPosition
-                    lastGroupPosition = groupPosition
-                    notifyDataSetChanged()
                 }
                 2 -> {
                     CalendarPrayerTimes.updateHighLats(childPosition)
                     editor?.putInt("latitudes", childPosition)
-                    editor?.apply()
-                    lastChildPosition = childPosition
-                    lastGroupPosition = groupPosition
-                    notifyDataSetChanged()
                 }
             }
+            editor?.apply()
+            lastChildPosition = childPosition
+            lastGroupPosition = groupPosition
+            notifyDataSetChanged()
         }
         val textListChild = convertView?.findViewById<TextView>(R.id.item)
         val childText = getChild(groupPosition, childPosition) as String
@@ -102,15 +95,15 @@ class CustomELVAdapter(
     }
 
     override fun getGroupCount(): Int {
-        return this.expandableListHeader.size
+        return expandableListHeader.size
     }
 
     override fun getChildrenCount(groupPosition: Int): Int {
-        return this.expandableListDetail[this.expandableListHeader[groupPosition]]!!.size
+        return expandableListDetail[expandableListHeader[groupPosition]]!!.size
     }
 
     override fun getGroup(groupPosition: Int): Any {
-        return this.expandableListHeader[groupPosition]
+        return expandableListHeader[groupPosition]
     }
 
     override fun getGroupId(groupPosition: Int): Long {
@@ -124,15 +117,15 @@ class CustomELVAdapter(
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
         if (convertView == null) {
-            val inflater = this.context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_header, null)
         }
 
         val arrowDown = convertView?.findViewById<ImageView>(R.id.arrow_right)
         if (isExpanded) {
-            arrowDown!!.setImageResource(R.drawable.arrow_down)
+            arrowDown?.setImageResource(R.drawable.arrow_down)
         } else {
-            arrowDown!!.setImageResource(R.drawable.arrow_right)
+            arrowDown?.setImageResource(R.drawable.arrow_right)
         }
         val imageIcon = convertView?.findViewById<ImageView>(R.id.image_header)
         imageIcon?.setImageResource(getImageDrawable(groupPosition))
