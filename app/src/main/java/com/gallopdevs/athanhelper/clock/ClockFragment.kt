@@ -26,6 +26,7 @@ import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes
 import com.gallopdevs.athanhelper.utils.SwiperActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_clock.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -81,7 +82,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
                             startNewTimer(getTimerDifference(currentTimeMilliSeconds)[nextTime])
 
                             view_pager_fragment.adapter = dayViewAdapter
-                            tab_dots.setupWithViewPager(view_pager_fragment, true)
+                            TabLayoutMediator(tab_dots, view_pager_fragment, true) { _, _ -> }.attach()
                         } else {
                             Toast.makeText(activity, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
                         }

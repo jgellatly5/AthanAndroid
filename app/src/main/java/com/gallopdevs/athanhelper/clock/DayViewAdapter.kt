@@ -2,17 +2,18 @@ package com.gallopdevs.athanhelper.clock
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import java.util.*
 
 /**
  * Created by jgell on 5/23/2017.
  */
 
-class DayViewAdapter(fm: FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
+class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
     private val NUM_ITEMS = 7
 
-    override fun getItem(i: Int): Fragment {
+    override fun createFragment(i: Int): Fragment {
         val fragment = DayViewFragment()
         val bundle = Bundle()
         val c = Calendar.getInstance()
@@ -25,11 +26,7 @@ class DayViewAdapter(fm: FragmentManager) : androidx.fragment.app.FragmentPagerA
         return fragment
     }
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return NUM_ITEMS
-    }
-
-    override fun getItemPosition(`object`: Any): Int {
-        return POSITION_NONE
     }
 }

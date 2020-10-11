@@ -21,7 +21,7 @@ class SwiperActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swiper)
 
-        val dayViewAdapter = DayViewAdapter(supportFragmentManager)
+        val dayViewAdapter = DayViewAdapter(this)
         val settingsPagerAdapter = SettingsPagerAdapter(supportFragmentManager)
         val clockFragment = ClockFragment(dayViewAdapter)
 
