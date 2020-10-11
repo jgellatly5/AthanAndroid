@@ -11,13 +11,16 @@ import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
 import java.util.*
 
-class CustomELVAdapter(private val context: Context?, private val expandableListHeader: List<String>, private val expandableListDetail: HashMap<String, List<String>>) : BaseExpandableListAdapter() {
-    private val TAG = "CustomELVAdapter"
+class CustomELVAdapter(
+        private val context: Context?,
+        private val expandableListHeader: List<String>,
+        private val expandableListDetail: HashMap<String, List<String>>
+) : BaseExpandableListAdapter() {
     private var lastChildPosition = 0
     private var lastGroupPosition = 0
 
     override fun getChild(groupPosition: Int, childPosition: Int): Any {
-        return this.expandableListDetail[this.expandableListHeader[groupPosition]]!!.get(childPosition)
+        return expandableListDetail[expandableListHeader[groupPosition]]!!.get(childPosition)
     }
 
     override fun getChildId(groupPosition: Int, childPosition: Int): Long {
@@ -28,7 +31,7 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
                               convertView: View?, parent: ViewGroup): View? {
         var convertView = convertView
         if (convertView == null) {
-            val inflater = this.context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_items, null)
         }
         val imageView = convertView?.findViewById<ImageView>(R.id.selection_indicator)
@@ -38,23 +41,23 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
             }
         }
 
-        val sharedPreferences = context!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val sharedPreferences = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
         if (groupPosition == 0) {
-            if (sharedPreferences.getInt("calcMethod", 0) == childPosition) {
+            if (sharedPreferences?.getInt("calcMethod", 0) == childPosition) {
                 imageView?.visibility = View.VISIBLE
             } else {
                 imageView?.visibility = View.INVISIBLE
             }
         }
         if (groupPosition == 1) {
-            if (sharedPreferences.getInt("asrMethod", 0) == childPosition) {
+            if (sharedPreferences?.getInt("asrMethod", 0) == childPosition) {
                 imageView?.visibility = View.VISIBLE
             } else {
                 imageView?.visibility = View.INVISIBLE
             }
         }
         if (groupPosition == 2) {
-            if (sharedPreferences.getInt("latitudes", 0) == childPosition) {
+            if (sharedPreferences?.getInt("latitudes", 0) == childPosition) {
                 imageView?.visibility = View.VISIBLE
             } else {
                 imageView?.visibility = View.INVISIBLE
@@ -63,29 +66,29 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
 
         convertView?.setOnClickListener {
             imageView?.visibility = View.VISIBLE
-            val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
+            val sharedPreferences = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            val editor = sharedPreferences?.edit()
             when (groupPosition) {
                 0 -> {
                     CalendarPrayerTimes.updateCalcMethod(childPosition)
-                    editor.putInt("calcMethod", childPosition)
-                    editor.apply()
+                    editor?.putInt("calcMethod", childPosition)
+                    editor?.apply()
                     lastChildPosition = childPosition
                     lastGroupPosition = groupPosition
                     notifyDataSetChanged()
                 }
                 1 -> {
                     CalendarPrayerTimes.updateAsrJuristic(childPosition)
-                    editor.putInt("asrMethod", childPosition)
-                    editor.apply()
+                    editor?.putInt("asrMethod", childPosition)
+                    editor?.apply()
                     lastChildPosition = childPosition
                     lastGroupPosition = groupPosition
                     notifyDataSetChanged()
                 }
                 2 -> {
                     CalendarPrayerTimes.updateHighLats(childPosition)
-                    editor.putInt("latitudes", childPosition)
-                    editor.apply()
+                    editor?.putInt("latitudes", childPosition)
+                    editor?.apply()
                     lastChildPosition = childPosition
                     lastGroupPosition = groupPosition
                     notifyDataSetChanged()
@@ -121,7 +124,7 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
         if (convertView == null) {
-            val inflater = this.context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater = this.context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_header, null)
         }
 
