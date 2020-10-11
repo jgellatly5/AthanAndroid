@@ -8,26 +8,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import kotlinx.android.synthetic.main.fragment_settings.*
-import java.util.*
+import kotlin.collections.HashMap
 
 class SettingsFragment : Fragment() {
-    private lateinit var listDataHeader: List<String>
-    private lateinit var listDataChild: HashMap<String, List<String>>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_settings, container, false)
-
-        listDataHeader = resources.getStringArray(R.array.method_settings).toMutableList()
-        listDataChild = HashMap()
-        listDataChild[listDataHeader[0]] = resources.getStringArray(R.array.calculation_methods).toMutableList()
-        listDataChild[listDataHeader[1]] = resources.getStringArray(R.array.asr_methods).toMutableList()
-        listDataChild[listDataHeader[2]] = resources.getStringArray(R.array.latitudes_method).toMutableList()
-
-        return view
+        return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val listDataHeader = resources.getStringArray(R.array.method_settings).toMutableList()
+        val listDataChild: HashMap<String, List<String>> = HashMap()
+        listDataChild[listDataHeader[0]] = resources.getStringArray(R.array.calculation_methods).toMutableList()
+        listDataChild[listDataHeader[1]] = resources.getStringArray(R.array.asr_methods).toMutableList()
+        listDataChild[listDataHeader[2]] = resources.getStringArray(R.array.latitudes_method).toMutableList()
 
         val adapter = CustomELVAdapter(context, listDataHeader, listDataChild)
         expandable_list_view.setAdapter(adapter)
