@@ -42,26 +42,21 @@ class CustomELVAdapter(
         }
 
         val sharedPreferences = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        // set default indicators
         when (groupPosition) {
             0 -> {
                 if (sharedPreferences?.getInt("calcMethod", 0) == childPosition) {
                     selectionIndicator?.visibility = View.VISIBLE
-                } else {
-                    selectionIndicator?.visibility = View.INVISIBLE
                 }
             }
             1 -> {
                 if (sharedPreferences?.getInt("asrMethod", 0) == childPosition) {
                     selectionIndicator?.visibility = View.VISIBLE
-                } else {
-                    selectionIndicator?.visibility = View.INVISIBLE
                 }
             }
             2 -> {
                 if (sharedPreferences?.getInt("latitudes", 0) == childPosition) {
                     selectionIndicator?.visibility = View.VISIBLE
-                } else {
-                    selectionIndicator?.visibility = View.INVISIBLE
                 }
             }
         }
