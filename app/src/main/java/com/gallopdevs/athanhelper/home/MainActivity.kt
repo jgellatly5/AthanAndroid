@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
 
         tab_layout_activity.setupWithViewPager(view_pager_activity)
         tab_layout_activity.tabGravity = TabLayout.GRAVITY_FILL
-        tab_layout_activity.getTabAt(0)!!.setIcon(R.drawable.clock_icon)
-        tab_layout_activity.getTabAt(1)!!.setIcon(R.drawable.settings_icon)
+        tab_layout_activity.getTabAt(0)?.setIcon(R.drawable.clock_icon)
+        tab_layout_activity.getTabAt(1)?.setIcon(R.drawable.settings_icon)
 
         view_pager_activity.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
