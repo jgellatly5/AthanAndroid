@@ -1,6 +1,5 @@
-package com.gallopdevs.athanhelper.utils
+package com.gallopdevs.athanhelper.model
 
-import com.gallopdevs.athanhelper.model.PrayTime
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*

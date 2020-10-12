@@ -8,7 +8,7 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes
+import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
 import java.util.*
 
 class CustomELVAdapter(private val context: Context?, private val expandableListHeader: List<String>, private val expandableListDetail: HashMap<String, List<String>>) : BaseExpandableListAdapter() {

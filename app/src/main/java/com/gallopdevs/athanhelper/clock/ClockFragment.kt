@@ -22,8 +22,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes
-import com.gallopdevs.athanhelper.utils.SwiperActivity
+import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
+import com.gallopdevs.athanhelper.home.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
@@ -212,7 +212,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
     }
 
     private fun createNotification() {
-        val intent = Intent(activity, SwiperActivity::class.java)
+        val intent = Intent(activity, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0)
 
         val prayerNames = ArrayList<String>()

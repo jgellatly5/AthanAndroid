@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.utils
+package com.gallopdevs.athanhelper.home
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,12 +9,12 @@ import androidx.viewpager.widget.ViewPager
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.DayViewAdapter
+import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
 import com.gallopdevs.athanhelper.settings.SettingsFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_swiper.*
 
-class SwiperActivity : AppCompatActivity() {
-    private val TAG = "SwiperActivity"
+class MainActivity : AppCompatActivity() {
     private val CHANNEL_ID = "Notification"
 
     override fun onCreate(savedInstanceState: Bundle?) {
