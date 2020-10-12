@@ -23,10 +23,8 @@ class DayViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val prayerTime = PrayTime.instance
         prayerTime?.timeFormat = DEFAULT_TIME_FORMAT
-
-        val bundle = arguments
-        setDate(bundle!!)
-        updateTimes(bundle)
+        setDate(arguments!!)
+        updateTimes(arguments!!)
     }
 
     private fun setDate(bundle: Bundle) {
