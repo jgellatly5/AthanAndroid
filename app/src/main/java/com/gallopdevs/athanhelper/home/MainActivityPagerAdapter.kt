@@ -4,8 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import java.util.*
 
-class SettingsPagerAdapter(fm: FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
-    private val TAG = "SettingsPagerAdapter"
+class MainActivityPagerAdapter(fm: FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 
     private val fragmentList = ArrayList<Fragment>()
 

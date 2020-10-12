@@ -22,12 +22,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_swiper)
 
         val dayViewAdapter = DayViewAdapter(this)
-        val settingsPagerAdapter = SettingsPagerAdapter(supportFragmentManager)
+        val mainActivityPagerAdapter = MainActivityPagerAdapter(supportFragmentManager)
         val clockFragment = ClockFragment(dayViewAdapter)
 
-        settingsPagerAdapter.addFrag(clockFragment)
-        settingsPagerAdapter.addFrag(SettingsFragment())
-        view_pager_activity.adapter = settingsPagerAdapter
+        mainActivityPagerAdapter.addFrag(clockFragment)
+        mainActivityPagerAdapter.addFrag(SettingsFragment())
+        view_pager_activity.adapter = mainActivityPagerAdapter
 
         tab_layout_activity.setupWithViewPager(view_pager_activity)
         tab_layout_activity.tabGravity = TabLayout.GRAVITY_FILL
