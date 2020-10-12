@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.fragment_page.*
 import java.util.*
 
 class DayViewFragment : Fragment() {
-    private val TAG = "DayViewFragment"
     private val DEFAULT_TIME_FORMAT = 1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -28,6 +27,43 @@ class DayViewFragment : Fragment() {
         val bundle = arguments
         setDate(bundle!!)
         updateTimes(bundle)
+    }
+
+    private fun setDate(bundle: Bundle) {
+        val nextDay = Calendar.getInstance()
+        val count = bundle.getInt("count")
+        var dayOfMonth = nextDay.get(Calendar.DAY_OF_MONTH)
+        nextDay.set(Calendar.DAY_OF_MONTH, dayOfMonth + count)
+
+        dayOfMonth = nextDay.get(Calendar.DAY_OF_MONTH)
+        val numberString = dayOfMonth.toString()
+
+        val monthDay = nextDay.get(Calendar.MONTH) + 1
+        val monthString = if (monthDay < 10) {
+            "0$monthDay"
+        } else {
+            monthDay.toString()
+        }
+
+        var weekDay = bundle.getInt("day")
+        if (weekDay >= 8) {
+            weekDay -= 7
+        }
+        val weekDayString = when (weekDay) {
+            1 -> "Sunday"
+            2 -> "Monday"
+            3 -> "Tuesday"
+            4 -> "Wednesday"
+            5 -> "Thursday"
+            6 -> "Friday"
+            7 -> "Saturday"
+            else -> "This is not a day"
+        }
+        if (dayOfMonth < 10) {
+            day_text_view.text = "$weekDayString, $monthString/0$numberString"
+        } else {
+            day_text_view.text = "$weekDayString, $monthString/$numberString"
+        }
     }
 
     private fun updateTimes(bundle: Bundle) {
@@ -57,49 +93,6 @@ class DayViewFragment : Fragment() {
         night_time_text_view.text = splitNightTime[0]
         night_post_fix.text = splitNightTime[1]
         setOvalVisibility(ClockFragment.nextTime)
-    }
-
-    private fun setDate(bundle: Bundle) {
-        val c = Calendar.getInstance()
-        val month = c.get(Calendar.MONTH)
-        val dayOfMonth = c.get(Calendar.DAY_OF_MONTH)
-        val year = c.get(Calendar.YEAR)
-
-        val nextDay = Calendar.getInstance()
-        val count = bundle.getInt("count")
-        nextDay.set(year, month, dayOfMonth + count)
-
-        val numberDay = nextDay.get(Calendar.DAY_OF_MONTH)
-        val numberString = numberDay.toString()
-
-        val monthString: String
-        val monthDay = nextDay.get(Calendar.MONTH) + 1
-        if (monthDay < 10) {
-            monthString = "0" + monthDay.toString()
-        } else {
-            monthString = monthDay.toString()
-        }
-
-        var weekDay = bundle.getInt("day")
-        if (weekDay >= 8) {
-            weekDay -= 7
-        }
-        val weekDayString: String
-        when (weekDay) {
-            1 -> weekDayString = "Sunday"
-            2 -> weekDayString = "Monday"
-            3 -> weekDayString = "Tuesday"
-            4 -> weekDayString = "Wednesday"
-            5 -> weekDayString = "Thursday"
-            6 -> weekDayString = "Friday"
-            7 -> weekDayString = "Saturday"
-            else -> weekDayString = "This is not a day"
-        }
-        if (numberDay < 10) {
-            day_text_view.text = "$weekDayString, $monthString/0$numberString"
-        } else {
-            day_text_view.text = "$weekDayString, $monthString/$numberString"
-        }
     }
 
     private fun setOvalVisibility(item: Int) {
