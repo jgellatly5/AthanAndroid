@@ -1,7 +1,7 @@
-package com.gallopdevs.athanhelper.model
+package com.gallopdevs.athanhelper.model.utils
 
-import com.gallopdevs.athanhelper.model.PrayTime.Companion.jDate
-import com.gallopdevs.athanhelper.model.PrayTime.Companion.lat
+import com.gallopdevs.athanhelper.model.PrayTime.jDate
+import com.gallopdevs.athanhelper.model.PrayTime.lat
 import kotlin.math.abs
 
 // References:

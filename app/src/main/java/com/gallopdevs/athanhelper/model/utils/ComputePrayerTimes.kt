@@ -1,4 +1,6 @@
-package com.gallopdevs.athanhelper.model
+package com.gallopdevs.athanhelper.model.utils
+
+import com.gallopdevs.athanhelper.model.*
 
 // compute prayer times at given julian date
 fun computeDayTimes(): ArrayList<String> {

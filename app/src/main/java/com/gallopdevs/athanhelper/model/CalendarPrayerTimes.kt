@@ -5,9 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object CalendarPrayerTimes {
-    private val TAG = "CalendarPrayerTimes"
     private val DEFAULT_TIME_FORMAT = 0
-    private val prayerTime = PrayTime.instance
 
     val currentTime: Long
         get() {
@@ -49,11 +47,11 @@ object CalendarPrayerTimes {
     }
 
     fun getNewTimes(): ArrayList<String> {
-        return prayerTime!!.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
+        return PrayTime.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
     }
 
     fun getNextDayTimes(i: Int): ArrayList<String> {
-        return prayerTime!!.getDatePrayerTimes(year, month + 1, dayOfMonth + i, latitude, longitude, timeZoneOffset.toDouble())
+        return PrayTime.getDatePrayerTimes(year, month + 1, dayOfMonth + i, latitude, longitude, timeZoneOffset.toDouble())
     }
 
     fun setLatitude(latitude: Double) {

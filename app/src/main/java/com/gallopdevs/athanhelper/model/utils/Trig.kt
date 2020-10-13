@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.model
+package com.gallopdevs.athanhelper.model.utils
 
 import kotlin.math.*
 

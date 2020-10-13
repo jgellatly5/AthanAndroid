@@ -1,4 +1,6 @@
-package com.gallopdevs.athanhelper.model
+package com.gallopdevs.athanhelper.model.utils
+
+import com.gallopdevs.athanhelper.model.PrayTime
 
 // set the angle for calculating Fajr
 fun setFajrAngle(angle: Double) {
