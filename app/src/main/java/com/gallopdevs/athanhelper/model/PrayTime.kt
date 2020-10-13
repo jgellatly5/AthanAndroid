@@ -32,21 +32,6 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 */
 class PrayTime private constructor() {
     // Global Variables
-    // calculation method
-    var calcMethod = 0
-
-    // Juristic method for Asr
-    var asrJuristic = 0
-
-    // minutes after mid-day for Dhuhr
-    var dhuhrMinutes = 0
-
-    // adjusting method for higher latitudes
-    var adjustHighLats = 0
-
-    // time format
-    var timeFormat = 0
-
     // latitude
     var lat = 0.0
 
@@ -61,19 +46,6 @@ class PrayTime private constructor() {
 
     // Custom Setting
     private var custom = 0
-
-    // Adjusting Methods for Higher Latitudes
-    // No adjustment
-    private var none = 0
-
-    // middle of night
-    private var midNight = 0
-
-    // 1/7th of night
-    private var oneSeventh = 0
-
-    // angle/60th of night
-    private var angleBased = 0
 
     // Time Formats
     // 24-hour format
@@ -232,7 +204,7 @@ class PrayTime private constructor() {
     private fun adjustTimes(t: DoubleArray): DoubleArray {
         var times = t
         for (i in times.indices) {
-            times[i] += timeZone - lng / 15
+            times[i] +=  timeZone - lng / 15
         }
         // Dhuhr
         times[2] = times[2] + dhuhrMinutes / 60
@@ -346,15 +318,22 @@ class PrayTime private constructor() {
                 }
                 return prayerTime
             }
+
+        // Initialize vars
+        var calcMethod = 0
+        var asrJuristic = 0
+        var dhuhrMinutes = 0
+        var adjustHighLats = 1
+        var timeFormat = 1
+
+        // Adjusting Methods for Higher Latitudes
+        const val none = 0
+        const val midNight = 1 // middle of night
+        const val oneSeventh = 2 // 1/7th of night
+        const val angleBased = 3 // angle/60th of night
     }
 
     init {
-        // Initialize vars
-        calcMethod = 0
-        asrJuristic = 0
-        dhuhrMinutes = 0
-        adjustHighLats = 1
-        timeFormat = 0
 
         // Calculation Methods
         val jafari = 0 // Ithna Ashari
@@ -370,11 +349,7 @@ class PrayTime private constructor() {
         val shafii = 0 // Shafii (standard)
         val hanafi = 1 // Hanafi
 
-        // Adjusting Methods for Higher Latitudes
-        none = 0 // No adjustment
-        midNight = 1 // middle of night
-        oneSeventh = 2 // 1/7th of night
-        angleBased = 3 // angle/60th of night
+
 
         // Time Formats
         time24 = 0 // 24-hour format

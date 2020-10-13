@@ -33,19 +33,19 @@ object CalendarPrayerTimes {
     private var longitude: Double = 0.toDouble()
 
     fun updateCalcMethod(value: Int) {
-        prayerTime?.calcMethod = value
+        PrayTime.calcMethod = value
     }
 
     fun updateAsrJuristic(value: Int) {
-        prayerTime?.asrJuristic = value
+        PrayTime.asrJuristic = value
     }
 
     fun updateHighLats(value: Int) {
-        prayerTime?.adjustHighLats = value
+        PrayTime.adjustHighLats = value
     }
 
     fun updateTimeFormat() {
-        prayerTime?.timeFormat = DEFAULT_TIME_FORMAT
+        PrayTime.timeFormat = DEFAULT_TIME_FORMAT
     }
 
     fun getNewTimes(): ArrayList<String> {

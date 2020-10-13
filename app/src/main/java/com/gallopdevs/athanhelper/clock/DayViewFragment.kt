@@ -21,8 +21,7 @@ class DayViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val prayerTime = PrayTime.instance
-        prayerTime?.timeFormat = DEFAULT_TIME_FORMAT
+        PrayTime.timeFormat = DEFAULT_TIME_FORMAT
         setDate(arguments!!)
         updateTimes(arguments!!)
     }
