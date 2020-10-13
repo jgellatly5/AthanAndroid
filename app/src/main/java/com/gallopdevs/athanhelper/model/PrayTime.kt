@@ -33,6 +33,14 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 
 */
 object PrayTime {
+
+    val calendar = Calendar.getInstance()
+    val month = calendar.get(Calendar.MONTH)
+    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+    val year = calendar.get(Calendar.YEAR)
+    val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
+    val timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset
+
     var lat = 0.0
     var lng = 0.0
     var timeZone = 0.0

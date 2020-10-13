@@ -73,8 +73,8 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
             mFusedLocationClient.lastLocation
                     .addOnSuccessListener { location ->
                         if (location != null) {
-                            CalendarPrayerTimes.setLatitude(location.latitude)
-                            CalendarPrayerTimes.setLongitude(location.longitude)
+                            PrayTime.lat = location.latitude
+                            PrayTime.lng = location.longitude
 
                             progress_bar.visibility = ProgressBar.INVISIBLE
                             moon_icon.visibility = ImageView.VISIBLE
@@ -137,8 +137,22 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
     fun getTimerDifference(currentTime: Long): LongArray {
         loadSettings()
-        val newTimes = CalendarPrayerTimes.getNewTimes()
-        val nextDayTimes = CalendarPrayerTimes.getNextDayTimes(NEXT_DAY_TIMES)
+        val newTimes = PrayTime.getDatePrayerTimes(
+                PrayTime.year,
+                PrayTime.month + 1,
+                PrayTime.dayOfMonth,
+                PrayTime.lat,
+                PrayTime.lng,
+                PrayTime.timeZoneOffset.toDouble()
+        )
+        val nextDayTimes = PrayTime.getDatePrayerTimes(
+                PrayTime.year,
+                PrayTime.month + 1,
+                PrayTime.dayOfMonth + NEXT_DAY_TIMES,
+                PrayTime.lat,
+                PrayTime.lng,
+                PrayTime.timeZoneOffset.toDouble()
+        )
 
         // format times received from PrayTime model
         val dawnTime = newTimes[0] + ":00"

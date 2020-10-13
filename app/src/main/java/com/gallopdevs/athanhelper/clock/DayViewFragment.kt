@@ -65,7 +65,14 @@ class DayViewFragment : Fragment() {
 
     private fun updateTimes(bundle: Bundle) {
         val count = bundle.getInt("count")
-        val nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count)
+        val nextDayTimes = PrayTime.getDatePrayerTimes(
+                PrayTime.year,
+                PrayTime.month + 1,
+                PrayTime.dayOfMonth + count,
+                PrayTime.lat,
+                PrayTime.lng,
+                PrayTime.timeZoneOffset.toDouble()
+        )
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
         val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")
