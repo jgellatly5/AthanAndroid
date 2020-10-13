@@ -96,8 +96,6 @@ class PrayTime private constructor() {
 
     // Time Names
     val timeNames: ArrayList<String>
-    // The string used for invalid times
-    private val InvalidTime: String
 
     // Technical settings_icon
     // number of iterations needed to compute times
@@ -116,86 +114,6 @@ class PrayTime private constructor() {
      */
 
     private val offsets: IntArray
-
-    // ---------------------- Trigonometric Functions -----------------------
-    // range reduce angle in degrees.
-    private fun fixAngle(a: Double): Double {
-        var angle = a
-        angle -= 360 * floor(angle / 360.0)
-        angle = if (angle < 0) angle + 360 else angle
-        return angle
-    }
-
-    // range reduce hours to 0..23
-    private fun fixHour(h: Double): Double {
-        var hour = h
-        hour -= 24.0 * floor(hour / 24.0)
-        hour = if (hour < 0) hour + 24 else hour
-        return hour
-    }
-
-    // radians to degrees
-    private fun radiansToDegrees(alpha: Double): Double = alpha * 180.0 / Math.PI
-
-    // degrees to radians
-    private fun degreesToRadians(alpha: Double): Double = alpha * Math.PI / 180.0
-
-    // degree sin
-    private fun degreeSin(d: Double): Double = sin(degreesToRadians(d))
-
-    // degree cos
-    private fun degreeCos(d: Double): Double = cos(degreesToRadians(d))
-
-    // degree tan
-    private fun degreeTan(d: Double): Double = tan(degreesToRadians(d))
-
-    // degree arcsin
-    private fun degreeArcsin(x: Double): Double = radiansToDegrees(asin(x))
-
-    // degree arccos
-    private fun degreeArccos(x: Double): Double = radiansToDegrees(acos(x))
-
-    // degree arctan
-    private fun degreeArctan(x: Double): Double = radiansToDegrees(atan(x))
-
-    // degree arctan2
-    private fun degreeArctan2(y: Double, x: Double): Double = radiansToDegrees(atan2(y, x))
-
-    // degree arccot
-    private fun degreeArccot(x: Double): Double = radiansToDegrees(atan2(1.0, x))
-
-    // ---------------------- Time-Zone Functions -----------------------
-    // compute local time-zone for a specific date
-    val timeZone1: Double = TimeZone.getDefault().rawOffset / 1000.0 / 3600
-
-    // compute base time-zone of the system
-    private val baseTimeZone: Double = TimeZone.getDefault().rawOffset / 1000.0 / 3600
-
-    // detect daylight saving in a given date
-    private fun detectDaylightSaving(): Double = TimeZone.getDefault().dstSavings.toDouble()
-
-    // ---------------------- Julian Date Functions -----------------------
-    // calculate julian date from a calendar date
-    private fun julianDate(y: Int, m: Int, d: Int): Double {
-        var year = y
-        var month = m
-        if (month <= 2) {
-            year -= 1
-            month += 12
-        }
-        val a = floor(year / 100.0)
-        val b = 2 - a + floor(a / 4.0)
-        return (floor(365.25 * (year + 4716)) + floor(30.6001 * (month + 1)) + d + b) - 1524.5
-    }
-
-    // convert a calendar date to julian date (second method)
-    private fun calcJD(year: Int, month: Int, day: Int): Double {
-        val j1970 = 2440588.0
-        val date = Date(year, month - 1, day)
-        val ms = date.time.toDouble() // # of milliseconds since midnight Jan 1, 1970
-        val days = floor(ms / (1000.0 * 60.0 * 60.0 * 24.0))
-        return j1970 + days - 0.5
-    }
 
     // ---------------------- Calculation Functions -----------------------
     // References:
@@ -329,72 +247,6 @@ class PrayTime private constructor() {
         val params = doubleArrayOf(-1.0, -1.0, -1.0, 1.0, minutes)
         setCustomParams(params)
     }
-
-    // convert double hours to 24h format
-    fun floatToTime24(t: Double): String {
-        var time = t
-        val result: String
-        if (java.lang.Double.isNaN(time)) {
-            return InvalidTime
-        }
-        time = fixHour(time + 0.5 / 60.0) // add 0.5 minutes to round
-        val hours = floor(time).toInt()
-        val minutes = floor((time - hours) * 60.0)
-        result = if (hours in 0..9 && minutes >= 0 && minutes <= 9) {
-            "0" + hours + ":0" + minutes.roundToInt()
-        } else if (hours in 0..9) {
-            "0" + hours + ":" + minutes.roundToInt()
-        } else if (minutes in 0.0..9.0) {
-            hours.toString() + ":0" + minutes.roundToInt()
-        } else {
-            hours.toString() + ":" + minutes.roundToInt()
-        }
-        return result
-    }
-
-    // convert double hours to 12h format
-    fun floatToTime12(t: Double, noSuffix: Boolean): String {
-        var time = t
-        if (java.lang.Double.isNaN(time)) {
-            return InvalidTime
-        }
-        time = fixHour(time + 0.5 / 60) // add 0.5 minutes to round
-        var hours = floor(time).toInt()
-        val minutes = floor((time - hours) * 60)
-        val suffix = if (hours >= 12) {
-            "pm"
-        } else {
-            "am"
-        }
-        hours = (hours + 12 - 1) % 12 + 1
-        /*hours = (hours + 12) - 1;
-        int hrs = (int) hours % 12;
-        hrs += 1;*/
-        return if (!noSuffix) {
-            if (hours in 0..9 && minutes >= 0 && minutes <= 9) {
-                ("0" + hours + ":0" + minutes.roundToInt() + " " + suffix)
-            } else if (hours in 0..9) {
-                "0" + hours + ":" + minutes.roundToInt() + " " + suffix
-            } else if (minutes in 0.0..9.0) {
-                hours.toString() + ":0" + minutes.roundToInt() + " " + suffix
-            } else {
-                hours.toString() + ":" + minutes.roundToInt() + " " + suffix
-            }
-        } else {
-            if (hours in 0..9 && minutes >= 0 && minutes <= 9) {
-                "0" + hours + ":0" + minutes.roundToInt()
-            } else if (hours in 0..9) {
-                "0" + hours + ":" + minutes.roundToInt()
-            } else if (minutes in 0.0..9.0) {
-                hours.toString() + ":0" + minutes.roundToInt()
-            } else {
-                hours.toString() + ":" + minutes.roundToInt()
-            }
-        }
-    }
-
-    // convert double hours to 12h format with no suffix
-    fun floatToTime12NS(time: Double): String = floatToTime12(time, true)
 
     // ---------------------- Compute Prayer Times -----------------------
     // compute prayer times at given julian date
@@ -585,7 +437,6 @@ class PrayTime private constructor() {
         timeNames.add("Sunset")
         timeNames.add("Maghrib")
         timeNames.add("Isha")
-        InvalidTime = "-----" // The string used for invalid times
 
         // --------------------- Technical settings_icon --------------------
         numIterations = 1 // number of iterations needed to compute times
@@ -608,38 +459,31 @@ class PrayTime private constructor() {
          * sunset) mv : maghrib parameter value (in angle or minutes) is : isha
          * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter
          * value (in angle or minutes)
-         */methodParams = HashMap()
+         */
+        methodParams = HashMap()
 
         // Jafari
-        val Jvalues = doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0)
-        methodParams[Integer.valueOf(jafari)] = Jvalues
+        methodParams[Integer.valueOf(jafari)] = doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0)
 
         // Karachi
-        val Kvalues = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0)
-        methodParams[Integer.valueOf(karachi)] = Kvalues
+        methodParams[Integer.valueOf(karachi)] = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0)
 
         // ISNA
-        val Ivalues = doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0)
-        methodParams[Integer.valueOf(iSNA)] = Ivalues
+        methodParams[Integer.valueOf(iSNA)] = doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0)
 
         // MWL
-        val MWvalues = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
-        methodParams[Integer.valueOf(mWL)] = MWvalues
+        methodParams[Integer.valueOf(mWL)] = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
 
         // Makkah
-        val MKvalues = doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0)
-        methodParams[Integer.valueOf(makkah)] = MKvalues
+        methodParams[Integer.valueOf(makkah)] = doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0)
 
         // Egypt
-        val Evalues = doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5)
-        methodParams[Integer.valueOf(egypt)] = Evalues
+        methodParams[Integer.valueOf(egypt)] = doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5)
 
         // Tehran
-        val Tvalues = doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0)
-        methodParams[Integer.valueOf(tehran)] = Tvalues
+        methodParams[Integer.valueOf(tehran)] = doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0)
 
         // Custom
-        val Cvalues = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
-        methodParams[Integer.valueOf(custom)] = Cvalues
+        methodParams[Integer.valueOf(custom)] = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
     }
 }
