@@ -44,9 +44,6 @@ class PrayTime private constructor() {
     // Julian date
     var jDate = 0.0
 
-    // Custom Setting
-    private var custom = 0
-
     // Time Formats
     // 24-hour format
     private var time24 = 0
@@ -326,14 +323,9 @@ class PrayTime private constructor() {
         var adjustHighLats = 1
         var timeFormat = 1
 
-        // Adjusting Methods for Higher Latitudes
-        const val none = 0
-        const val midNight = 1 // middle of night
-        const val oneSeventh = 2 // 1/7th of night
-        const val angleBased = 3 // angle/60th of night
-    }
-
-    init {
+        // Juristic Methods
+        val shafii = 0 // Shafii (standard)
+        val hanafi = 1 // Hanafi
 
         // Calculation Methods
         val jafari = 0 // Ithna Ashari
@@ -343,13 +335,16 @@ class PrayTime private constructor() {
         val makkah = 4 // Umm al-Qura, Makkah
         val egypt = 5 // Egyptian General Authority of Survey
         val tehran = 6 // Institute of Geophysics, University of Tehran
-        val custom = 7 // Custom Setting
+        var custom = 7 // Custom Setting
 
-        // Juristic Methods
-        val shafii = 0 // Shafii (standard)
-        val hanafi = 1 // Hanafi
+        // Adjusting Methods for Higher Latitudes
+        const val none = 0
+        const val midNight = 1 // middle of night
+        const val oneSeventh = 2 // 1/7th of night
+        const val angleBased = 3 // angle/60th of night
+    }
 
-
+    init {
 
         // Time Formats
         time24 = 0 // 24-hour format
