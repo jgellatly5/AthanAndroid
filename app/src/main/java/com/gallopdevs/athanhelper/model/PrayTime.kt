@@ -69,8 +69,6 @@ class PrayTime private constructor() {
      * (in angle or minutes)
      */
 
-    private val offsets: IntArray
-
     // ---------------------- SunCalculation Functions -----------------------
 
 
@@ -201,7 +199,7 @@ class PrayTime private constructor() {
     private fun adjustTimes(t: DoubleArray): DoubleArray {
         var times = t
         for (i in times.indices) {
-            times[i] +=  timeZone - lng / 15
+            times[i] += timeZone - lng / 15
         }
         // Dhuhr
         times[2] = times[2] + dhuhrMinutes / 60
@@ -342,6 +340,9 @@ class PrayTime private constructor() {
         const val midNight = 1 // middle of night
         const val oneSeventh = 2 // 1/7th of night
         const val angleBased = 3 // angle/60th of night
+
+        // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}
+        val offsets = IntArray(7) { 0 }
     }
 
     init {
@@ -352,27 +353,7 @@ class PrayTime private constructor() {
         time12NS = 2 // 12-hour format with no suffix
         floating = 3 // floating point number
 
-        // Time Names
-        val timeNames: ArrayList<String> = ArrayList()
-        timeNames.add("Fajr")
-        timeNames.add("Sunrise")
-        timeNames.add("Dhuhr")
-        timeNames.add("Asr")
-        timeNames.add("Sunset")
-        timeNames.add("Maghrib")
-        timeNames.add("Isha")
-
         // ------------------- Calc Method Parameters --------------------
-
-        // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}
-        offsets = IntArray(7)
-        offsets[0] = 0
-        offsets[1] = 0
-        offsets[2] = 0
-        offsets[3] = 0
-        offsets[4] = 0
-        offsets[5] = 0
-        offsets[6] = 0
 
         /*
          *
