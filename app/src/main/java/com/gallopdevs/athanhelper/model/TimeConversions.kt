@@ -3,6 +3,9 @@ package com.gallopdevs.athanhelper.model
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
+// compute the difference between two times
+fun timeDiff(time1: Double, time2: Double): Double = fixHour(time2 - time1)
+
 // convert double hours to 24h format
 fun floatToTime24(t: Double): String {
     var time = t

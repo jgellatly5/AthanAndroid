@@ -59,37 +59,8 @@ class PrayTime private constructor() {
     // Julian date
     var jDate = 0.0
 
-    // Calculation Methods
-    // Ithna Ashari
-    private var jafari = 0
-
-    // University of Islamic Sciences, Karachi
-    private var karachi = 0
-
-    // Islamic Society of North America (ISNA)
-    private var iSNA = 0
-
-    // Muslim World League (MWL)
-    private var mWL = 0
-
-    // Umm al-Qura, Makkah
-    private var makkah = 0
-
-    // Egyptian General Authority of Survey
-    private var egypt = 0
-
     // Custom Setting
     private var custom = 0
-
-    // Institute of Geophysics, University of Tehran
-    private var tehran = 0
-
-    // Juristic Methods
-    // Shafii (standard)
-    private var shafii = 0
-
-    // Hanafi
-    private var hanafi = 0
 
     // Adjusting Methods for Higher Latitudes
     // No adjustment
@@ -131,35 +102,8 @@ class PrayTime private constructor() {
 
     private val offsets: IntArray
 
-    // ---------------------- Calculation Functions -----------------------
-    // References:
-    // http://www.ummah.net/astronomy/saltime
-    // http://aa.usno.navy.mil/faq/docs/SunApprox.html
-    // compute declination angle of sun_icon and equation of time
-    private fun sunPosition(jd: Double): DoubleArray {
-        val D = jd - 2451545
-        val g = fixAngle(357.529 + 0.98560028 * D)
-        val q = fixAngle(280.459 + 0.98564736 * D)
-        val L = fixAngle(q + 1.915 * degreeSin(g) + 0.020 * degreeSin(2 * g))
+    // ---------------------- SunCalculation Functions -----------------------
 
-        // double R = 1.00014 - 0.01671 * [self dcos:g] - 0.00014 * [self dcos:
-        // (2*g)];
-        val e = 23.439 - 0.00000036 * D
-        val d = degreeArcsin(degreeSin(e) * degreeSin(L))
-        var RA = degreeArctan2(degreeCos(e) * degreeSin(L), degreeCos(L)) / 15.0
-        RA = fixHour(RA)
-        val EqT = q / 15.0 - RA
-        val sPosition = DoubleArray(2)
-        sPosition[0] = d
-        sPosition[1] = EqT
-        return sPosition
-    }
-
-    // compute equation of time
-    private fun equationOfTime(jd: Double): Double = sunPosition(jd)[1]
-
-    // compute declination angle of sun_icon
-    private fun sunDeclination(jd: Double): Double = sunPosition(jd)[0]
 
     // compute mid-day (Dhuhr, Zawal) time
     private fun computeMidDay(t: Double): Double {
@@ -184,10 +128,6 @@ class PrayTime private constructor() {
         val G = -degreeArccot(step + degreeTan(abs(lat - D)))
         return computeTime(G, t)
     }
-
-    // ---------------------- Misc Functions -----------------------
-    // compute the difference between two times
-    private fun timeDiff(time1: Double, time2: Double): Double = fixHour(time2 - time1)
 
     // -------------------- Interface Functions --------------------
     // return prayer times for a given date
@@ -417,18 +357,18 @@ class PrayTime private constructor() {
         timeFormat = 0
 
         // Calculation Methods
-        jafari = 0 // Ithna Ashari
-        karachi = 1 // University of Islamic Sciences, Karachi
-        iSNA = 2 // Islamic Society of North America (ISNA)
-        mWL = 3 // Muslim World League (MWL)
-        makkah = 4 // Umm al-Qura, Makkah
-        egypt = 5 // Egyptian General Authority of Survey
-        tehran = 6 // Institute of Geophysics, University of Tehran
-        custom = 7 // Custom Setting
+        val jafari = 0 // Ithna Ashari
+        val karachi = 1 // University of Islamic Sciences, Karachi
+        val iSNA = 2 // Islamic Society of North America (ISNA)
+        val mWL = 3 // Muslim World League (MWL)
+        val makkah = 4 // Umm al-Qura, Makkah
+        val egypt = 5 // Egyptian General Authority of Survey
+        val tehran = 6 // Institute of Geophysics, University of Tehran
+        val custom = 7 // Custom Setting
 
         // Juristic Methods
-        shafii = 0 // Shafii (standard)
-        hanafi = 1 // Hanafi
+        val shafii = 0 // Shafii (standard)
+        val hanafi = 1 // Hanafi
 
         // Adjusting Methods for Higher Latitudes
         none = 0 // No adjustment
