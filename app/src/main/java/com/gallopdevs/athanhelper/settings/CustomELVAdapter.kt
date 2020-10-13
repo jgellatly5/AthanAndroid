@@ -19,17 +19,20 @@ class CustomELVAdapter(
     private var lastChildPosition = 0
     private var lastGroupPosition = 0
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Any {
-        return expandableListDetail[expandableListHeader[groupPosition]]!!.get(childPosition)
-    }
+    override fun getChild(groupPosition: Int, childPosition: Int): Any =
+            expandableListDetail[expandableListHeader[groupPosition]]!![childPosition]
 
-    override fun getChildId(groupPosition: Int, childPosition: Int): Long {
-        return childPosition.toLong()
-    }
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long =
+            childPosition.toLong()
 
-    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean,
-                              convertView: View?, parent: ViewGroup): View? {
-        var convertView = convertView
+    override fun getChildView(
+            groupPosition: Int,
+            childPosition: Int,
+            isLastChild: Boolean,
+            cv: View?,
+            parent: ViewGroup
+    ): View? {
+        var convertView = cv
         if (convertView == null) {
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_items, null)
@@ -89,28 +92,24 @@ class CustomELVAdapter(
         return convertView
     }
 
-    override fun getGroupCount(): Int {
-        return expandableListHeader.size
-    }
+    override fun getGroupCount(): Int = expandableListHeader.size
 
-    override fun getChildrenCount(groupPosition: Int): Int {
-        return expandableListDetail[expandableListHeader[groupPosition]]!!.size
-    }
+    override fun getChildrenCount(groupPosition: Int): Int =
+            expandableListDetail[expandableListHeader[groupPosition]]!!.size
 
-    override fun getGroup(groupPosition: Int): Any {
-        return expandableListHeader[groupPosition]
-    }
+    override fun getGroup(groupPosition: Int): Any = expandableListHeader[groupPosition]
 
-    override fun getGroupId(groupPosition: Int): Long {
-        return groupPosition.toLong()
-    }
+    override fun getGroupId(groupPosition: Int): Long = groupPosition.toLong()
 
-    override fun hasStableIds(): Boolean {
-        return false
-    }
+    override fun hasStableIds(): Boolean = false
 
-    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+    override fun getGroupView(
+            groupPosition: Int,
+            isExpanded: Boolean,
+            cv: View?,
+            parent: ViewGroup
+    ): View {
+        var convertView = cv
         if (convertView == null) {
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_header, null)
@@ -130,9 +129,7 @@ class CustomELVAdapter(
         return convertView!!
     }
 
-    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return true
-    }
+    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean = true
 
     private fun getImageDrawable(index: Int): Int {
         val drawables = intArrayOf(R.drawable.sum_icon, R.drawable.sun_icon, R.drawable.compass_icon)
