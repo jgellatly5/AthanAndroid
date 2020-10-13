@@ -117,13 +117,6 @@ class PrayTime private constructor() {
     // floating point number
     private var floating = 0
 
-    // Time Names
-    val timeNames: ArrayList<String>
-
-    // Technical settings_icon
-    // number of iterations needed to compute times
-    private var numIterations = 0
-
     // Calc Method Parameters
     private val methodParams: HashMap<Int, DoubleArray>
 
@@ -289,9 +282,7 @@ class PrayTime private constructor() {
     private fun computeDayTimes(): ArrayList<String> {
         // default times
         var times = doubleArrayOf(5.0, 6.0, 12.0, 13.0, 18.0, 18.0, 18.0)
-        for (i in 1..numIterations) {
-            times = computeTimes(times)
-        }
+        times = computeTimes(times)
         times = adjustTimes(times)
         times = tuneTimes(times)
         return adjustTimesFormat(times)
@@ -452,7 +443,7 @@ class PrayTime private constructor() {
         floating = 3 // floating point number
 
         // Time Names
-        timeNames = ArrayList()
+        val timeNames: ArrayList<String> = ArrayList()
         timeNames.add("Fajr")
         timeNames.add("Sunrise")
         timeNames.add("Dhuhr")
@@ -460,9 +451,6 @@ class PrayTime private constructor() {
         timeNames.add("Sunset")
         timeNames.add("Maghrib")
         timeNames.add("Isha")
-
-        // --------------------- Technical settings_icon --------------------
-        numIterations = 1 // number of iterations needed to compute times
 
         // ------------------- Calc Method Parameters --------------------
 
