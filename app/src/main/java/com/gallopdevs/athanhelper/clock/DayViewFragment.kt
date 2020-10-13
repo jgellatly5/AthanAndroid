@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.fragment_page.*
 import java.util.*
 
 class DayViewFragment : Fragment() {
-    private val DEFAULT_TIME_FORMAT = 1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_page, container, false)
@@ -20,7 +19,7 @@ class DayViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        PrayTime.timeFormat = DEFAULT_TIME_FORMAT
+        PrayTime.timeFormat = PrayTime.time12
         setDate(arguments!!)
         updateTimes(arguments!!)
     }

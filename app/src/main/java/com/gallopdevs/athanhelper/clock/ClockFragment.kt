@@ -34,8 +34,6 @@ import java.util.*
 
 class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
 
-    private val DEFAULT_TIME_FORMAT = 0
-
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     private var timer: CountDownTimer? = null
@@ -63,7 +61,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         PrayTime.calcMethod = calcMethod
         PrayTime.asrJuristic = asrMethod
         PrayTime.adjustHighLats = latitudes
-        PrayTime.timeFormat = DEFAULT_TIME_FORMAT
+        PrayTime.timeFormat = PrayTime.time24
     }
 
     @SuppressLint("MissingPermission")
