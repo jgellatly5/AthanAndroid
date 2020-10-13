@@ -15,18 +15,20 @@ class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
 
     override fun createFragment(i: Int): Fragment {
         val fragment = DayViewFragment()
-        val bundle = Bundle()
+
         val c = Calendar.getInstance()
         val day = c.get(Calendar.DAY_OF_WEEK)
         val indicator = ClockFragment.nextTime
-        bundle.putInt("day", day + i)
-        bundle.putInt("count", i)
-        bundle.putInt("indicator", indicator)
+
+        val bundle = Bundle().apply {
+            putInt("day", day + i)
+            putInt("count", i)
+            putInt("indicator", indicator)
+        }
+
         fragment.arguments = bundle
         return fragment
     }
 
-    override fun getItemCount(): Int {
-        return NUM_ITEMS
-    }
+    override fun getItemCount(): Int = NUM_ITEMS
 }
