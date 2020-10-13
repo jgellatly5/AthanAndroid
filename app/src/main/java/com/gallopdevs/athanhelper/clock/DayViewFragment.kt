@@ -8,7 +8,6 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayTime
-import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
 import kotlinx.android.synthetic.main.fragment_page.*
 import java.util.*
 

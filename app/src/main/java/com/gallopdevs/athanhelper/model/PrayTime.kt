@@ -2,6 +2,8 @@ package com.gallopdevs.athanhelper.model
 
 import com.gallopdevs.athanhelper.model.utils.computeDayTimes
 import com.gallopdevs.athanhelper.model.utils.julianDate
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -99,6 +101,19 @@ object PrayTime {
             tehran to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
             custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
     )
+
+    val currentTime: Long
+        get() {
+            val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
+            val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
+            var currentTimeMilliSeconds: Long = 0
+            try {
+                currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).time
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+            return currentTimeMilliSeconds
+        }
 
     // -------------------- Interface Functions --------------------
     // return prayer times for a given date

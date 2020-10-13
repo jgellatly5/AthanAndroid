@@ -8,7 +8,6 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
 import com.gallopdevs.athanhelper.model.PrayTime
 import java.util.*
 

@@ -9,7 +9,7 @@ import androidx.viewpager.widget.ViewPager
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.DayViewAdapter
-import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
+import com.gallopdevs.athanhelper.model.PrayTime
 import com.gallopdevs.athanhelper.settings.SettingsFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_swiper.*
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onPageSelected(position: Int) {
                 if (position == 0) {
-                    val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
+                    val currentTimeMilliSeconds = PrayTime.currentTime
                     val getTimeDifference = clockFragment.getTimerDifference(currentTimeMilliSeconds)
                     val countDownTime = getTimeDifference[ClockFragment.nextTime]
                     dayViewAdapter.notifyDataSetChanged()

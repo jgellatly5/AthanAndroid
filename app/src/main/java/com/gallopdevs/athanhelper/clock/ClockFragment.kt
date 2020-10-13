@@ -22,7 +22,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
 import com.gallopdevs.athanhelper.home.MainActivity
 import com.gallopdevs.athanhelper.model.PrayTime
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -81,7 +80,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
                             prayer_timer_text.visibility = TextView.VISIBLE
                             next_prayer_text.visibility = TextView.VISIBLE
 
-                            val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
+                            val currentTimeMilliSeconds = PrayTime.currentTime
                             startNewTimer(getTimerDifference(currentTimeMilliSeconds)[nextTime])
 
                             view_pager_fragment.adapter = dayViewAdapter
@@ -220,7 +219,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
                 val sharedPref = activity!!.getPreferences(Context.MODE_PRIVATE)
                 val enableNotifications = sharedPref.getBoolean("enableNotifications", false)
                 if (enableNotifications) createNotification()
-                val currentTimeMilliSeconds = CalendarPrayerTimes.currentTime
+                val currentTimeMilliSeconds = PrayTime.currentTime
                 val getTimeDifference = getTimerDifference(currentTimeMilliSeconds)
                 val newCountDownTime = getTimeDifference[nextTime]
                 startNewTimer(newCountDownTime)
