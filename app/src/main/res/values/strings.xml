@@ -23,6 +23,16 @@
     <string name="moon">moon</string>
     <string name="next_prayer">Next Prayer</string>
 
+    <string-array name="time_names">
+        <item>Fajr</item>
+        <item>Sunrise</item>
+        <item>Dhuhr</item>
+        <item>Asr</item>
+        <item>Sunset</item>
+        <item>Maghrib</item>
+        <item>Isha</item>
+    </string-array>
+
     <string-array name="method_settings">
         <item>Calculation Method</item>
         <item>Asr Method</item>

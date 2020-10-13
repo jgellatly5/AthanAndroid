@@ -1,7 +1,8 @@
 package com.gallopdevs.athanhelper.model
 
 import java.util.*
-import kotlin.math.*
+import kotlin.collections.ArrayList
+import kotlin.math.abs
 
 /**
  * Created by jgell on 6/8/2017.
@@ -33,64 +34,86 @@ class PrayTime private constructor() {
     // Global Variables
     // calculation method
     var calcMethod = 0
+
     // Juristic method for Asr
     var asrJuristic = 0
+
     // minutes after mid-day for Dhuhr
     var dhuhrMinutes = 0
+
     // adjusting method for higher latitudes
     var adjustHighLats = 0
+
     // time format
     var timeFormat = 0
+
     // latitude
     var lat = 0.0
+
     // longitude
     var lng = 0.0
+
     // time-zone
     var timeZone = 0.0
+
     // Julian date
     var jDate = 0.0
 
     // Calculation Methods
     // Ithna Ashari
     private var jafari = 0
+
     // University of Islamic Sciences, Karachi
     private var karachi = 0
+
     // Islamic Society of North America (ISNA)
     private var iSNA = 0
+
     // Muslim World League (MWL)
     private var mWL = 0
+
     // Umm al-Qura, Makkah
     private var makkah = 0
+
     // Egyptian General Authority of Survey
     private var egypt = 0
+
     // Custom Setting
     private var custom = 0
+
     // Institute of Geophysics, University of Tehran
     private var tehran = 0
 
     // Juristic Methods
     // Shafii (standard)
     private var shafii = 0
+
     // Hanafi
     private var hanafi = 0
 
     // Adjusting Methods for Higher Latitudes
     // No adjustment
     private var none = 0
+
     // middle of night
     private var midNight = 0
+
     // 1/7th of night
     private var oneSeventh = 0
+
     // angle/60th of night
     private var angleBased = 0
 
     // Time Formats
     // 24-hour format
     private var time24 = 0
+
     // 12-hour format
     private var time12 = 0
+
     // 12-hour format with no suffix
     private var time12NS = 0
+
     // floating point number
     private var floating = 0
 
@@ -332,7 +355,7 @@ class PrayTime private constructor() {
         }
 
         // Adjust Isha
-        val ishaAngle: Double = if (methodParams[calcMethod]!![3] .equals(0.0)) methodParams[calcMethod]!![4] else 18.0
+        val ishaAngle: Double = if (methodParams[calcMethod]!![3].equals(0.0)) methodParams[calcMethod]!![4] else 18.0
         val ishaDiff = nightPortion(ishaAngle) * nightTime
         if (java.lang.Double.isNaN(times[6]) || timeDiff(times[4], times[6]) > ishaDiff) {
             times[6] = times[4] + ishaDiff
