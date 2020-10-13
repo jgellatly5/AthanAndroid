@@ -32,45 +32,6 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 
 */
 class PrayTime private constructor() {
-    // Global Variables
-    // latitude
-    var lat = 0.0
-
-    // longitude
-    var lng = 0.0
-
-    // time-zone
-    var timeZone = 0.0
-
-    // Julian date
-    var jDate = 0.0
-
-    // ---------------------- SunCalculation Functions -----------------------
-
-
-    // compute mid-day (Dhuhr, Zawal) time
-    private fun computeMidDay(t: Double): Double {
-        val time = equationOfTime(jDate + t)
-        return fixHour(12 - time)
-    }
-
-    // compute time for a given angle G
-    private fun computeTime(G: Double, t: Double): Double {
-        val D = sunDeclination(jDate + t)
-        val Z = computeMidDay(t)
-        val Beg = -degreeSin(G) - degreeSin(D) * degreeSin(lat)
-        val Mid = degreeCos(D) * degreeCos(lat)
-        val V = degreeArccos(Beg / Mid) / 15.0
-        return Z + if (G > 90) -V else V
-    }
-
-    // compute the time of Asr
-    // Shafii: step=1, Hanafi: step=2
-    private fun computeAsr(step: Double, t: Double): Double {
-        val D = sunDeclination(jDate + t)
-        val G = -degreeArccot(step + degreeTan(abs(lat - D)))
-        return computeTime(G, t)
-    }
 
     // -------------------- Interface Functions --------------------
     // return prayer times for a given date
@@ -248,6 +209,11 @@ class PrayTime private constructor() {
                 }
                 return prayerTime
             }
+
+        var lat = 0.0
+        var lng = 0.0
+        var timeZone = 0.0
+        var jDate = 0.0
 
         // Initialize vars
         var calcMethod = 0

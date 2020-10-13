@@ -1,5 +1,9 @@
 package com.gallopdevs.athanhelper.model
 
+import com.gallopdevs.athanhelper.model.PrayTime.Companion.jDate
+import com.gallopdevs.athanhelper.model.PrayTime.Companion.lat
+import kotlin.math.abs
+
 // References:
 // http://www.ummah.net/astronomy/saltime
 // http://aa.usno.navy.mil/faq/docs/SunApprox.html
@@ -28,3 +32,27 @@ fun equationOfTime(jd: Double): Double = sunPosition(jd)[1]
 
 // compute declination angle of sun_icon
 fun sunDeclination(jd: Double): Double = sunPosition(jd)[0]
+
+// compute mid-day (Dhuhr, Zawal) time
+fun computeMidDay(t: Double): Double {
+    val time = equationOfTime(jDate + t)
+    return fixHour(12 - time)
+}
+
+// compute time for a given angle G
+fun computeTime(G: Double, t: Double): Double {
+    val D = sunDeclination(jDate + t)
+    val Z = computeMidDay(t)
+    val Beg = -degreeSin(G) - degreeSin(D) * degreeSin(lat)
+    val Mid = degreeCos(D) * degreeCos(lat)
+    val V = degreeArccos(Beg / Mid) / 15.0
+    return Z + if (G > 90) -V else V
+}
+
+// compute the time of Asr
+// Shafii: step=1, Hanafi: step=2
+fun computeAsr(step: Double, t: Double): Double {
+    val D = sunDeclination(jDate + t)
+    val G = -degreeArccot(step + degreeTan(abs(lat - D)))
+    return computeTime(G, t)
+}

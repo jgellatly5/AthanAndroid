@@ -1,5 +1,7 @@
 package com.gallopdevs.athanhelper.model
 
+
+
 // convert times array to given time format
 fun adjustTimesFormat(times: DoubleArray): ArrayList<String> {
     val result = ArrayList<String>()
