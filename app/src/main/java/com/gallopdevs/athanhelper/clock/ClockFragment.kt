@@ -112,25 +112,26 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        var allowed = true
+
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
+    ) {
         when (requestCode) {
-            MY_PERMISSIONS_REQUEST_FINE_LOCATION -> for (res in grantResults) {
-                allowed = allowed && res == PackageManager.PERMISSION_GRANTED
-            }
-            else -> allowed = false
-        }
-        if (allowed) {
-            if (timer != null) {
-                timer?.cancel()
-            }
-            getLocation()
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Toast.makeText(activity, "LocationOfPrayer permissions denied", Toast.LENGTH_SHORT).show()
+            MY_PERMISSIONS_REQUEST_FINE_LOCATION ->
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    if (timer != null) {
+                        timer?.cancel()
+                    }
+                    getLocation()
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                            Toast.makeText(activity, "Location permissions denied.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
-            }
         }
     }
 
