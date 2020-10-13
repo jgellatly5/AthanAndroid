@@ -74,6 +74,19 @@ class PrayTime private constructor() {
 
     // -------------------- Interface Functions --------------------
     // return prayer times for a given date
+    fun getPrayerTimes(
+            date: Calendar,
+            latitude: Double,
+            longitude: Double,
+            tZone: Double
+    ): ArrayList<String> {
+        val year = date[Calendar.YEAR]
+        val month = date[Calendar.MONTH]
+        val day = date[Calendar.DATE]
+        return getDatePrayerTimes(year, month + 1, day, latitude, longitude, tZone)
+    }
+
+    // return prayer times for a given date
     fun getDatePrayerTimes(
             year: Int,
             month: Int,
@@ -89,32 +102,6 @@ class PrayTime private constructor() {
         val lonDiff = longitude / (15.0 * 24.0)
         jDate -= lonDiff
         return computeDayTimes()
-    }
-
-    // return prayer times for a given date
-    fun getPrayerTimes(
-            date: Calendar,
-            latitude: Double,
-            longitude: Double,
-            tZone: Double
-    ): ArrayList<String> {
-        val year = date[Calendar.YEAR]
-        val month = date[Calendar.MONTH]
-        val day = date[Calendar.DATE]
-        return getDatePrayerTimes(year, month + 1, day, latitude, longitude, tZone)
-    }
-
-    // set custom values for calculation parameters
-    private fun setCustomParams(params: DoubleArray) {
-        for (i in 0..4) {
-            if (params[i].equals(-1.0)) {
-                params[i] = methodParams[calcMethod]!![i]
-                methodParams[custom] = params
-            } else {
-                methodParams[custom]!![i] = params[i]
-            }
-        }
-        calcMethod = custom
     }
 
     // set the angle for calculating Fajr
@@ -147,7 +134,30 @@ class PrayTime private constructor() {
         setCustomParams(params)
     }
 
+    // set custom values for calculation parameters
+    private fun setCustomParams(params: DoubleArray) {
+        for (i in 0..4) {
+            if (params[i].equals(-1.0)) {
+                params[i] = methodParams[calcMethod]!![i]
+                methodParams[custom] = params
+            } else {
+                methodParams[custom]!![i] = params[i]
+            }
+        }
+        calcMethod = custom
+    }
+
     // ---------------------- Compute Prayer Times -----------------------
+    // compute prayer times at given julian date
+    private fun computeDayTimes(): ArrayList<String> {
+        // default times
+        var times = doubleArrayOf(5.0, 6.0, 12.0, 13.0, 18.0, 18.0, 18.0)
+        times = computeTimes(times)
+        times = adjustTimes(times)
+        times = tuneTimes(times)
+        return adjustTimesFormat(times)
+    }
+
     // compute prayer times at given julian date
     private fun computeTimes(times: DoubleArray): DoubleArray {
         val t = dayPortion(times)
@@ -161,14 +171,12 @@ class PrayTime private constructor() {
         return doubleArrayOf(fajr, sunrise, dhuhr, asr, sunset, maghrib, isha)
     }
 
-    // compute prayer times at given julian date
-    private fun computeDayTimes(): ArrayList<String> {
-        // default times
-        var times = doubleArrayOf(5.0, 6.0, 12.0, 13.0, 18.0, 18.0, 18.0)
-        times = computeTimes(times)
-        times = adjustTimes(times)
-        times = tuneTimes(times)
-        return adjustTimesFormat(times)
+    // convert hours to day portions
+    private fun dayPortion(times: DoubleArray): DoubleArray {
+        for (i in 0..6) {
+            times[i] = times[i] / 24
+        }
+        return times
     }
 
     // adjust times in a prayer time array
@@ -193,30 +201,6 @@ class PrayTime private constructor() {
         return times
     }
 
-    // convert times array to given time format
-    private fun adjustTimesFormat(times: DoubleArray): ArrayList<String> {
-        val result = ArrayList<String>()
-        if (timeFormat == floating) {
-            for (time in times) {
-                result.add(time.toString())
-            }
-            return result
-        }
-        for (i in 0..6) {
-            when (timeFormat) {
-                time12 -> {
-                    result.add(floatToTime12(times[i], false))
-                }
-                time12NS -> {
-                    result.add(floatToTime12(times[i], true))
-                }
-                else -> {
-                    result.add(floatToTime24(times[i]))
-                }
-            }
-        }
-        return result
-    }
 
     // adjust Fajr, Isha and Maghrib for locations in higher latitudes
     private fun adjustHighLatTimes(times: DoubleArray): DoubleArray {
@@ -253,33 +237,6 @@ class PrayTime private constructor() {
             oneSeventh -> calc = 0.14286
         }
         return calc
-    }
-
-    // convert hours to day portions
-    private fun dayPortion(times: DoubleArray): DoubleArray {
-        for (i in 0..6) {
-            times[i] = times[i] / 24
-        }
-        return times
-    }
-
-    // Tune timings for adjustments
-    // Set time offsets
-    fun tune(offsetTimes: IntArray) {
-        for (i in offsetTimes.indices) { // offsetTimes length
-            // should be 7 in order
-            // of Fajr, Sunrise,
-            // Dhuhr, Asr, Sunset,
-            // Maghrib, Isha
-            offsets[i] = offsetTimes[i]
-        }
-    }
-
-    private fun tuneTimes(times: DoubleArray): DoubleArray {
-        for (i in times.indices) {
-            times[i] = times[i] + offsets[i] / 60.0
-        }
-        return times
     }
 
     companion object {
