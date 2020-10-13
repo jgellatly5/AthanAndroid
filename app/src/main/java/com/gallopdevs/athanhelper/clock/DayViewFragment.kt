@@ -97,8 +97,8 @@ class DayViewFragment : Fragment() {
         setOvalVisibility(ClockFragment.nextTime)
     }
 
-    private fun setOvalVisibility(item: Int) {
-        var item = item
+    private fun setOvalVisibility(i: Int) {
+        var item = i
         val timeViewList = ArrayList<ImageView>()
         timeViewList.add(green_oval_dawn)
         timeViewList.add(green_oval_midday)

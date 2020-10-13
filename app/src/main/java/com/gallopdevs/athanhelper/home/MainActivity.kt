@@ -21,10 +21,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swiper)
 
+        createNotificationChannel()
+
         val dayViewAdapter = DayViewAdapter(this)
-        val mainActivityPagerAdapter = MainActivityPagerAdapter(supportFragmentManager)
         val clockFragment = ClockFragment(dayViewAdapter)
 
+        val mainActivityPagerAdapter = MainActivityPagerAdapter(supportFragmentManager)
         mainActivityPagerAdapter.addFrag(clockFragment)
         mainActivityPagerAdapter.addFrag(SettingsFragment())
         view_pager_activity.adapter = mainActivityPagerAdapter
@@ -53,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
-        createNotificationChannel()
     }
 
     private fun createNotificationChannel() {
