@@ -2,6 +2,7 @@ package com.gallopdevs.athanhelper.model
 
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.math.abs
 
 /**
@@ -43,31 +44,6 @@ class PrayTime private constructor() {
 
     // Julian date
     var jDate = 0.0
-
-    // Time Formats
-    // 24-hour format
-    private var time24 = 0
-
-    // 12-hour format
-    private var time12 = 0
-
-    // 12-hour format with no suffix
-    private var time12NS = 0
-
-    // floating point number
-    private var floating = 0
-
-    // Calc Method Parameters
-    private val methodParams: HashMap<Int, DoubleArray>
-
-    /*
-     * this.methodParams[methodNum] = new Array(fa, ms, mv, is, iv);
-     *
-     * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after
-     * sunset) mv : maghrib parameter value (in angle or minutes) is : isha
-     * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter value
-     * (in angle or minutes)
-     */
 
     // ---------------------- SunCalculation Functions -----------------------
 
@@ -271,9 +247,11 @@ class PrayTime private constructor() {
     // the night portion used for adjusting times in higher latitudes
     private fun nightPortion(angle: Double): Double {
         var calc = 0.0
-        if (adjustHighLats == angleBased) calc = angle / 60.0
-        else if (adjustHighLats == midNight) calc = 0.5
-        else if (adjustHighLats == oneSeventh) calc = 0.14286
+        when (adjustHighLats) {
+            angleBased -> calc = angle / 60.0
+            midNight -> calc = 0.5
+            oneSeventh -> calc = 0.14286
+        }
         return calc
     }
 
@@ -326,13 +304,13 @@ class PrayTime private constructor() {
         val hanafi = 1 // Hanafi
 
         // Calculation Methods
-        val jafari = 0 // Ithna Ashari
-        val karachi = 1 // University of Islamic Sciences, Karachi
-        val iSNA = 2 // Islamic Society of North America (ISNA)
-        val mWL = 3 // Muslim World League (MWL)
-        val makkah = 4 // Umm al-Qura, Makkah
-        val egypt = 5 // Egyptian General Authority of Survey
-        val tehran = 6 // Institute of Geophysics, University of Tehran
+        const val jafari = 0 // Ithna Ashari
+        const val karachi = 1 // University of Islamic Sciences, Karachi
+        const val iSNA = 2 // Islamic Society of North America (ISNA)
+        const val mWL = 3 // Muslim World League (MWL)
+        const val makkah = 4 // Umm al-Qura, Makkah
+        const val egypt = 5 // Egyptian General Authority of Survey
+        const val tehran = 6 // Institute of Geophysics, University of Tehran
         var custom = 7 // Custom Setting
 
         // Adjusting Methods for Higher Latitudes
@@ -341,19 +319,14 @@ class PrayTime private constructor() {
         const val oneSeventh = 2 // 1/7th of night
         const val angleBased = 3 // angle/60th of night
 
+        // Time Formats
+        const val time24 = 0 // 24-hour format
+        const val time12 = 1 // 12-hour format
+        const val time12NS = 2 // 12-hour format with no suffix
+        const val floating = 3 // floating point number
+
         // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}
         val offsets = IntArray(7) { 0 }
-    }
-
-    init {
-
-        // Time Formats
-        time24 = 0 // 24-hour format
-        time12 = 1 // 12-hour format
-        time12NS = 2 // 12-hour format with no suffix
-        floating = 3 // floating point number
-
-        // ------------------- Calc Method Parameters --------------------
 
         /*
          *
@@ -362,30 +335,15 @@ class PrayTime private constructor() {
          * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter
          * value (in angle or minutes)
          */
-        methodParams = HashMap()
-
-        // Jafari
-        methodParams[Integer.valueOf(jafari)] = doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0)
-
-        // Karachi
-        methodParams[Integer.valueOf(karachi)] = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0)
-
-        // ISNA
-        methodParams[Integer.valueOf(iSNA)] = doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0)
-
-        // MWL
-        methodParams[Integer.valueOf(mWL)] = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
-
-        // Makkah
-        methodParams[Integer.valueOf(makkah)] = doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0)
-
-        // Egypt
-        methodParams[Integer.valueOf(egypt)] = doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5)
-
-        // Tehran
-        methodParams[Integer.valueOf(tehran)] = doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0)
-
-        // Custom
-        methodParams[Integer.valueOf(custom)] = doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
+        val methodParams: HashMap<Int, DoubleArray> = hashMapOf(
+                jafari to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
+                karachi to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0),
+                iSNA to doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0),
+                mWL to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0),
+                makkah to doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0),
+                egypt to doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5),
+                tehran to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
+                custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
+        )
     }
 }
