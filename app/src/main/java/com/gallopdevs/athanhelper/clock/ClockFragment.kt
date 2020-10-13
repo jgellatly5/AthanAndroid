@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
 import com.gallopdevs.athanhelper.home.MainActivity
+import com.gallopdevs.athanhelper.model.PrayTime
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
@@ -33,6 +34,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
+
+    private val DEFAULT_TIME_FORMAT = 0
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
@@ -58,10 +61,10 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
         val calcMethod = sharedPreferences.getInt("calcMethod", DEFAULT_CALC_METHOD)
         val asrMethod = sharedPreferences.getInt("asrMethod", DEFAULT_JURISTIC_METHOD)
         val latitudes = sharedPreferences.getInt("latitudes", DEFAULT_HIGH_LATITUDES)
-        CalendarPrayerTimes.updateCalcMethod(calcMethod)
-        CalendarPrayerTimes.updateAsrJuristic(asrMethod)
-        CalendarPrayerTimes.updateHighLats(latitudes)
-        CalendarPrayerTimes.updateTimeFormat()
+        PrayTime.calcMethod = calcMethod
+        PrayTime.asrJuristic = asrMethod
+        PrayTime.adjustHighLats = latitudes
+        PrayTime.timeFormat = DEFAULT_TIME_FORMAT
     }
 
     @SuppressLint("MissingPermission")

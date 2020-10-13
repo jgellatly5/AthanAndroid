@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.CalendarPrayerTimes
+import com.gallopdevs.athanhelper.model.PrayTime
 import java.util.*
 
 class CustomELVAdapter(
@@ -66,15 +67,15 @@ class CustomELVAdapter(
             val editor = sharedPreferences?.edit()
             when (groupPosition) {
                 0 -> {
-                    CalendarPrayerTimes.updateCalcMethod(childPosition)
+                    PrayTime.calcMethod = childPosition
                     editor?.putInt("calcMethod", childPosition)
                 }
                 1 -> {
-                    CalendarPrayerTimes.updateAsrJuristic(childPosition)
+                    PrayTime.asrJuristic = childPosition
                     editor?.putInt("asrMethod", childPosition)
                 }
                 2 -> {
-                    CalendarPrayerTimes.updateHighLats(childPosition)
+                    PrayTime.adjustHighLats = childPosition
                     editor?.putInt("latitudes", childPosition)
                 }
             }

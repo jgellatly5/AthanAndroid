@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object CalendarPrayerTimes {
-    private val DEFAULT_TIME_FORMAT = 0
 
     val currentTime: Long
         get() {
@@ -29,22 +28,6 @@ object CalendarPrayerTimes {
 
     private var latitude: Double = 0.toDouble()
     private var longitude: Double = 0.toDouble()
-
-    fun updateCalcMethod(value: Int) {
-        PrayTime.calcMethod = value
-    }
-
-    fun updateAsrJuristic(value: Int) {
-        PrayTime.asrJuristic = value
-    }
-
-    fun updateHighLats(value: Int) {
-        PrayTime.adjustHighLats = value
-    }
-
-    fun updateTimeFormat() {
-        PrayTime.timeFormat = DEFAULT_TIME_FORMAT
-    }
 
     fun getNewTimes(): ArrayList<String> {
         return PrayTime.getDatePrayerTimes(year, month + 1, dayOfMonth, latitude, longitude, timeZoneOffset.toDouble())
