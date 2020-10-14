@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
@@ -16,10 +17,13 @@ import kotlinx.android.synthetic.main.activity_swiper.*
 
 class MainActivity : AppCompatActivity() {
     private val CHANNEL_ID = "Notification"
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swiper)
+
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         createNotificationChannel()
 
