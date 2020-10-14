@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var dayViewAdapter: DayViewAdapter
-    private lateinit var clockFragment: ClockFragment
 
     private var timer: CountDownTimer? = null
 
@@ -53,12 +52,11 @@ class MainActivity : AppCompatActivity() {
         loadSettings()
 
         dayViewAdapter = DayViewAdapter(this)
-        clockFragment = ClockFragment()
 
         getLocation()
 
         val mainActivityPagerAdapter = MainActivityPagerAdapter(supportFragmentManager)
-        mainActivityPagerAdapter.addFrag(clockFragment)
+        mainActivityPagerAdapter.addFrag(ClockFragment())
         mainActivityPagerAdapter.addFrag(SettingsFragment())
         view_pager_activity.adapter = mainActivityPagerAdapter
 
