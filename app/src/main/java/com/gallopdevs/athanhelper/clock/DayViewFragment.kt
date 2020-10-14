@@ -13,31 +13,29 @@ import java.util.*
 
 class DayViewFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_page, container, false)
-    }
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_page, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PrayTime.timeFormat = PrayTime.time12
         setDate(arguments!!)
         updateTimes(arguments!!)
+        setOvalVisibility(PrayTime.nextTime)
     }
 
     private fun setDate(bundle: Bundle) {
-        val nextDay = Calendar.getInstance()
-        val count = bundle.getInt("count")
-        var dayOfMonth = nextDay.get(Calendar.DAY_OF_MONTH)
-        nextDay.set(Calendar.DAY_OF_MONTH, dayOfMonth + count)
+        val dayOfMonth = bundle.getInt("dayOfMonth")
+        val dayOfMonthString = dayOfMonth.toString()
 
-        dayOfMonth = nextDay.get(Calendar.DAY_OF_MONTH)
-        val numberString = dayOfMonth.toString()
-
-        val monthDay = nextDay.get(Calendar.MONTH) + 1
-        val monthString = if (monthDay < 10) {
-            "0$monthDay"
+        val month = bundle.getInt("month")
+        val monthString = if (month < 10) {
+            "0$month"
         } else {
-            monthDay.toString()
+            month.toString()
         }
 
         var weekDay = bundle.getInt("day")
@@ -55,9 +53,9 @@ class DayViewFragment : Fragment() {
             else -> "This is not a day"
         }
         if (dayOfMonth < 10) {
-            day_text_view.text = "$weekDayString, $monthString/0$numberString"
+            day_text_view.text = "$weekDayString, $monthString/0$dayOfMonthString"
         } else {
-            day_text_view.text = "$weekDayString, $monthString/$numberString"
+            day_text_view.text = "$weekDayString, $monthString/$dayOfMonthString"
         }
     }
 
@@ -94,7 +92,6 @@ class DayViewFragment : Fragment() {
         sunset_post_fix.text = splitSunsetTime[1]
         night_time_text_view.text = splitNightTime[0]
         night_post_fix.text = splitNightTime[1]
-        setOvalVisibility(PrayTime.nextTime)
     }
 
     private fun setOvalVisibility(i: Int) {

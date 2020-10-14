@@ -19,11 +19,15 @@ class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
 
         val c = Calendar.getInstance()
         val day = c.get(Calendar.DAY_OF_WEEK)
+        val dayOfMonth = c.get(Calendar.DAY_OF_MONTH)
+        val month = c.get(Calendar.MONTH) + 1
         val indicator = PrayTime.nextTime
 
         val bundle = Bundle().apply {
-            putInt("day", day + i)
             putInt("count", i)
+            putInt("day", day + i)
+            putInt("dayOfMonth", dayOfMonth + i)
+            putInt("month", month)
             putInt("indicator", indicator)
         }
 
