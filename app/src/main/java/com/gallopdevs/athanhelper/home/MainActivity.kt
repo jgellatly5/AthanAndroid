@@ -3,16 +3,22 @@ package com.gallopdevs.athanhelper.home
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.gallopdevs.athanhelper.R
@@ -26,13 +32,16 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_swiper.*
 import kotlinx.android.synthetic.main.fragment_clock.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    private val CHANNEL_ID = "Notification"
     private lateinit var mainViewModel: MainViewModel
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var dayViewAdapter: DayViewAdapter
     private lateinit var clockFragment: ClockFragment
+
+    private var timer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                     val getTimeDifference = PrayTime.getTimerDifference(currentTimeMilliSeconds)
                     val countDownTime = getTimeDifference[PrayTime.nextTime]
                     dayViewAdapter.notifyDataSetChanged()
-                    clockFragment.startNewTimer(countDownTime)
+                    startNewTimer(countDownTime)
                 }
             }
 
@@ -134,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                             next_prayer_text.visibility = TextView.VISIBLE
 
                             val currentTimeMilliSeconds = PrayTime.currentTime
-                            clockFragment.startNewTimer(PrayTime.getTimerDifference(currentTimeMilliSeconds)[PrayTime.nextTime])
+                            startNewTimer(PrayTime.getTimerDifference(currentTimeMilliSeconds)[PrayTime.nextTime])
 
                             view_pager_fragment.adapter = dayViewAdapter
                             TabLayoutMediator(tab_dots, view_pager_fragment, true) { _, _ -> }.attach()
@@ -156,9 +165,9 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             REQUEST_FINE_LOCATION ->
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-//                    if (timer != null) {
-//                        timer?.cancel()
-//                    }
+                    if (timer != null) {
+                        timer?.cancel()
+                    }
                     getLocation()
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -170,7 +179,59 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun startNewTimer(countDownTime: Long) {
+        if (timer != null) {
+            timer?.cancel()
+        }
+        timer = object : CountDownTimer(countDownTime, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
+                offset.timeZone = TimeZone.getTimeZone("GMT")
+                val newDateTimer = Date()
+                newDateTimer.time = millisUntilFinished
+                prayer_timer_text.text = offset.format(newDateTimer) + "s"
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            override fun onFinish() {
+                prayer_timer_text.text = "00:00:00s"
+                val sharedPref = getPreferences(Context.MODE_PRIVATE)
+                val enableNotifications = sharedPref.getBoolean("enableNotifications", false)
+                if (enableNotifications) createNotification()
+                val currentTimeMilliSeconds = PrayTime.currentTime
+                val getTimeDifference = PrayTime.getTimerDifference(currentTimeMilliSeconds)
+                val newCountDownTime = getTimeDifference[PrayTime.nextTime]
+                startNewTimer(newCountDownTime)
+            }
+        }.start()
+    }
+
+    private fun createNotification() {
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        val prayerNames = ArrayList<String>()
+        prayerNames.add("Dawn")
+        prayerNames.add("Mid-Day")
+        prayerNames.add("Afternoon")
+        prayerNames.add("Sunset")
+        prayerNames.add("Night")
+
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.moon)
+                .setContentTitle("Athan")
+                .setContentText("Next prayer time: " + prayerNames[PrayTime.nextTime])
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+        val notificationManager = NotificationManagerCompat.from(this)
+
+        val notificationId = 0
+        notificationManager.notify(notificationId, builder.build())
+    }
+
     companion object {
         private const val REQUEST_FINE_LOCATION = 1
+        private const val CHANNEL_ID = "Notification"
     }
 }
