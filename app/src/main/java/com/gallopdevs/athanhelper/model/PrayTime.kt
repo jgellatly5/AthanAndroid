@@ -1,5 +1,7 @@
 package com.gallopdevs.athanhelper.model
 
+import android.widget.Toast
+import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.model.utils.computeDayTimes
 import com.gallopdevs.athanhelper.model.utils.julianDate
 import java.text.ParseException
@@ -145,5 +147,91 @@ object PrayTime {
         val lonDiff = longitude / (15.0 * 24.0)
         jDate -= lonDiff
         return computeDayTimes()
+    }
+
+    private var difference1: Long = 0
+    private var difference2: Long = 0
+    private var difference3: Long = 0
+    private var difference4: Long = 0
+    private var difference5: Long = 0
+    private var difference6: Long = 0
+    private val differences = longArrayOf(difference1, difference2, difference3, difference4, difference5, difference6)
+
+    private var currentTimeIndex = 0
+    val nextTime: Int
+        get() {
+            for (i in differences.indices) {
+                if (differences[i] < 0) {
+                    currentTimeIndex = i + 1
+                    if (currentTimeIndex > 5) {
+                        currentTimeIndex = 0
+                    }
+                }
+            }
+            return currentTimeIndex
+        }
+
+    fun getTimerDifference(currentTime: Long): LongArray {
+        val newTimes = getDatePrayerTimes(
+                PrayTime.year,
+                PrayTime.month + 1,
+                PrayTime.dayOfMonth,
+                PrayTime.lat,
+                PrayTime.lng,
+                PrayTime.timeZoneOffset.toDouble()
+        )
+        val nextDayTimes = getDatePrayerTimes(
+                PrayTime.year,
+                PrayTime.month + 1,
+                PrayTime.dayOfMonth + 1,
+                PrayTime.lat,
+                PrayTime.lng,
+                PrayTime.timeZoneOffset.toDouble()
+        )
+
+        // format times received from PrayTime model
+        val dawnTime = newTimes[0] + ":00"
+        val middayTime = newTimes[2] + ":00"
+        val afternoonTime = newTimes[3] + ":00"
+        val sunsetTime = newTimes[4] + ":00"
+        val nightTime = newTimes[6] + ":00"
+        val nextDawnTime = nextDayTimes[0] + ":00"
+        try {
+            // get milliseconds from parsing dates
+            val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
+            val dawnMillis = simpleDateFormat.parse(dawnTime).time
+            val middayMillis = simpleDateFormat.parse(middayTime).time
+            val afMillis = simpleDateFormat.parse(afternoonTime).time
+            val sunsetMillis = simpleDateFormat.parse(sunsetTime).time
+            val nightMillis = simpleDateFormat.parse(nightTime).time
+            val nextDawnMillis = simpleDateFormat.parse(nextDawnTime).time
+
+            //get intervals between times
+            difference1 = dawnMillis - currentTime
+            difference2 = middayMillis - currentTime
+            difference3 = afMillis - currentTime
+            difference4 = sunsetMillis - currentTime
+            difference5 = nightMillis - currentTime
+            difference6 = nextDawnMillis - currentTime + 86400000
+
+            // set index of each element in differences array
+            differences[0] = difference1
+            differences[1] = difference2
+            differences[2] = difference3
+            differences[3] = difference4
+            differences[4] = difference5
+            differences[5] = difference6
+            return differences
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        differences[0] = difference1
+        differences[1] = difference2
+        differences[2] = difference3
+        differences[3] = difference4
+        differences[4] = difference5
+        differences[5] = difference6
+        return differences
     }
 }

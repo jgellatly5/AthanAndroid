@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.gallopdevs.athanhelper.model.PrayTime
 import java.util.*
 
 /**
@@ -18,7 +19,7 @@ class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
 
         val c = Calendar.getInstance()
         val day = c.get(Calendar.DAY_OF_WEEK)
-        val indicator = ClockFragment.nextTime
+        val indicator = PrayTime.nextTime
 
         val bundle = Bundle().apply {
             putInt("day", day + i)

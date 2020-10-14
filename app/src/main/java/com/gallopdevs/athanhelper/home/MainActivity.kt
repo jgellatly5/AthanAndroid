@@ -66,8 +66,8 @@ class MainActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 if (position == 0) {
                     val currentTimeMilliSeconds = PrayTime.currentTime
-                    val getTimeDifference = clockFragment.getTimerDifference(currentTimeMilliSeconds)
-                    val countDownTime = getTimeDifference[ClockFragment.nextTime]
+                    val getTimeDifference = PrayTime.getTimerDifference(currentTimeMilliSeconds)
+                    val countDownTime = getTimeDifference[PrayTime.nextTime]
                     dayViewAdapter.notifyDataSetChanged()
                     clockFragment.startNewTimer(countDownTime)
                 }
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                             next_prayer_text.visibility = TextView.VISIBLE
 
                             val currentTimeMilliSeconds = PrayTime.currentTime
-                            clockFragment.startNewTimer(clockFragment.getTimerDifference(currentTimeMilliSeconds)[ClockFragment.nextTime])
+                            clockFragment.startNewTimer(PrayTime.getTimerDifference(currentTimeMilliSeconds)[PrayTime.nextTime])
 
                             view_pager_fragment.adapter = dayViewAdapter
                             TabLayoutMediator(tab_dots, view_pager_fragment, true) { _, _ -> }.attach()
