@@ -1,21 +1,14 @@
 package com.gallopdevs.athanhelper.clock
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -24,117 +17,22 @@ import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.home.MainActivity
 import com.gallopdevs.athanhelper.model.PrayTime
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_clock.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
-
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+class ClockFragment : Fragment() {
 
     private var timer: CountDownTimer? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_clock, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // location listener
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
-
-        loadSettings()
-        getLocation()
-    }
-
-    private fun loadSettings() {
-        // TODO remove !! from activity reference
-        val sharedPreferences = activity!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val calcMethod = sharedPreferences.getInt("calcMethod", DEFAULT_CALC_METHOD)
-        val asrMethod = sharedPreferences.getInt("asrMethod", DEFAULT_JURISTIC_METHOD)
-        val latitudes = sharedPreferences.getInt("latitudes", DEFAULT_HIGH_LATITUDES)
-        PrayTime.calcMethod = calcMethod
-        PrayTime.asrJuristic = asrMethod
-        PrayTime.adjustHighLats = latitudes
-        PrayTime.timeFormat = PrayTime.time24
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getLocation() {
-        if (hasPermissions()) {
-            mFusedLocationClient.lastLocation
-                    .addOnSuccessListener { location ->
-                        if (location != null) {
-                            PrayTime.lat = location.latitude
-                            PrayTime.lng = location.longitude
-
-                            progress_bar.visibility = ProgressBar.INVISIBLE
-                            moon_icon.visibility = ImageView.VISIBLE
-                            prayer_timer_text.visibility = TextView.VISIBLE
-                            next_prayer_text.visibility = TextView.VISIBLE
-
-                            val currentTimeMilliSeconds = PrayTime.currentTime
-                            startNewTimer(getTimerDifference(currentTimeMilliSeconds)[nextTime])
-
-                            view_pager_fragment.adapter = dayViewAdapter
-                            TabLayoutMediator(tab_dots, view_pager_fragment, true) { _, _ -> }.attach()
-                        } else {
-                            Toast.makeText(activity, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(activity, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
-                        Log.e(TAG, "onFailure: " + e.message)
-                    }
-        } else {
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(permissions, MY_PERMISSIONS_REQUEST_FINE_LOCATION)
-            }
-        }
-    }
-
-    private fun hasPermissions(): Boolean {
-        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        for (perms in permissions) {
-            val res = activity!!.checkCallingOrSelfPermission(perms)
-            if (res != PackageManager.PERMISSION_GRANTED) {
-                return false
-            }
-        }
-        return true
-    }
-
-
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
-    ) {
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_FINE_LOCATION ->
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    if (timer != null) {
-                        timer?.cancel()
-                    }
-                    getLocation()
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                            Toast.makeText(activity, "Location permissions denied.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-        }
-    }
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_clock, container, false)
 
     fun getTimerDifference(currentTime: Long): LongArray {
-        loadSettings()
         val newTimes = PrayTime.getDatePrayerTimes(
                 PrayTime.year,
                 PrayTime.month + 1,
@@ -186,7 +84,7 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
             differences[5] = difference6
             return differences
         } catch (e: ParseException) {
-            Log.e(TAG, "getTimerDifference: cannot parse the dates: " + e.message)
+            Toast.makeText(activity, "Cannot parse that date", Toast.LENGTH_SHORT).show()
         }
 
         differences[0] = difference1
@@ -251,12 +149,6 @@ class ClockFragment(private val dayViewAdapter: DayViewAdapter) : Fragment() {
     }
 
     companion object {
-
-        private const val TAG = "ClockFragment"
-        private const val DEFAULT_CALC_METHOD = 2
-        private const val DEFAULT_JURISTIC_METHOD = 0
-        private const val DEFAULT_HIGH_LATITUDES = 0
-        private const val MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1
         private const val NEXT_DAY_TIMES = 1
         private const val CHANNEL_ID = "Notification"
 
