@@ -1,5 +1,6 @@
 package com.gallopdevs.athanhelper.model
 
+import android.util.Log
 import com.gallopdevs.athanhelper.model.utils.computeDayTimes
 import com.gallopdevs.athanhelper.model.utils.julianDate
 import java.text.ParseException
@@ -147,18 +148,24 @@ object PrayTime {
 
     private val differences = LongArray(6) { 0 }
 
-    private var currentTimeIndex = 0
-    val nextTime: Int
+    private val TAG = "PrayTime"
+    private var _nextTimeIndex = 0
+    val nextTimeIndex: Int
         get() {
             for (i in differences.indices) {
-                if (differences[i] < 0) {
-                    currentTimeIndex = i + 1
-                    if (currentTimeIndex > 5) {
-                        currentTimeIndex = 0
-                    }
+                Log.w(TAG, "Index: " + i + ", PrayTime.nextTimeInMillis: " + differences[i])
+//                if (differences[i] < 0) {
+//                    _nextTimeIndex = i + 1
+//                    if (_nextTimeIndex > 5) {
+//                        _nextTimeIndex = 0
+//                    }
+//                }
+                if (differences[i] > 0) {
+                    _nextTimeIndex = i
                 }
             }
-            return currentTimeIndex
+            Log.w(TAG, "NextTimeIndex: $_nextTimeIndex")
+            return _nextTimeIndex
         }
 
     fun getTimerDifference(currentTime: Long): LongArray {

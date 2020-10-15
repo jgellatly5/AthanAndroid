@@ -24,7 +24,7 @@ class DayViewFragment : Fragment() {
         PrayTime.timeFormat = PrayTime.time12
         setDate(arguments!!)
         updateTimes(arguments!!)
-        setOvalVisibility(PrayTime.nextTime)
+        setOvalVisibility(PrayTime.nextTimeIndex)
     }
 
     private fun setDate(bundle: Bundle) {

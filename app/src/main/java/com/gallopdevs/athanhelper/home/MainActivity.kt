@@ -121,8 +121,8 @@ class MainActivity : AppCompatActivity() {
                             prayer_timer_text.visibility = TextView.VISIBLE
                             next_prayer_text.visibility = TextView.VISIBLE
 
-                            Log.w(TAG, "PrayTime.currentTime: " + PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime])
-                            startNewTimer(PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime])
+                            Log.w(TAG, "PrayTime.currentTime: " + PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTimeIndex])
+                            startNewTimer(PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTimeIndex])
 
                             view_pager_fragment.adapter = dayViewAdapter
                             TabLayoutMediator(tab_dots, view_pager_fragment, true) { _, _ -> }.attach()
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                 prayer_timer_text.text = getString(R.string.end_time)
                 val sharedPref = getPreferences(Context.MODE_PRIVATE)
                 if (sharedPref.getBoolean("enableNotifications", false)) createNotification()
-                val newCountDownTime = PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime]
+                val newCountDownTime = PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTimeIndex]
                 startNewTimer(newCountDownTime)
             }
         }.start()
@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.moon)
                 .setContentTitle("Athan")
-                .setContentText("Next prayer time: " + prayerNames[PrayTime.nextTime])
+                .setContentText("Next prayer time: " + prayerNames[PrayTime.nextTimeIndex])
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
