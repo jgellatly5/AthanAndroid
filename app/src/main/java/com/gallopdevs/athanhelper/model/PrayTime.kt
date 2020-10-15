@@ -140,34 +140,32 @@ object PrayTime {
     val nextTimeIndex: Int
         get() {
             for (i in differences.indices) {
-                Log.w(TAG, "Index: " + i + ", PrayTime.nextTimeInMillis: " + differences[i])
                 if (differences[i] > 0) {
                     _nextTimeIndex = i
                 }
             }
-            Log.w(TAG, "NextTimeIndex: $_nextTimeIndex")
             return _nextTimeIndex
         }
 
-    fun getTimerDifference(index: Int): Long {
+    fun getNextTimeMillis(): Long {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
 
         val newTimes = getDatePrayerTimes(
-                PrayTime.year,
-                PrayTime.month + 1,
-                PrayTime.dayOfMonth,
-                PrayTime.lat,
-                PrayTime.lng,
-                PrayTime.timeZoneOffset.toDouble()
+                year,
+                month + 1,
+                dayOfMonth,
+                lat,
+                lng,
+                timeZoneOffset.toDouble()
         )
         val nextDayTimes = getDatePrayerTimes(
-                PrayTime.year,
-                PrayTime.month + 1,
-                PrayTime.dayOfMonth + 1,
-                PrayTime.lat,
-                PrayTime.lng,
-                PrayTime.timeZoneOffset.toDouble()
+                year,
+                month + 1,
+                dayOfMonth + 1,
+                lat,
+                lng,
+                timeZoneOffset.toDouble()
         )
 
         try {
@@ -191,6 +189,13 @@ object PrayTime {
         } catch (e: ParseException) {
             e.printStackTrace()
         }
-        return differences[index]
+
+        var nextTimeIndex = 0
+        for (i in differences.indices) {
+            if (differences[i] > 0) {
+                nextTimeIndex = i
+            }
+        }
+        return differences[nextTimeIndex]
     }
 }
