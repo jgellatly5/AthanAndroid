@@ -71,11 +71,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                // TODO going back and forth between settings and clock resets timer
                 if (position == 0) {
-                    val countDownTime = PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime]
                     dayViewAdapter.notifyDataSetChanged()
-                    startNewTimer(countDownTime)
                 }
             }
 
@@ -147,9 +144,6 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             REQUEST_FINE_LOCATION ->
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    if (timer != null) {
-                        timer?.cancel()
-                    }
                     getLocation()
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
