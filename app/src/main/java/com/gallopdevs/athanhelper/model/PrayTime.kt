@@ -101,19 +101,6 @@ object PrayTime {
             custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
     )
 
-    val currentTime: Long
-        get() {
-            val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
-            val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
-            var currentTimeMilliSeconds: Long = 0
-            try {
-                currentTimeMilliSeconds = simpleDateFormat.parse(currentTime).time
-            } catch (e: ParseException) {
-                e.printStackTrace()
-            }
-            return currentTimeMilliSeconds
-        }
-
     // -------------------- Interface Functions --------------------
     // return prayer times for a given date
     fun getPrayerTimes(
@@ -154,12 +141,6 @@ object PrayTime {
         get() {
             for (i in differences.indices) {
                 Log.w(TAG, "Index: " + i + ", PrayTime.nextTimeInMillis: " + differences[i])
-//                if (differences[i] < 0) {
-//                    _nextTimeIndex = i + 1
-//                    if (_nextTimeIndex > 5) {
-//                        _nextTimeIndex = 0
-//                    }
-//                }
                 if (differences[i] > 0) {
                     _nextTimeIndex = i
                 }
@@ -168,7 +149,10 @@ object PrayTime {
             return _nextTimeIndex
         }
 
-    fun getTimerDifference(currentTime: Long): LongArray {
+    fun getTimerDifference(index: Int): Long {
+        val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
+        val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
+
         val newTimes = getDatePrayerTimes(
                 PrayTime.year,
                 PrayTime.month + 1,
@@ -188,7 +172,7 @@ object PrayTime {
 
         try {
             // get milliseconds from parsing dates
-            val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
+            val currentTimeMillis = simpleDateFormat.parse(currentTime).time
             val dawnMillis = simpleDateFormat.parse("${newTimes[0]}:00").time
             val middayMillis = simpleDateFormat.parse("${newTimes[2]}:00").time
             val afMillis = simpleDateFormat.parse("${newTimes[3]}:00").time
@@ -198,15 +182,15 @@ object PrayTime {
             val MILLIS_IN_DAY = 86400000
 
             // set index of each element in differences array
-            differences[0] = dawnMillis - currentTime
-            differences[1] = middayMillis - currentTime
-            differences[2] = afMillis - currentTime
-            differences[3] = sunsetMillis - currentTime
-            differences[4] = nightMillis - currentTime
-            differences[5] = nextDawnMillis - currentTime + MILLIS_IN_DAY
+            differences[0] = dawnMillis - currentTimeMillis
+            differences[1] = middayMillis - currentTimeMillis
+            differences[2] = afMillis - currentTimeMillis
+            differences[3] = sunsetMillis - currentTimeMillis
+            differences[4] = nightMillis - currentTimeMillis
+            differences[5] = nextDawnMillis - currentTimeMillis + MILLIS_IN_DAY
         } catch (e: ParseException) {
             e.printStackTrace()
         }
-        return differences
+        return differences[index]
     }
 }
