@@ -140,8 +140,11 @@ object PrayTime {
     val nextTimeIndex: Int
         get() {
             for (i in differences.indices) {
-                if (differences[i] > 0) {
-                    _nextTimeIndex = i
+                if (differences[i] < 0) {
+                    _nextTimeIndex = i + 1
+                    if (_nextTimeIndex > 5) {
+                        _nextTimeIndex = 0
+                    }
                 }
             }
             return _nextTimeIndex
@@ -192,8 +195,11 @@ object PrayTime {
 
         var nextTimeIndex = 0
         for (i in differences.indices) {
-            if (differences[i] > 0) {
-                nextTimeIndex = i
+            if (differences[i] < 0) {
+                nextTimeIndex = i + 1
+                if (nextTimeIndex > 5) {
+                    nextTimeIndex = 0
+                }
             }
         }
         return differences[nextTimeIndex]

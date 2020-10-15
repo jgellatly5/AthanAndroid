@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity() {
         PrayTime.calcMethod = sharedPreferences.getInt("calcMethod", PrayTime.calcMethod)
         PrayTime.asrJuristic = sharedPreferences.getInt("asrMethod", PrayTime.asrJuristic)
         PrayTime.adjustHighLats = sharedPreferences.getInt("latitudes", PrayTime.adjustHighLats)
+        // TODO figure out why PrayTime time format is different between activity and fragment
         PrayTime.timeFormat = PrayTime.time24
     }
 
