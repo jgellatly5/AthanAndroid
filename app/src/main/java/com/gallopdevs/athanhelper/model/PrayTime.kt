@@ -1,14 +1,10 @@
 package com.gallopdevs.athanhelper.model
 
-import android.widget.Toast
-import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.model.utils.computeDayTimes
 import com.gallopdevs.athanhelper.model.utils.julianDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * Created by jgell on 6/8/2017.
@@ -155,7 +151,7 @@ object PrayTime {
     private var difference4: Long = 0
     private var difference5: Long = 0
     private var difference6: Long = 0
-    private val differences = longArrayOf(difference1, difference2, difference3, difference4, difference5, difference6)
+    private val differences = LongArray(6) { 0 }
 
     private var currentTimeIndex = 0
     val nextTime: Int
@@ -193,7 +189,7 @@ object PrayTime {
         val dawnTime = newTimes[0] + ":00"
         val middayTime = newTimes[2] + ":00"
         val afternoonTime = newTimes[3] + ":00"
-        val sunsetTime = newTimes[4] + ":00"
+        val sunsetTime = newTimes[5] + ":00"
         val nightTime = newTimes[6] + ":00"
         val nextDawnTime = nextDayTimes[0] + ":00"
         try {
