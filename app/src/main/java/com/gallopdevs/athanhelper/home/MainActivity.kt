@@ -71,10 +71,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
+                // TODO going back and forth between settings and clock resets timer
                 if (position == 0) {
-                    val currentTimeMilliSeconds = PrayTime.currentTime
-                    val getTimeDifference = PrayTime.getTimerDifference(currentTimeMilliSeconds)
-                    val countDownTime = getTimeDifference[PrayTime.nextTime]
+                    val countDownTime = PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime]
                     dayViewAdapter.notifyDataSetChanged()
                     startNewTimer(countDownTime)
                 }
@@ -87,16 +86,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val description = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance)
+            val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
@@ -104,29 +98,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadSettings() {
         val sharedPreferences = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val calcMethod = sharedPreferences.getInt("calcMethod", PrayTime.calcMethod)
-        val asrMethod = sharedPreferences.getInt("asrMethod", PrayTime.asrJuristic)
-        val latitudes = sharedPreferences.getInt("latitudes", PrayTime.adjustHighLats)
-        PrayTime.calcMethod = calcMethod
-        PrayTime.asrJuristic = asrMethod
-        PrayTime.adjustHighLats = latitudes
+        PrayTime.calcMethod = sharedPreferences.getInt("calcMethod", PrayTime.calcMethod)
+        PrayTime.asrJuristic = sharedPreferences.getInt("asrMethod", PrayTime.asrJuristic)
+        PrayTime.adjustHighLats = sharedPreferences.getInt("latitudes", PrayTime.adjustHighLats)
         PrayTime.timeFormat = PrayTime.time24
     }
 
     private fun getLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(permissions, REQUEST_FINE_LOCATION)
             }
-            return
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             mFusedLocationClient.lastLocation
@@ -177,7 +161,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun startNewTimer(countDownTime: Long) {
+    private fun startNewTimer(countDownTime: Long) {
         if (timer != null) {
             timer?.cancel()
         }
@@ -185,20 +169,14 @@ class MainActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
                 offset.timeZone = TimeZone.getTimeZone("GMT")
-                val newDateTimer = Date()
-                newDateTimer.time = millisUntilFinished
-                prayer_timer_text.text = offset.format(newDateTimer) + "s"
+                prayer_timer_text.text = getString(R.string.count_down_time, offset.format(millisUntilFinished))
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             override fun onFinish() {
-                prayer_timer_text.text = "00:00:00s"
+                prayer_timer_text.text = getString(R.string.end_time)
                 val sharedPref = getPreferences(Context.MODE_PRIVATE)
-                val enableNotifications = sharedPref.getBoolean("enableNotifications", false)
-                if (enableNotifications) createNotification()
-                val currentTimeMilliSeconds = PrayTime.currentTime
-                val getTimeDifference = PrayTime.getTimerDifference(currentTimeMilliSeconds)
-                val newCountDownTime = getTimeDifference[PrayTime.nextTime]
+                if (sharedPref.getBoolean("enableNotifications", false)) createNotification()
+                val newCountDownTime = PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime]
                 startNewTimer(newCountDownTime)
             }
         }.start()
@@ -207,14 +185,7 @@ class MainActivity : AppCompatActivity() {
     private fun createNotification() {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-
-        val prayerNames = ArrayList<String>()
-        prayerNames.add("Dawn")
-        prayerNames.add("Mid-Day")
-        prayerNames.add("Afternoon")
-        prayerNames.add("Sunset")
-        prayerNames.add("Night")
-
+        val prayerNames = resources.getStringArray(R.array.ui_names)
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.moon)
                 .setContentTitle("Athan")
@@ -223,9 +194,7 @@ class MainActivity : AppCompatActivity() {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
         val notificationManager = NotificationManagerCompat.from(this)
-
-        val notificationId = 0
-        notificationManager.notify(notificationId, builder.build())
+        notificationManager.notify(0, builder.build())
     }
 
     companion object {

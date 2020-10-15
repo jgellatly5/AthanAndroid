@@ -7,6 +7,17 @@
     <string name="sunset">Sunset</string>
     <string name="night">Night</string>
 
+    <string-array name="ui_names">
+        <item>@string/dawn</item>
+        <item>@string/mid_day</item>
+        <item>@string/afternoon</item>
+        <item>@string/sunset</item>
+        <item>@string/night</item>
+    </string-array>
+
+    <string name="count_down_time">%1$ss</string>
+    <string name="end_time">00:00:00s</string>
+
     <string name="day_placeholder">Monday, 03/17</string>
 
     <string name="dawn_time_placeholder">5:45</string>
