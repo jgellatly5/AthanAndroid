@@ -10,11 +10,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -121,8 +121,8 @@ class MainActivity : AppCompatActivity() {
                             prayer_timer_text.visibility = TextView.VISIBLE
                             next_prayer_text.visibility = TextView.VISIBLE
 
-                            val currentTimeMilliSeconds = PrayTime.currentTime
-                            startNewTimer(PrayTime.getTimerDifference(currentTimeMilliSeconds)[PrayTime.nextTime])
+                            Log.w(TAG, "PrayTime.currentTime: " + PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime])
+                            startNewTimer(PrayTime.getTimerDifference(PrayTime.currentTime)[PrayTime.nextTime])
 
                             view_pager_fragment.adapter = dayViewAdapter
                             TabLayoutMediator(tab_dots, view_pager_fragment, true) { _, _ -> }.attach()
@@ -192,6 +192,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val TAG = "MainActivity"
         private const val REQUEST_FINE_LOCATION = 1
         private const val CHANNEL_ID = "Notification"
     }
