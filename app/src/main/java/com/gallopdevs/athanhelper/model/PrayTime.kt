@@ -1,6 +1,5 @@
 package com.gallopdevs.athanhelper.model
 
-import android.util.Log
 import com.gallopdevs.athanhelper.model.utils.computeDayTimes
 import com.gallopdevs.athanhelper.model.utils.julianDate
 import java.text.ParseException
@@ -52,7 +51,7 @@ object PrayTime {
     var asrJuristic = 0
     var dhuhrMinutes = 0
     var adjustHighLats = 1
-    var timeFormat = 1
+    var timeFormat = 0
 
     // Juristic Methods
     val shafii = 0 // Shafii (standard)
