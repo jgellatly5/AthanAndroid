@@ -8,7 +8,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayTime
-import kotlinx.android.synthetic.main.fragment_page.*
+import kotlinx.android.synthetic.main.fragment_dayview.*
 import java.util.*
 
 class DayViewFragment : Fragment() {
@@ -17,7 +17,7 @@ class DayViewFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_page, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_dayview, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

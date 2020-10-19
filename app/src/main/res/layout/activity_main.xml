@@ -12,14 +12,12 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/athan" />
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/view_pager_activity"
         android:layout_below="@id/athan_title"
-        android:layout_marginTop="10dp">
-
-    </androidx.viewpager.widget.ViewPager>
+        android:layout_marginTop="10dp" />
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"

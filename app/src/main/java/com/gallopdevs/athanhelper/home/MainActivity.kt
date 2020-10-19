@@ -20,7 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.DayViewAdapter
@@ -28,9 +28,8 @@ import com.gallopdevs.athanhelper.model.PrayTime
 import com.gallopdevs.athanhelper.settings.SettingsFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.activity_swiper.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_clock.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,42 +43,54 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_swiper)
+        setContentView(R.layout.activity_main)
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         createNotificationChannel()
         loadSettings()
 
-        dayViewAdapter = DayViewAdapter(this)
+        val mainActivityPagerAdapter = MainActivityPagerAdapter(this).apply {
+            addFrag(ClockFragment())
+            addFrag(SettingsFragment())
+        }
 
-        getLocation()
-
-        val mainActivityPagerAdapter = MainActivityPagerAdapter(supportFragmentManager)
-        mainActivityPagerAdapter.addFrag(ClockFragment())
-        mainActivityPagerAdapter.addFrag(SettingsFragment())
         view_pager_activity.adapter = mainActivityPagerAdapter
-
-        tab_layout_activity.setupWithViewPager(view_pager_activity)
-        tab_layout_activity.tabGravity = TabLayout.GRAVITY_FILL
-        tab_layout_activity.getTabAt(0)?.setIcon(R.drawable.clock_icon)
-        tab_layout_activity.getTabAt(1)?.setIcon(R.drawable.settings_icon)
-
-        view_pager_activity.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
-
+        view_pager_activity.isUserInputEnabled = false
+        view_pager_activity.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 if (position == 0) {
                     dayViewAdapter.notifyDataSetChanged()
                 }
             }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
         })
+
+        TabLayoutMediator(tab_layout_activity, view_pager_activity, true) { _, _ -> }.attach()
+        tab_layout_activity.getTabAt(0)?.setIcon(R.drawable.clock_icon)
+        tab_layout_activity.getTabAt(1)?.setIcon(R.drawable.settings_icon)
+
+        dayViewAdapter = DayViewAdapter(this)
+
+        getLocation()
+    }
+
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
+    ) {
+        when (requestCode) {
+            REQUEST_FINE_LOCATION ->
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    getLocation()
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                            Toast.makeText(this, "Location permissions denied.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+        }
     }
 
     private fun createNotificationChannel() {
@@ -136,25 +147,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
-    ) {
-        when (requestCode) {
-            REQUEST_FINE_LOCATION ->
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    getLocation()
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                            Toast.makeText(this, "Location permissions denied.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-        }
-    }
-
     private fun startNewTimer(countDownTime: Long) {
         if (timer != null) {
             timer?.cancel()
@@ -183,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.moon)
                 .setContentTitle("Athan")
-                .setContentText("Next prayer time: " + prayerNames[PrayTime.nextTimeIndex])
+                .setContentText("Next prayer time: ${prayerNames[PrayTime.nextTimeIndex]}")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
