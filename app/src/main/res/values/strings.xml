@@ -33,9 +33,10 @@
     <string name="channel_description">Show prayer that has just completed.</string>
     <string name="moon">moon</string>
     <string name="next_prayer">Next Prayer</string>
-    <string name="notification_icon">Notification Icon</string>
-    <string name="notifications">Notifications</string>
+    <string name="icon">Icon</string>
+    <string name="header_title">Header Title</string>
     <string name="line_decoration">Line Decoration</string>
+    <string name="drop_down_icon">Drop-down Icon</string>
 
     <string-array name="time_names">
         <item>Fajr</item>
