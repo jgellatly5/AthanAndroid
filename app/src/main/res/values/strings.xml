@@ -37,6 +37,8 @@
     <string name="header_title">Header Title</string>
     <string name="line_decoration">Line Decoration</string>
     <string name="drop_down_icon">Drop-down Icon</string>
+    <string name="notifications">Notifications</string>
+    <string name="item_title">Item Title</string>
 
     <string-array name="time_names">
         <item>Fajr</item>
