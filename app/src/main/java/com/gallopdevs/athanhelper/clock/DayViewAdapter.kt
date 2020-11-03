@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.gallopdevs.athanhelper.model.PrayTime
 import java.util.*
 
 /**
@@ -12,7 +11,6 @@ import java.util.*
  */
 
 class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
-    private val NUM_ITEMS = 7
 
     override fun createFragment(i: Int): Fragment {
         val fragment = DayViewFragment()
@@ -34,4 +32,8 @@ class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
     }
 
     override fun getItemCount(): Int = NUM_ITEMS
+
+    companion object {
+        private const val NUM_ITEMS = 7
+    }
 }

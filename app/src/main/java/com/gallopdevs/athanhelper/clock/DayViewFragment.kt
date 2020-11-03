@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayTime
 import kotlinx.android.synthetic.main.fragment_dayview.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DayViewFragment : Fragment() {
 
@@ -96,17 +99,24 @@ class DayViewFragment : Fragment() {
 
     private fun setOvalVisibility(i: Int) {
         var item = i
-        val timeViewList = ArrayList<ImageView>()
-        timeViewList.add(green_oval_dawn)
-        timeViewList.add(green_oval_midday)
-        timeViewList.add(green_oval_afternoon)
-        timeViewList.add(green_oval_sunset)
-        timeViewList.add(green_oval_night)
+
+        val timeViewList = ArrayList<TextView>()
+        timeViewList.add(dawn_text_view)
+        timeViewList.add(midday_text_view)
+        timeViewList.add(afternoon_text_view)
+        timeViewList.add(sunset_text_view)
+        timeViewList.add(night_text_view)
 
         if (item >= 5) {
             item -= 5
         }
 
-        timeViewList[item].visibility = View.VISIBLE
+        timeViewList[item].addDrawable(R.drawable.green_oval)
     }
+}
+
+fun TextView.addDrawable(drawable: Int) {
+    val imgDrawable = ContextCompat.getDrawable(context, drawable)
+    compoundDrawablePadding = 30
+    setCompoundDrawablesWithIntrinsicBounds(imgDrawable, null, null, null)
 }

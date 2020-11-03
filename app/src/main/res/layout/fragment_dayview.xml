@@ -28,28 +28,18 @@
             android:paddingBottom="@dimen/table_padding_bottom"
             android:paddingTop="@dimen/table_padding_top">
 
-            <LinearLayout>
-                <ImageView
-                    android:id="@+id/green_oval_dawn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/green_oval"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/dawn_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:paddingLeft="@dimen/prayer_name_padding_left"
-                    android:paddingRight="@dimen/prayer_name_padding_right"
-                    android:text="@string/dawn"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="@dimen/prayer_name_text_size"
-                    tools:ignore="RtlSymmetry"/>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/dawn_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingLeft="@dimen/prayer_name_padding_left"
+                android:paddingRight="@dimen/prayer_name_padding_right"
+                android:text="@string/dawn"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/prayer_name_text_size"
+                tools:ignore="RtlSymmetry" />
 
 
             <TextView
@@ -151,7 +141,7 @@
                     android:visibility="gone"/>
 
                 <TextView
-                    android:id="@+id/afternoonTextView"
+                    android:id="@+id/afternoon_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"
@@ -207,7 +197,7 @@
                     android:visibility="gone"/>
 
                 <TextView
-                    android:id="@+id/sunsetTextView"
+                    android:id="@+id/sunset_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"
@@ -261,7 +251,7 @@
                     android:visibility="gone"/>
 
                 <TextView
-                    android:id="@+id/nightTextView"
+                    android:id="@+id/night_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"
