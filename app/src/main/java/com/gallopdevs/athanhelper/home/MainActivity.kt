@@ -1,95 +1,48 @@
 package com.gallopdevs.athanhelper.home
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
-import com.gallopdevs.athanhelper.clock.DayViewAdapter
+import com.gallopdevs.athanhelper.databinding.ActivityMainBinding
 import com.gallopdevs.athanhelper.model.PrayTime
 import com.gallopdevs.athanhelper.settings.SettingsFragment
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_clock.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mainViewModel: MainViewModel
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private lateinit var dayViewAdapter: DayViewAdapter
 
-    private var timer: CountDownTimer? = null
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater).apply {
+            setContentView(root)
 
-        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+            mainViewModel = ViewModelProvider(this@MainActivity).get(MainViewModel::class.java)
 
-        createNotificationChannel()
-        loadSettings()
+            createNotificationChannel()
+            loadSettings()
 
-        val mainActivityPagerAdapter = MainActivityPagerAdapter(this).apply {
-            addFrag(ClockFragment())
-            addFrag(SettingsFragment())
-        }
-
-        view_pager_activity.adapter = mainActivityPagerAdapter
-        view_pager_activity.isUserInputEnabled = false
-        view_pager_activity.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                if (position == 0) {
-                    dayViewAdapter.notifyDataSetChanged()
-                }
+            val mainActivityPagerAdapter = MainActivityPagerAdapter(this@MainActivity).apply {
+                addFrag(ClockFragment())
+                addFrag(SettingsFragment())
             }
-        })
 
-        TabLayoutMediator(tab_layout_activity, view_pager_activity, true) { _, _ -> }.attach()
-        tab_layout_activity.getTabAt(0)?.setIcon(R.drawable.clock_icon)
-        tab_layout_activity.getTabAt(1)?.setIcon(R.drawable.settings_icon)
+            viewPagerActivity.apply {
+                adapter = mainActivityPagerAdapter
+                isUserInputEnabled = false
+            }
 
-        dayViewAdapter = DayViewAdapter(this)
-
-        getLocation()
-    }
-
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
-    ) {
-        when (requestCode) {
-            REQUEST_FINE_LOCATION ->
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    getLocation()
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                            Toast.makeText(this, "Location permissions denied.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+            TabLayoutMediator(tabLayoutActivity, viewPagerActivity, true) { _, _ -> }.attach()
+            tabLayoutActivity.getTabAt(0)?.setIcon(R.drawable.clock_icon)
+            tabLayoutActivity.getTabAt(1)?.setIcon(R.drawable.settings_icon)
         }
     }
 
@@ -112,80 +65,8 @@ class MainActivity : AppCompatActivity() {
         // TODO add setting for adjusting time format
     }
 
-    private fun getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(permissions, REQUEST_FINE_LOCATION)
-            }
-        } else {
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-            mFusedLocationClient.lastLocation
-                    .addOnSuccessListener { location ->
-                        if (location != null) {
-                            PrayTime.lat = location.latitude
-                            PrayTime.lng = location.longitude
-
-                            progress_bar.visibility = ProgressBar.INVISIBLE
-                            moon_icon.visibility = ImageView.VISIBLE
-                            prayer_timer_text.visibility = TextView.VISIBLE
-                            next_prayer_text.visibility = TextView.VISIBLE
-
-                            Log.w(TAG, "PrayTime.currentTime: " + PrayTime.getNextTimeMillis())
-                            startNewTimer(PrayTime.getNextTimeMillis())
-
-                            view_pager_fragment.adapter = dayViewAdapter
-                            TabLayoutMediator(tab_dots, view_pager_fragment, true) { _, _ -> }.attach()
-                        } else {
-                            Toast.makeText(this, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
-                    }
-        }
-    }
-
-    private fun startNewTimer(countDownTime: Long) {
-        if (timer != null) {
-            timer?.cancel()
-        }
-        timer = object : CountDownTimer(countDownTime, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
-                offset.timeZone = TimeZone.getTimeZone("GMT")
-                prayer_timer_text.text = getString(R.string.count_down_time, offset.format(millisUntilFinished))
-            }
-
-            override fun onFinish() {
-                prayer_timer_text.text = getString(R.string.end_time)
-                val sharedPref = getPreferences(Context.MODE_PRIVATE)
-                if (sharedPref.getBoolean("enableNotifications", false)) createNotification()
-                val newCountDownTime = PrayTime.getNextTimeMillis()
-                startNewTimer(newCountDownTime)
-            }
-        }.start()
-    }
-
-    private fun createNotification() {
-        val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        val prayerNames = resources.getStringArray(R.array.ui_names)
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.moon)
-                .setContentTitle("Athan")
-                .setContentText("Next prayer time: ${prayerNames[PrayTime.nextTimeIndex]}")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-        val notificationManager = NotificationManagerCompat.from(this)
-        notificationManager.notify(0, builder.build())
-    }
-
     companion object {
         private const val TAG = "MainActivity"
-        private const val REQUEST_FINE_LOCATION = 1
         private const val CHANNEL_ID = "Notification"
     }
 }

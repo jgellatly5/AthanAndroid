@@ -4,29 +4,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
+import com.gallopdevs.athanhelper.databinding.FragmentDayviewBinding
 import com.gallopdevs.athanhelper.model.PrayTime
-import kotlinx.android.synthetic.main.fragment_dayview.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 class DayViewFragment : Fragment() {
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_dayview, container, false)
+    private var _binding: FragmentDayviewBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentDayviewBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PrayTime.timeFormat = PrayTime.time12
-        setDate(arguments!!)
-        updateTimes(arguments!!)
+        setDate(requireArguments())
+        updateTimes(requireArguments())
         setOvalVisibility(PrayTime.nextTimeIndex)
     }
 
@@ -56,22 +60,15 @@ class DayViewFragment : Fragment() {
             else -> "This is not a day"
         }
         if (dayOfMonth < 10) {
-            day_text_view.text = "$weekDayString, $monthString/0$dayOfMonthString"
+            binding.dayTextView.text = "$weekDayString, $monthString/0$dayOfMonthString"
         } else {
-            day_text_view.text = "$weekDayString, $monthString/$dayOfMonthString"
+            binding.dayTextView.text = "$weekDayString, $monthString/$dayOfMonthString"
         }
     }
 
     private fun updateTimes(bundle: Bundle) {
         val count = bundle.getInt("count")
-        val nextDayTimes = PrayTime.getDatePrayerTimes(
-                PrayTime.year,
-                PrayTime.month + 1,
-                PrayTime.dayOfMonth + count,
-                PrayTime.lat,
-                PrayTime.lng,
-                PrayTime.timeZoneOffset.toDouble()
-        )
+        val nextDayTimes = PrayTime.getDatePrayerTimes(PrayTime.year, PrayTime.month + 1, PrayTime.dayOfMonth + count, PrayTime.lat, PrayTime.lng, PrayTime.timeZoneOffset.toDouble())
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
         val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")
@@ -85,33 +82,37 @@ class DayViewFragment : Fragment() {
         val splitSunsetTime = newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val splitNightTime = newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-        dawn_time_text_view.text = splitDawnTime[0]
-        dawn_post_fix.text = splitDawnTime[1]
-        midday_time_text_view.text = splitMiddayTime[0]
-        midday_post_fix.text = splitMiddayTime[1]
-        afternoon_time_text_view.text = splitAfternoonTime[0]
-        afternoon_post_fix.text = splitAfternoonTime[1]
-        sunset_time_text_view.text = splitSunsetTime[0]
-        sunset_post_fix.text = splitSunsetTime[1]
-        night_time_text_view.text = splitNightTime[0]
-        night_post_fix.text = splitNightTime[1]
+        binding.apply {
+            dawnTimeTextView.text = splitDawnTime[0]
+            dawnPostFix.text = splitDawnTime[1]
+            middayTimeTextView.text = splitMiddayTime[0]
+            middayPostFix.text = splitMiddayTime[1]
+            afternoonTimeTextView.text = splitAfternoonTime[0]
+            afternoonPostFix.text = splitAfternoonTime[1]
+            sunsetTimeTextView.text = splitSunsetTime[0]
+            sunsetPostFix.text = splitSunsetTime[1]
+            nightTimeTextView.text = splitNightTime[0]
+            nightPostFix.text = splitNightTime[1]
+        }
     }
 
     private fun setOvalVisibility(i: Int) {
-        var item = i
+        binding.apply {
+            var item = i
 
-        val timeViewList = ArrayList<TextView>()
-        timeViewList.add(dawn_text_view)
-        timeViewList.add(midday_text_view)
-        timeViewList.add(afternoon_text_view)
-        timeViewList.add(sunset_text_view)
-        timeViewList.add(night_text_view)
+            val timeViewList = ArrayList<TextView>()
+            timeViewList.add(dawnTextView)
+            timeViewList.add(middayTextView)
+            timeViewList.add(afternoonTextView)
+            timeViewList.add(sunsetTextView)
+            timeViewList.add(nightTextView)
 
-        if (item >= 5) {
-            item -= 5
+            if (item >= 5) {
+                item -= 5
+            }
+
+            timeViewList[item].addDrawable(R.drawable.green_oval)
         }
-
-        timeViewList[item].addDrawable(R.drawable.green_oval)
     }
 }
 

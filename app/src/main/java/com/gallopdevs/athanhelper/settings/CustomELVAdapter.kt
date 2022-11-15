@@ -11,27 +11,15 @@ import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayTime
 import java.util.*
 
-class CustomELVAdapter(
-        private val context: Context?,
-        private val expandableListHeader: List<String>,
-        private val expandableListDetail: HashMap<String, List<String>>
-) : BaseExpandableListAdapter() {
+class CustomELVAdapter(private val context: Context?, private val expandableListHeader: List<String>, private val expandableListDetail: HashMap<String, List<String>>) : BaseExpandableListAdapter() {
     private var lastChildPosition = 0
     private var lastGroupPosition = 0
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Any =
-            expandableListDetail[expandableListHeader[groupPosition]]!![childPosition]
+    override fun getChild(groupPosition: Int, childPosition: Int): Any = expandableListDetail[expandableListHeader[groupPosition]]!![childPosition]
 
-    override fun getChildId(groupPosition: Int, childPosition: Int): Long =
-            childPosition.toLong()
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long = childPosition.toLong()
 
-    override fun getChildView(
-            groupPosition: Int,
-            childPosition: Int,
-            isLastChild: Boolean,
-            cv: View?,
-            parent: ViewGroup
-    ): View? {
+    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, cv: View?, parent: ViewGroup): View? {
         var convertView = cv
         if (convertView == null) {
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -94,8 +82,7 @@ class CustomELVAdapter(
 
     override fun getGroupCount(): Int = expandableListHeader.size
 
-    override fun getChildrenCount(groupPosition: Int): Int =
-            expandableListDetail[expandableListHeader[groupPosition]]!!.size
+    override fun getChildrenCount(groupPosition: Int): Int = expandableListDetail[expandableListHeader[groupPosition]]!!.size
 
     override fun getGroup(groupPosition: Int): Any = expandableListHeader[groupPosition]
 
@@ -103,12 +90,7 @@ class CustomELVAdapter(
 
     override fun hasStableIds(): Boolean = false
 
-    override fun getGroupView(
-            groupPosition: Int,
-            isExpanded: Boolean,
-            cv: View?,
-            parent: ViewGroup
-    ): View {
+    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, cv: View?, parent: ViewGroup): View {
         var convertView = cv
         if (convertView == null) {
             val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
