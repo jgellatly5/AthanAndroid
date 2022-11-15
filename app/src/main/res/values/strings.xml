@@ -7,6 +7,17 @@
     <string name="sunset">Sunset</string>
     <string name="night">Night</string>
 
+    <string-array name="ui_names">
+        <item>@string/dawn</item>
+        <item>@string/mid_day</item>
+        <item>@string/afternoon</item>
+        <item>@string/sunset</item>
+        <item>@string/night</item>
+    </string-array>
+
+    <string name="count_down_time">%1$ss</string>
+    <string name="end_time">00:00:00s</string>
+
     <string name="day_placeholder">Monday, 03/17</string>
 
     <string name="dawn_time_placeholder">5:45</string>
@@ -22,5 +33,49 @@
     <string name="channel_description">Show prayer that has just completed.</string>
     <string name="moon">moon</string>
     <string name="next_prayer">Next Prayer</string>
+    <string name="icon">Icon</string>
+    <string name="header_title">Header Title</string>
+    <string name="line_decoration">Line Decoration</string>
+    <string name="drop_down_icon">Drop-down Icon</string>
+    <string name="notifications">Notifications</string>
+    <string name="item_title">Item Title</string>
+
+    <string-array name="time_names">
+        <item>Fajr</item>
+        <item>Sunrise</item>
+        <item>Dhuhr</item>
+        <item>Asr</item>
+        <item>Sunset</item>
+        <item>Maghrib</item>
+        <item>Isha</item>
+    </string-array>
+
+    <string-array name="method_settings">
+        <item>Calculation Method</item>
+        <item>Asr Method</item>
+        <item>Latitudes Method</item>
+    </string-array>
+
+    <string-array name="calculation_methods">
+        <item>Jafari</item>
+        <item>Karachi</item>
+        <item>Islamic Society of North America</item>
+        <item>Muslim World League</item>
+        <item>Makkah</item>
+        <item>Egypt</item>
+        <item>Tehran</item>
+    </string-array>
+
+    <string-array name="asr_methods">
+        <item>Shafii</item>
+        <item>Hanafi</item>
+    </string-array>
+
+    <string-array name="latitudes_method">
+        <item>None</item>
+        <item>MidNight</item>
+        <item>One/Seventh</item>
+        <item>Angle Based (angle/60th)</item>
+    </string-array>
 
 </resources>

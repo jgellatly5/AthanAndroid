@@ -8,89 +8,83 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes
+import com.gallopdevs.athanhelper.model.PrayTime
 import java.util.*
 
-class CustomELVAdapter(private val context: Context?, private val expandableListHeader: List<String>, private val expandableListDetail: HashMap<String, List<String>>) : BaseExpandableListAdapter() {
-    private val TAG = "CustomELVAdapter"
+class CustomELVAdapter(
+        private val context: Context?,
+        private val expandableListHeader: List<String>,
+        private val expandableListDetail: HashMap<String, List<String>>
+) : BaseExpandableListAdapter() {
     private var lastChildPosition = 0
     private var lastGroupPosition = 0
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Any {
-        return this.expandableListDetail[this.expandableListHeader[groupPosition]]!!.get(childPosition)
-    }
+    override fun getChild(groupPosition: Int, childPosition: Int): Any =
+            expandableListDetail[expandableListHeader[groupPosition]]!![childPosition]
 
-    override fun getChildId(groupPosition: Int, childPosition: Int): Long {
-        return childPosition.toLong()
-    }
+    override fun getChildId(groupPosition: Int, childPosition: Int): Long =
+            childPosition.toLong()
 
-    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean,
-                              convertView: View?, parent: ViewGroup): View? {
-        var convertView = convertView
+    override fun getChildView(
+            groupPosition: Int,
+            childPosition: Int,
+            isLastChild: Boolean,
+            cv: View?,
+            parent: ViewGroup
+    ): View? {
+        var convertView = cv
         if (convertView == null) {
-            val inflater = this.context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_items, null)
         }
-        val imageView = convertView?.findViewById<ImageView>(R.id.selection_indicator)
+        val selectionIndicator = convertView?.findViewById<ImageView>(R.id.selection_indicator)
         if (lastGroupPosition == groupPosition) {
             if (lastChildPosition != childPosition) {
-                imageView?.visibility = View.INVISIBLE
+                selectionIndicator?.visibility = View.INVISIBLE
             }
         }
 
-        val sharedPreferences = context!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        if (groupPosition == 0) {
-            if (sharedPreferences.getInt("calcMethod", 0) == childPosition) {
-                imageView?.visibility = View.VISIBLE
-            } else {
-                imageView?.visibility = View.INVISIBLE
+        val sharedPreferences = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        // set default indicators
+        when (groupPosition) {
+            0 -> {
+                if (sharedPreferences?.getInt("calcMethod", 0) == childPosition) {
+                    selectionIndicator?.visibility = View.VISIBLE
+                }
             }
-        }
-        if (groupPosition == 1) {
-            if (sharedPreferences.getInt("asrMethod", 0) == childPosition) {
-                imageView?.visibility = View.VISIBLE
-            } else {
-                imageView?.visibility = View.INVISIBLE
+            1 -> {
+                if (sharedPreferences?.getInt("asrMethod", 0) == childPosition) {
+                    selectionIndicator?.visibility = View.VISIBLE
+                }
             }
-        }
-        if (groupPosition == 2) {
-            if (sharedPreferences.getInt("latitudes", 0) == childPosition) {
-                imageView?.visibility = View.VISIBLE
-            } else {
-                imageView?.visibility = View.INVISIBLE
+            2 -> {
+                if (sharedPreferences?.getInt("latitudes", 0) == childPosition) {
+                    selectionIndicator?.visibility = View.VISIBLE
+                }
             }
         }
 
         convertView?.setOnClickListener {
-            imageView?.visibility = View.VISIBLE
-            val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
+            selectionIndicator?.visibility = View.VISIBLE
+            val editor = sharedPreferences?.edit()
             when (groupPosition) {
                 0 -> {
-                    CalendarPrayerTimes.updateCalcMethod(childPosition)
-                    editor.putInt("calcMethod", childPosition)
-                    editor.apply()
-                    lastChildPosition = childPosition
-                    lastGroupPosition = groupPosition
-                    notifyDataSetChanged()
+                    PrayTime.calcMethod = childPosition
+                    editor?.putInt("calcMethod", childPosition)
                 }
                 1 -> {
-                    CalendarPrayerTimes.updateAsrJuristic(childPosition)
-                    editor.putInt("asrMethod", childPosition)
-                    editor.apply()
-                    lastChildPosition = childPosition
-                    lastGroupPosition = groupPosition
-                    notifyDataSetChanged()
+                    PrayTime.asrJuristic = childPosition
+                    editor?.putInt("asrMethod", childPosition)
                 }
                 2 -> {
-                    CalendarPrayerTimes.updateHighLats(childPosition)
-                    editor.putInt("latitudes", childPosition)
-                    editor.apply()
-                    lastChildPosition = childPosition
-                    lastGroupPosition = groupPosition
-                    notifyDataSetChanged()
+                    PrayTime.adjustHighLats = childPosition
+                    editor?.putInt("latitudes", childPosition)
                 }
             }
+            editor?.apply()
+            lastChildPosition = childPosition
+            lastGroupPosition = groupPosition
+            notifyDataSetChanged()
         }
         val textListChild = convertView?.findViewById<TextView>(R.id.item)
         val childText = getChild(groupPosition, childPosition) as String
@@ -98,38 +92,34 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
         return convertView
     }
 
-    override fun getGroupCount(): Int {
-        return this.expandableListHeader.size
-    }
+    override fun getGroupCount(): Int = expandableListHeader.size
 
-    override fun getChildrenCount(groupPosition: Int): Int {
-        return this.expandableListDetail[this.expandableListHeader[groupPosition]]!!.size
-    }
+    override fun getChildrenCount(groupPosition: Int): Int =
+            expandableListDetail[expandableListHeader[groupPosition]]!!.size
 
-    override fun getGroup(groupPosition: Int): Any {
-        return this.expandableListHeader[groupPosition]
-    }
+    override fun getGroup(groupPosition: Int): Any = expandableListHeader[groupPosition]
 
-    override fun getGroupId(groupPosition: Int): Long {
-        return groupPosition.toLong()
-    }
+    override fun getGroupId(groupPosition: Int): Long = groupPosition.toLong()
 
-    override fun hasStableIds(): Boolean {
-        return false
-    }
+    override fun hasStableIds(): Boolean = false
 
-    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+    override fun getGroupView(
+            groupPosition: Int,
+            isExpanded: Boolean,
+            cv: View?,
+            parent: ViewGroup
+    ): View {
+        var convertView = cv
         if (convertView == null) {
-            val inflater = this.context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_header, null)
         }
 
         val arrowDown = convertView?.findViewById<ImageView>(R.id.arrow_right)
         if (isExpanded) {
-            arrowDown!!.setImageResource(R.drawable.arrow_down)
+            arrowDown?.setImageResource(R.drawable.arrow_down)
         } else {
-            arrowDown!!.setImageResource(R.drawable.arrow_right)
+            arrowDown?.setImageResource(R.drawable.arrow_right)
         }
         val imageIcon = convertView?.findViewById<ImageView>(R.id.image_header)
         imageIcon?.setImageResource(getImageDrawable(groupPosition))
@@ -139,9 +129,7 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
         return convertView!!
     }
 
-    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return true
-    }
+    override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean = true
 
     private fun getImageDrawable(index: Int): Int {
         val drawables = intArrayOf(R.drawable.sum_icon, R.drawable.sun_icon, R.drawable.compass_icon)

@@ -1,38 +1,77 @@
 package com.gallopdevs.athanhelper.clock
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayTime
-import com.gallopdevs.athanhelper.utils.CalendarPrayerTimes
-import kotlinx.android.synthetic.main.fragment_page.*
+import kotlinx.android.synthetic.main.fragment_dayview.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DayViewFragment : Fragment() {
-    private val TAG = "DayViewFragment"
-    private val DEFAULT_TIME_FORMAT = 1
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_page, container, false)
-    }
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_dayview, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val prayerTime = PrayTime.getInstance()
-        prayerTime.timeFormat = DEFAULT_TIME_FORMAT
+        PrayTime.timeFormat = PrayTime.time12
+        setDate(arguments!!)
+        updateTimes(arguments!!)
+        setOvalVisibility(PrayTime.nextTimeIndex)
+    }
 
-        val bundle = arguments
-        setDate(bundle!!)
-        updateTimes(bundle)
+    private fun setDate(bundle: Bundle) {
+        val dayOfMonth = bundle.getInt("dayOfMonth")
+        val dayOfMonthString = dayOfMonth.toString()
+
+        val month = bundle.getInt("month")
+        val monthString = if (month < 10) {
+            "0$month"
+        } else {
+            month.toString()
+        }
+
+        var weekDay = bundle.getInt("day")
+        if (weekDay >= 8) {
+            weekDay -= 7
+        }
+        val weekDayString = when (weekDay) {
+            1 -> "Sunday"
+            2 -> "Monday"
+            3 -> "Tuesday"
+            4 -> "Wednesday"
+            5 -> "Thursday"
+            6 -> "Friday"
+            7 -> "Saturday"
+            else -> "This is not a day"
+        }
+        if (dayOfMonth < 10) {
+            day_text_view.text = "$weekDayString, $monthString/0$dayOfMonthString"
+        } else {
+            day_text_view.text = "$weekDayString, $monthString/$dayOfMonthString"
+        }
     }
 
     private fun updateTimes(bundle: Bundle) {
         val count = bundle.getInt("count")
-        val nextDayTimes = CalendarPrayerTimes.getNextDayTimes(count)
+        val nextDayTimes = PrayTime.getDatePrayerTimes(
+                PrayTime.year,
+                PrayTime.month + 1,
+                PrayTime.dayOfMonth + count,
+                PrayTime.lat,
+                PrayTime.lng,
+                PrayTime.timeZoneOffset.toDouble()
+        )
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
         val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")
@@ -56,65 +95,28 @@ class DayViewFragment : Fragment() {
         sunset_post_fix.text = splitSunsetTime[1]
         night_time_text_view.text = splitNightTime[0]
         night_post_fix.text = splitNightTime[1]
-        setOvalVisibility(ClockFragment.nextTime)
     }
 
-    private fun setDate(bundle: Bundle) {
-        val c = Calendar.getInstance()
-        val month = c.get(Calendar.MONTH)
-        val dayOfMonth = c.get(Calendar.DAY_OF_MONTH)
-        val year = c.get(Calendar.YEAR)
+    private fun setOvalVisibility(i: Int) {
+        var item = i
 
-        val nextDay = Calendar.getInstance()
-        val count = bundle.getInt("count")
-        nextDay.set(year, month, dayOfMonth + count)
-
-        val numberDay = nextDay.get(Calendar.DAY_OF_MONTH)
-        val numberString = numberDay.toString()
-
-        val monthString: String
-        val monthDay = nextDay.get(Calendar.MONTH) + 1
-        if (monthDay < 10) {
-            monthString = "0" + monthDay.toString()
-        } else {
-            monthString = monthDay.toString()
-        }
-
-        var weekDay = bundle.getInt("day")
-        if (weekDay >= 8) {
-            weekDay -= 7
-        }
-        val weekDayString: String
-        when (weekDay) {
-            1 -> weekDayString = "Sunday"
-            2 -> weekDayString = "Monday"
-            3 -> weekDayString = "Tuesday"
-            4 -> weekDayString = "Wednesday"
-            5 -> weekDayString = "Thursday"
-            6 -> weekDayString = "Friday"
-            7 -> weekDayString = "Saturday"
-            else -> weekDayString = "This is not a day"
-        }
-        if (numberDay < 10) {
-            day_text_view.text = "$weekDayString, $monthString/0$numberString"
-        } else {
-            day_text_view.text = "$weekDayString, $monthString/$numberString"
-        }
-    }
-
-    private fun setOvalVisibility(item: Int) {
-        var item = item
-        val timeViewList = ArrayList<ImageView>()
-        timeViewList.add(green_oval_dawn)
-        timeViewList.add(green_oval_midday)
-        timeViewList.add(green_oval_afternoon)
-        timeViewList.add(green_oval_sunset)
-        timeViewList.add(green_oval_night)
+        val timeViewList = ArrayList<TextView>()
+        timeViewList.add(dawn_text_view)
+        timeViewList.add(midday_text_view)
+        timeViewList.add(afternoon_text_view)
+        timeViewList.add(sunset_text_view)
+        timeViewList.add(night_text_view)
 
         if (item >= 5) {
             item -= 5
         }
 
-        timeViewList[item].visibility = View.VISIBLE
+        timeViewList[item].addDrawable(R.drawable.green_oval)
     }
+}
+
+fun TextView.addDrawable(drawable: Int) {
+    val imgDrawable = ContextCompat.getDrawable(context, drawable)
+    compoundDrawablePadding = 30
+    setCompoundDrawablesWithIntrinsicBounds(imgDrawable, null, null, null)
 }

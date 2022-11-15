@@ -1,74 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/moon_icon"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="21dp"
-        android:layout_marginRight="15dp"
         android:contentDescription="@string/moon"
         android:src="@drawable/moon"
-        app:srcCompat="@drawable/moon"/>
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/moon" />
 
     <TextView
         android:id="@+id/prayer_timer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/view_pager_fragment"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="68dp"
+        android:paddingStart="10dp"
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="00:12:40s"
         android:textColor="@android:color/background_dark"
         android:textSize="40sp"
-        tools:ignore="HardcodedText"/>
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/view_pager_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.64"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/moon_icon"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/next_prayer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/prayer_timer_text"
-        android:layout_alignStart="@+id/prayer_timer_text"
-        android:layout_alignLeft="@+id/prayer_timer_text"
         android:fontFamily="sans-serif"
+        android:paddingStart="10dp"
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="@string/next_prayer"
         android:textAllCaps="true"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/prayer_timer_text"
+        app:layout_constraintLeft_toLeftOf="@+id/prayer_timer_text"
+        app:layout_constraintStart_toStartOf="@+id/prayer_timer_text" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/moon_icon"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moon_icon" />
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_dots"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:tabBackground="@drawable/tab_selector"
         app:tabGravity="center"
-        app:tabIndicatorHeight="0dp"/>
+        app:tabIndicatorHeight="0dp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
