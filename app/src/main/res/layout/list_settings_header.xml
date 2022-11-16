@@ -17,7 +17,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
             android:contentDescription="@string/icon"
             android:src="@drawable/bell_icon"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -29,13 +28,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:paddingTop="30dp"
             android:paddingBottom="30dp"
             android:text="@string/header_title"
             android:textColor="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_header"
+            app:layout_constraintStart_toEndOf="@id/image_header"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -43,7 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="45dp"
-            android:layout_marginRight="45dp"
             android:contentDescription="@string/drop_down_icon"
             android:scaleY="-1"
             android:src="@drawable/bell_icon"
