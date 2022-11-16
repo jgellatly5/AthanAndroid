@@ -6,9 +6,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Created by jgell on 6/8/2017.
- */
 //--------------------- Copyright Block ----------------------
 /*
 
@@ -32,6 +29,7 @@ be useful, but WITHOUT ANY WARRANTY.
 PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 
 */
+
 object PrayTime {
 
     fun getNextPrayerName(): String {

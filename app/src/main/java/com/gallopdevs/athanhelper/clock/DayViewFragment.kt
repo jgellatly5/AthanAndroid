@@ -31,10 +31,12 @@ class DayViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        PrayTime.timeFormat = PrayTime.time12
 
         viewModel = ViewModelProvider(this).get(ClockViewModel::class.java).apply {
+            setTimeFormat()
+
             binding.dayTextView.text = formatDate(requireArguments())
+
             val formattedTimes = formatTimes(requireArguments())
             updateText(formattedTimes)
 

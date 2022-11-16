@@ -28,6 +28,10 @@ class PrayerRepository : PrayerRepo {
     }
 
     override fun getNextTimeIndex(): Int = PrayTime.nextTimeIndex
+
+    override fun setTimeFormat() {
+        PrayTime.timeFormat = PrayTime.time12
+    }
 }
 
 interface PrayerRepo {
@@ -37,4 +41,5 @@ interface PrayerRepo {
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
     fun getNextTimeIndex(): Int
+    fun setTimeFormat()
 }
