@@ -11,7 +11,7 @@ class PrayTimeTest {
 
     @Before
     fun setup() {
-        val SUT = PrayTime.instance
+
     }
 
     @Test

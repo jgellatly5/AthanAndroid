@@ -2,16 +2,34 @@ package com.gallopdevs.athanhelper.clock
 
 import android.app.Application
 import android.os.Bundle
+import android.os.CountDownTimer
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.gallopdevs.athanhelper.model.PrayerRepository
 
 class ClockViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PrayerRepository = PrayerRepository()
+    private var timer: CountDownTimer? = null
+
+    val timerCountDown = MutableLiveData<Long>()
+
+    fun startNewTimer() {
+        timer?.cancel()
+        timer = object : CountDownTimer(getNextTimeMillis(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timerCountDown.value = millisUntilFinished
+            }
+
+            override fun onFinish() {
+                startNewTimer()
+            }
+        }.start()
+    }
 
     private fun getDatePrayerTimes(count: Int) = repository.getDatePrayerTimes(count)
 
-    fun getNextTimeMillis() = repository.getNextTimeMillis()
+    private fun getNextTimeMillis() = repository.getNextTimeMillis()
 
     fun getNextPrayerName() = repository.getNextPrayerName()
 
@@ -71,11 +89,11 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
         val splitNightTime = newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
         return listOf(
-            splitDawnTime,
-            splitMiddayTime,
-            splitAfternoonTime,
-            splitSunsetTime,
-            splitNightTime
+                splitDawnTime,
+                splitMiddayTime,
+                splitAfternoonTime,
+                splitSunsetTime,
+                splitNightTime
         )
     }
 

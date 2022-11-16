@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater).apply {
             setContentView(root)
 
-            viewModel = ViewModelProvider(this@MainActivity).get(ClockViewModel::class.java)
+            viewModel = ViewModelProvider(this@MainActivity)[ClockViewModel::class.java]
 
             createNotificationChannel()
             loadSettings()
