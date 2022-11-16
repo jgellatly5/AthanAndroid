@@ -59,10 +59,11 @@ class DayViewFragment : Fragment() {
             7 -> "Saturday"
             else -> "This is not a day"
         }
-        if (dayOfMonth < 10) {
-            binding.dayTextView.text = "$weekDayString, $monthString/0$dayOfMonthString"
+
+        binding.dayTextView.text = if (dayOfMonth < 10) {
+            "$weekDayString, $monthString/0$dayOfMonthString"
         } else {
-            binding.dayTextView.text = "$weekDayString, $monthString/$dayOfMonthString"
+            "$weekDayString, $monthString/$dayOfMonthString"
         }
     }
 
@@ -100,12 +101,7 @@ class DayViewFragment : Fragment() {
         binding.apply {
             var item = i
 
-            val timeViewList = ArrayList<TextView>()
-            timeViewList.add(dawnTextView)
-            timeViewList.add(middayTextView)
-            timeViewList.add(afternoonTextView)
-            timeViewList.add(sunsetTextView)
-            timeViewList.add(nightTextView)
+            val timeViewList = arrayListOf(dawnTextView, middayTextView, afternoonTextView, sunsetTextView, nightTextView)
 
             if (item >= 5) {
                 item -= 5
