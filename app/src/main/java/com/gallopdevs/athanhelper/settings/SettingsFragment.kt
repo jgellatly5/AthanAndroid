@@ -15,9 +15,9 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
@@ -41,9 +41,8 @@ class SettingsFragment : Fragment() {
             val adapter = CustomELVAdapter(context, listDataHeader, listDataChild)
             expandableListView.setAdapter(adapter)
 
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-
-            notificationSwitch.isChecked = sharedPref!!.getBoolean("enableNotifications", false)
+            val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+            notificationSwitch.isChecked = sharedPref.getBoolean("enableNotifications", false)
 
             val editor = sharedPref.edit()
             with(editor) {
