@@ -6,8 +6,10 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
+import com.gallopdevs.athanhelper.clock.ClockViewModel
 import com.gallopdevs.athanhelper.databinding.ActivityMainBinding
 import com.gallopdevs.athanhelper.model.PrayTime
 import com.gallopdevs.athanhelper.settings.SettingsFragment
@@ -16,11 +18,14 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: ClockViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).apply {
             setContentView(root)
+
+            viewModel = ViewModelProvider(this@MainActivity).get(ClockViewModel::class.java)
 
             createNotificationChannel()
             loadSettings()
@@ -54,9 +59,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadSettings() {
         val sharedPreferences = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        PrayTime.calcMethod = sharedPreferences.getInt("calcMethod", PrayTime.calcMethod)
-        PrayTime.asrJuristic = sharedPreferences.getInt("asrMethod", PrayTime.asrJuristic)
-        PrayTime.adjustHighLats = sharedPreferences.getInt("latitudes", PrayTime.adjustHighLats)
+        viewModel.setCalculations(
+            calcMethod = sharedPreferences.getInt("calcMethod", PrayTime.calcMethod),
+            asrJuristic = sharedPreferences.getInt("asrMethod", PrayTime.asrJuristic),
+            adjustHighLats = sharedPreferences.getInt("latitudes", PrayTime.adjustHighLats)
+        )
         // TODO add setting for adjusting time format
     }
 

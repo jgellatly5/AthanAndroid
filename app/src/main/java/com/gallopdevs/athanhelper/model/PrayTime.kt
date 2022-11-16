@@ -34,6 +34,17 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 */
 object PrayTime {
 
+    fun getNextPrayerName(): String {
+        val prayerNames = arrayOf(
+            "Dawn",
+            "Mid-day",
+            "Afternoon",
+            "Sunset",
+            "Night"
+        )
+        return prayerNames[nextTimeIndex]
+    }
+
     val calendar = Calendar.getInstance()
     val month = calendar.get(Calendar.MONTH)
     val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)

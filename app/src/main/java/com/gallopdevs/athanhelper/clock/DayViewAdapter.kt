@@ -6,10 +6,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import java.util.*
 
-/**
- * Created by jgell on 5/23/2017.
- */
-
 class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
     override fun createFragment(i: Int): Fragment {

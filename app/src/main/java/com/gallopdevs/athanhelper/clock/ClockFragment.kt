@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
 import com.gallopdevs.athanhelper.home.MainActivity
-import com.gallopdevs.athanhelper.model.PrayTime
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
@@ -91,17 +89,15 @@ class ClockFragment : Fragment() {
             mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 binding.apply {
                     if (location != null) {
-                        PrayTime.lat = location.latitude
-                        PrayTime.lng = location.longitude
-
+                        viewModel.setLocation(location.latitude, location.longitude)
 
                         progressBar.visibility = ProgressBar.INVISIBLE
                         moonIcon.visibility = ImageView.VISIBLE
                         prayerTimerText.visibility = TextView.VISIBLE
                         nextPrayerText.visibility = TextView.VISIBLE
 
-                        Log.w(TAG, "PrayTime.currentTime: " + PrayTime.getNextTimeMillis())
-                        startNewTimer(PrayTime.getNextTimeMillis())
+                        val countDownTime = viewModel.getNextTimeMillis()
+                        startNewTimer(countDownTime)
 
                         viewPagerFragment.adapter = dayViewAdapter
                         TabLayoutMediator(tabDots, viewPagerFragment, true) { _, _ -> }.attach()
@@ -128,7 +124,7 @@ class ClockFragment : Fragment() {
                 binding.prayerTimerText.text = getString(R.string.end_time)
                 val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
                 if (sharedPref.getBoolean("enableNotifications", false)) createNotification()
-                val newCountDownTime = PrayTime.getNextTimeMillis()
+                val newCountDownTime = viewModel.getNextTimeMillis()
                 startNewTimer(newCountDownTime)
             }
         }.start()
@@ -137,14 +133,18 @@ class ClockFragment : Fragment() {
     private fun createNotification() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        val prayerNames = resources.getStringArray(R.array.ui_names)
-        val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID).setSmallIcon(R.drawable.moon).setContentTitle("Athan").setContentText("Next prayer time: ${prayerNames[PrayTime.nextTimeIndex]}").setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(pendingIntent).setAutoCancel(true)
+        val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.moon)
+                .setContentTitle("Athan")
+                .setContentText("Next prayer time: ${viewModel.getNextPrayerName()}")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
         val notificationManager = NotificationManagerCompat.from(requireContext())
         notificationManager.notify(0, builder.build())
     }
 
     companion object {
-        private const val TAG = "ClockFragment"
         private const val CHANNEL_ID = "Notification"
     }
 }

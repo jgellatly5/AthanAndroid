@@ -11,8 +11,27 @@ class PrayerRepository : PrayerRepo {
                 tZone = PrayTime.timeZoneOffset.toDouble()
         )
     }
+
+    override fun getNextTimeMillis(): Long = PrayTime.getNextTimeMillis()
+
+    override fun getNextPrayerName(): String = PrayTime.getNextPrayerName()
+
+    override fun setLocation(latitude: Double, longitude: Double) {
+        PrayTime.lat = latitude
+        PrayTime.lng = longitude
+    }
+
+    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) {
+        PrayTime.calcMethod = calcMethod
+        PrayTime.asrJuristic = asrJuristic
+        PrayTime.adjustHighLats = adjustHighLats
+    }
 }
 
 interface PrayerRepo {
     fun getDatePrayerTimes(count: Int): ArrayList<String>
+    fun getNextTimeMillis(): Long
+    fun getNextPrayerName(): String
+    fun setLocation(latitude: Double, longitude: Double)
+    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
 }
