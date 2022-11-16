@@ -11,20 +11,25 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PrayerRepository = PrayerRepository()
     private var timer: CountDownTimer? = null
+    private var isFinished: Boolean = true
 
     val timerCountDown = MutableLiveData<Long>()
 
     fun startNewTimer() {
-        timer?.cancel()
-        timer = object : CountDownTimer(getNextTimeMillis(), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                timerCountDown.value = millisUntilFinished
-            }
+        if (isFinished) {
+            timer?.cancel()
+            timer = object : CountDownTimer(getNextTimeMillis(), 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    isFinished = false
+                    timerCountDown.value = millisUntilFinished
+                }
 
-            override fun onFinish() {
-                startNewTimer()
-            }
-        }.start()
+                override fun onFinish() {
+                    isFinished = true
+                    startNewTimer()
+                }
+            }.start()
+        }
     }
 
     private fun getDatePrayerTimes(count: Int) = repository.getDatePrayerTimes(count)
