@@ -8,5 +8,5 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: PrayerRepository = PrayerRepository()
 
-    fun getPrayers() = repository.getPrayers()
+    fun getDatePrayerTimes(count: Int) = repository.getDatePrayerTimes(count)
 }

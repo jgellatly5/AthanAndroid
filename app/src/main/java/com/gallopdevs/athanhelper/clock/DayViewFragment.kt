@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.databinding.FragmentDayviewBinding
 import com.gallopdevs.athanhelper.model.PrayTime
@@ -15,6 +16,8 @@ class DayViewFragment : Fragment() {
 
     private var _binding: FragmentDayviewBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModel: ClockViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDayviewBinding.inflate(inflater, container, false)
@@ -29,6 +32,9 @@ class DayViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PrayTime.timeFormat = PrayTime.time12
+
+        viewModel = ViewModelProvider(this).get(ClockViewModel::class.java)
+
         setDate(requireArguments())
         updateTimes(requireArguments())
         setOvalVisibility(PrayTime.nextTimeIndex)
@@ -69,7 +75,7 @@ class DayViewFragment : Fragment() {
 
     private fun updateTimes(bundle: Bundle) {
         val count = bundle.getInt("count")
-        val nextDayTimes = PrayTime.getDatePrayerTimes(PrayTime.year, PrayTime.month + 1, PrayTime.dayOfMonth + count, PrayTime.lat, PrayTime.lng, PrayTime.timeZoneOffset.toDouble())
+        val nextDayTimes = viewModel.getDatePrayerTimes(count)
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
         val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")

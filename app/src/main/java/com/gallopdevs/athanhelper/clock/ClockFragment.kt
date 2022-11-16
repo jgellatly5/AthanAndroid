@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
 import com.gallopdevs.athanhelper.home.MainActivity
@@ -36,6 +37,7 @@ class ClockFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var viewModel: ClockViewModel
     private lateinit var dayViewAdapter: DayViewAdapter
     private var timer: CountDownTimer? = null
 
@@ -67,6 +69,8 @@ class ClockFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this).get(ClockViewModel::class.java)
 
         getLocation()
 
