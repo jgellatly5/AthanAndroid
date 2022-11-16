@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -67,10 +66,8 @@ class ClockFragment : Fragment() {
             REQUEST_FINE_LOCATION -> if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 getLocation()
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        Toast.makeText(requireContext(), "Location permissions denied.", Toast.LENGTH_SHORT).show()
-                    }
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Toast.makeText(requireContext(), "Location permissions denied.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -79,9 +76,7 @@ class ClockFragment : Fragment() {
     private fun getLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(permissions, REQUEST_FINE_LOCATION)
-            }
+            requestPermissions(permissions, REQUEST_FINE_LOCATION)
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
             mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -112,9 +107,7 @@ class ClockFragment : Fragment() {
     }
 
     private fun startNewTimer(countDownTime: Long) {
-        if (timer != null) {
-            timer?.cancel()
-        }
+        timer?.cancel()
         timer = object : CountDownTimer(countDownTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
@@ -134,7 +127,7 @@ class ClockFragment : Fragment() {
 
     private fun createNotification() {
         val intent = Intent(requireContext(), MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val prayerNames = resources.getStringArray(R.array.ui_names)
         val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID).setSmallIcon(R.drawable.moon).setContentTitle("Athan").setContentText("Next prayer time: ${prayerNames[PrayTime.nextTimeIndex]}").setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(pendingIntent).setAutoCancel(true)
         val notificationManager = NotificationManagerCompat.from(requireContext())
