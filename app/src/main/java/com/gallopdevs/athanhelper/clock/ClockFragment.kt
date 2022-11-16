@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -38,6 +39,23 @@ class ClockFragment : Fragment() {
     private lateinit var dayViewAdapter: DayViewAdapter
     private var timer: CountDownTimer? = null
 
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        permissions.forEach { actionMap ->
+            when (actionMap.key) {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION-> {
+                    if (actionMap.value) {
+                        getLocation()
+                    } else {
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                            Toast.makeText(requireContext(), "Location permissions denied.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -60,23 +78,10 @@ class ClockFragment : Fragment() {
         _binding = null
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_FINE_LOCATION -> if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                getLocation()
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Toast.makeText(requireContext(), "Location permissions denied.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
     private fun getLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            requestPermissions(permissions, REQUEST_FINE_LOCATION)
+            requestPermissionLauncher.launch(permissions)
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
             mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -136,7 +141,6 @@ class ClockFragment : Fragment() {
 
     companion object {
         private const val TAG = "ClockFragment"
-        private const val REQUEST_FINE_LOCATION = 1
         private const val CHANNEL_ID = "Notification"
     }
 }
