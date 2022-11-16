@@ -33,73 +33,28 @@ class DayViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         PrayTime.timeFormat = PrayTime.time12
 
-        viewModel = ViewModelProvider(this).get(ClockViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ClockViewModel::class.java).apply {
+            binding.dayTextView.text = formatDate(requireArguments())
+            val formattedTimes = formatTimes(requireArguments())
+            updateText(formattedTimes)
 
-        setDate(requireArguments())
-        updateTimes(requireArguments())
-        setOvalVisibility(PrayTime.nextTimeIndex)
-    }
-
-    private fun setDate(bundle: Bundle) {
-        val dayOfMonth = bundle.getInt("dayOfMonth")
-        val dayOfMonthString = dayOfMonth.toString()
-
-        val month = bundle.getInt("month")
-        val monthString = if (month < 10) {
-            "0$month"
-        } else {
-            month.toString()
-        }
-
-        var weekDay = bundle.getInt("day")
-        if (weekDay >= 8) {
-            weekDay -= 7
-        }
-        val weekDayString = when (weekDay) {
-            1 -> "Sunday"
-            2 -> "Monday"
-            3 -> "Tuesday"
-            4 -> "Wednesday"
-            5 -> "Thursday"
-            6 -> "Friday"
-            7 -> "Saturday"
-            else -> "This is not a day"
-        }
-
-        binding.dayTextView.text = if (dayOfMonth < 10) {
-            "$weekDayString, $monthString/0$dayOfMonthString"
-        } else {
-            "$weekDayString, $monthString/$dayOfMonthString"
+            val nextTimeIndex = getNextTimeIndex()
+            setOvalVisibility(nextTimeIndex)
         }
     }
 
-    private fun updateTimes(bundle: Bundle) {
-        val count = bundle.getInt("count")
-        val nextDayTimes = viewModel.getDatePrayerTimes(count)
-
-        val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newAfternoonTime = nextDayTimes[3].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newSunsetTime = nextDayTimes[5].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newNightTime = nextDayTimes[6].replaceFirst("^0+(?!$)".toRegex(), "")
-
-        val splitDawnTime = newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitMiddayTime = newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitAfternoonTime = newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitSunsetTime = newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitNightTime = newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
+    private fun updateText(formattedTimes: List<Array<String>>) {
         binding.apply {
-            dawnTimeTextView.text = splitDawnTime[0]
-            dawnPostFix.text = splitDawnTime[1]
-            middayTimeTextView.text = splitMiddayTime[0]
-            middayPostFix.text = splitMiddayTime[1]
-            afternoonTimeTextView.text = splitAfternoonTime[0]
-            afternoonPostFix.text = splitAfternoonTime[1]
-            sunsetTimeTextView.text = splitSunsetTime[0]
-            sunsetPostFix.text = splitSunsetTime[1]
-            nightTimeTextView.text = splitNightTime[0]
-            nightPostFix.text = splitNightTime[1]
+            dawnTimeTextView.text = formattedTimes[0][0]
+            dawnPostFix.text = formattedTimes[0][1]
+            middayTimeTextView.text = formattedTimes[1][0]
+            middayPostFix.text = formattedTimes[1][1]
+            afternoonTimeTextView.text = formattedTimes[2][0]
+            afternoonPostFix.text = formattedTimes[2][1]
+            sunsetTimeTextView.text = formattedTimes[3][0]
+            sunsetPostFix.text = formattedTimes[3][1]
+            nightTimeTextView.text = formattedTimes[4][0]
+            nightPostFix.text = formattedTimes[4][1]
         }
     }
 

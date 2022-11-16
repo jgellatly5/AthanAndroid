@@ -26,6 +26,8 @@ class PrayerRepository : PrayerRepo {
         PrayTime.asrJuristic = asrJuristic
         PrayTime.adjustHighLats = adjustHighLats
     }
+
+    override fun getNextTimeIndex(): Int = PrayTime.nextTimeIndex
 }
 
 interface PrayerRepo {
@@ -34,4 +36,5 @@ interface PrayerRepo {
     fun getNextPrayerName(): String
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
+    fun getNextTimeIndex(): Int
 }
