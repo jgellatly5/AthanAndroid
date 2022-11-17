@@ -2,16 +2,8 @@ package com.gallopdevs.athanhelper.model
 
 class PrayerRepository(private val prayerTime: PrayerTime = PrayerTime) : PrayerRepo {
 
-    override fun getDatePrayerTimes(count: Int): ArrayList<String> {
-        return prayerTime.getDatePrayerTimes(
-                year = prayerTime.year,
-                month = prayerTime.month + 1,
-                day = prayerTime.dayOfMonth + count,
-                latitude = prayerTime.lat,
-                longitude = prayerTime.lng,
-                tZone = prayerTime.timeZoneOffset.toDouble()
-        )
-    }
+    override fun getDatePrayerTimes(pageIndex: Int): ArrayList<String> =
+        prayerTime.getDatePrayerTimes(offset = pageIndex)
 
     override fun getNextTimeMillis(): Long = prayerTime.getNextTimeMillis()
 
@@ -36,7 +28,7 @@ class PrayerRepository(private val prayerTime: PrayerTime = PrayerTime) : Prayer
 }
 
 interface PrayerRepo {
-    fun getDatePrayerTimes(count: Int): ArrayList<String>
+    fun getDatePrayerTimes(pageIndex: Int): ArrayList<String>
     fun getNextTimeMillis(): Long
     fun getNextPrayerName(): String
     fun setLocation(latitude: Double, longitude: Double)

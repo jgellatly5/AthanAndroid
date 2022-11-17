@@ -2,9 +2,9 @@ package com.gallopdevs.athanhelper.model
 
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.mockito.kotlin.mock
-import java.util.*
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 class PrayerRepositoryTest {
 
@@ -14,27 +14,20 @@ class PrayerRepositoryTest {
 
     @Test
     fun get_date_prayer_times_successful() {
-//        val latitude = -37.823689
-//        val longitude = 145.121597
-//        val timezone = 10.0
-//        // Test Prayer times here
-//        val prayers = PrayTime.instance
-//        prayers?.timeFormat = prayers!!.time12
-//        prayers?.calcMethod = prayers.jafari
-//        prayers?.asrJuristic = prayers.shafii
-//        prayers?.adjustHighLats = prayers.angleBased
-//        val offsets = intArrayOf(0, 0, 0, 0, 0, 0, 0) // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}
-//        prayers?.tune(offsets)
-//        val now = Date()
-//        val cal = Calendar.getInstance()
-//        cal.time = now
-//        val prayerTimes = prayers?.getPrayerTimes(cal,
-//                latitude, longitude, timezone)
-//        val prayerNames = prayers?.timeNames
-//        for (i in prayerTimes?.indices!!) {
-//            println(prayerNames!![i] + " - " + prayerTimes[i])
-//        }
         val pageIndex = 0
-        testObject.getDatePrayerTimes(pageIndex)
+
+//        whenever(mockPrayerTime.getDatePrayerTimes(
+//            year = mockPrayerTime.year,
+//            month = mockPrayerTime.month + 1,
+//            day = mockPrayerTime.dayOfMonth + pageIndex,
+//            latitude = mockPrayerTime.lat,
+//            longitude = mockPrayerTime.lng,
+//            tZone = mockPrayerTime.timeZoneOffset.toDouble()
+//        )).thenReturn(arrayListOf("5:00", "10:00", "12:00", "3:00", "6:00"))
+
+        testObject = PrayerRepository(mockPrayerTime)
+
+//        testObject.getDatePrayerTimes(pageIndex)
+        verify(testObject).getDatePrayerTimes(pageIndex)
     }
 }

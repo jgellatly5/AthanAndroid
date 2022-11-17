@@ -33,15 +33,12 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 object PrayerTime {
 
     private val calendar = Calendar.getInstance()
-    val month = calendar.get(Calendar.MONTH)
-    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-    val year = calendar.get(Calendar.YEAR)
     private val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
-    val timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset
+    private val timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset
 
     var lat = 0.0
     var lng = 0.0
-    var timeZone = 0.0
+    var timeZone = timeZoneOffset
     var jDate = 0.0
 
     // Initialize vars
@@ -98,34 +95,13 @@ object PrayerTime {
             custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
     )
 
-    // -------------------- Interface Functions --------------------
     // return prayer times for a given date
-    fun getPrayerTimes(
-            date: Calendar,
-            latitude: Double,
-            longitude: Double,
-            tZone: Double
-    ): ArrayList<String> {
-        val year = date[Calendar.YEAR]
-        val month = date[Calendar.MONTH]
-        val day = date[Calendar.DATE]
-        return getDatePrayerTimes(year, month + 1, day, latitude, longitude, tZone)
-    }
-
-    // return prayer times for a given date
-    fun getDatePrayerTimes(
-            year: Int,
-            month: Int,
-            day: Int,
-            latitude: Double,
-            longitude: Double,
-            tZone: Double
-    ): ArrayList<String> {
-        lat = latitude
-        lng = longitude
-        timeZone = tZone
-        jDate = julianDate(year, month, day)
-        val lonDiff = longitude / (15.0 * 24.0)
+    fun getDatePrayerTimes(offset: Int): ArrayList<String> {
+        val month = calendar.get(Calendar.MONTH) + 1
+        val year = calendar.get(Calendar.YEAR)
+        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        jDate = julianDate(year, month, dayOfMonth + offset)
+        val lonDiff = lng / (15.0 * 24.0)
         jDate -= lonDiff
         return computeDayTimes()
     }
@@ -159,23 +135,9 @@ object PrayerTime {
     fun getNextTimeMillis(): Long {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
-
-        val newTimes = getDatePrayerTimes(
-                year,
-                month + 1,
-                dayOfMonth,
-                lat,
-                lng,
-                timeZoneOffset.toDouble()
-        )
-        val nextDayTimes = getDatePrayerTimes(
-                year,
-                month + 1,
-                dayOfMonth + 1,
-                lat,
-                lng,
-                timeZoneOffset.toDouble()
-        )
+        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        val newTimes = getDatePrayerTimes(dayOfMonth)
+        val nextDayTimes = getDatePrayerTimes(dayOfMonth + 1)
 
         try {
             // get milliseconds from parsing dates

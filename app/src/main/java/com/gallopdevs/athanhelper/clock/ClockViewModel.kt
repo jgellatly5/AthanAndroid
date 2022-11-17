@@ -31,7 +31,7 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
         }
     }
 
-    private fun getDatePrayerTimes(count: Int) = prayerRepo.getDatePrayerTimes(count)
+    private fun getDatePrayerTimes(pageIndex: Int) = prayerRepo.getDatePrayerTimes(pageIndex)
 
     private fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
