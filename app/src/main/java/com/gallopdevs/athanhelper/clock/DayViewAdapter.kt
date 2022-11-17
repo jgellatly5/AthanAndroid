@@ -17,7 +17,7 @@ class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
         val month = c.get(Calendar.MONTH) + 1
 
         val bundle = Bundle().apply {
-            putInt("count", i)
+            putInt("pageIndex", i)
             putInt("day", day + i)
             putInt("dayOfMonth", dayOfMonth + i)
             putInt("month", month)

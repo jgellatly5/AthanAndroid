@@ -78,8 +78,8 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun formatTimes(bundle: Bundle): List<Array<String>> {
-        val count = bundle.getInt("count")
-        val nextDayTimes = getDatePrayerTimes(count)
+        val pageIndex = bundle.getInt("pageIndex")
+        val nextDayTimes = getDatePrayerTimes(pageIndex)
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
         val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")

@@ -13,7 +13,7 @@ class PrayerRepositoryTest {
     private val mockPrayerTime: PrayerTime = mock()
 
     @Test
-    fun get_date_prayer_times() {
+    fun get_date_prayer_times_successful() {
 //        val latitude = -37.823689
 //        val longitude = 145.121597
 //        val timezone = 10.0
@@ -34,5 +34,7 @@ class PrayerRepositoryTest {
 //        for (i in prayerTimes?.indices!!) {
 //            println(prayerNames!![i] + " - " + prayerTimes[i])
 //        }
+        val pageIndex = 0
+        testObject.getDatePrayerTimes(pageIndex)
     }
 }
