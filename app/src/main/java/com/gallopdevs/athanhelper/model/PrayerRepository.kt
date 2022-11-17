@@ -1,36 +1,37 @@
 package com.gallopdevs.athanhelper.model
 
-class PrayerRepository : PrayerRepo {
+class PrayerRepository(private val prayerTime: PrayerTime = PrayerTime) : PrayerRepo {
+
     override fun getDatePrayerTimes(count: Int): ArrayList<String> {
-        return PrayerTime.getDatePrayerTimes(
-                year = PrayerTime.year,
-                month = PrayerTime.month + 1,
-                day = PrayerTime.dayOfMonth + count,
-                latitude = PrayerTime.lat,
-                longitude = PrayerTime.lng,
-                tZone = PrayerTime.timeZoneOffset.toDouble()
+        return prayerTime.getDatePrayerTimes(
+                year = prayerTime.year,
+                month = prayerTime.month + 1,
+                day = prayerTime.dayOfMonth + count,
+                latitude = prayerTime.lat,
+                longitude = prayerTime.lng,
+                tZone = prayerTime.timeZoneOffset.toDouble()
         )
     }
 
-    override fun getNextTimeMillis(): Long = PrayerTime.getNextTimeMillis()
+    override fun getNextTimeMillis(): Long = prayerTime.getNextTimeMillis()
 
-    override fun getNextPrayerName(): String = PrayerTime.getNextPrayerName()
+    override fun getNextPrayerName(): String = prayerTime.getNextPrayerName()
 
     override fun setLocation(latitude: Double, longitude: Double) {
-        PrayerTime.lat = latitude
-        PrayerTime.lng = longitude
+        prayerTime.lat = latitude
+        prayerTime.lng = longitude
     }
 
     override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) {
-        PrayerTime.calcMethod = calcMethod
-        PrayerTime.asrJuristic = asrJuristic
-        PrayerTime.adjustHighLats = adjustHighLats
+        prayerTime.calcMethod = calcMethod
+        prayerTime.asrJuristic = asrJuristic
+        prayerTime.adjustHighLats = adjustHighLats
     }
 
-    override fun getNextTimeIndex(): Int = PrayerTime.nextTimeIndex
+    override fun getNextTimeIndex(): Int = prayerTime.nextTimeIndex
 
     override fun setTimeFormat() {
-        PrayerTime.timeFormat = PrayerTime.time12
+        prayerTime.timeFormat = prayerTime.time12
     }
 }
 

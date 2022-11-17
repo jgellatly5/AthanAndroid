@@ -1,15 +1,14 @@
 package com.gallopdevs.athanhelper.clock
 
-import android.app.Application
 import android.os.Bundle
 import android.os.CountDownTimer
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.gallopdevs.athanhelper.model.PrayerRepo
 import com.gallopdevs.athanhelper.model.PrayerRepository
 
-class ClockViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository: PrayerRepository = PrayerRepository()
+class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : ViewModel() {
+    
     private var timer: CountDownTimer? = null
     private var isFinished: Boolean = true
 
@@ -32,17 +31,17 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun getDatePrayerTimes(count: Int) = repository.getDatePrayerTimes(count)
+    private fun getDatePrayerTimes(count: Int) = prayerRepo.getDatePrayerTimes(count)
 
-    private fun getNextTimeMillis() = repository.getNextTimeMillis()
+    private fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
-    fun getNextPrayerName() = repository.getNextPrayerName()
+    fun getNextPrayerName() = prayerRepo.getNextPrayerName()
 
-    fun setLocation(latitude: Double, longitude: Double) = repository.setLocation(latitude, longitude)
+    fun setLocation(latitude: Double, longitude: Double) = prayerRepo.setLocation(latitude, longitude)
 
-    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) = repository.setCalculations(calcMethod, asrJuristic, adjustHighLats)
+    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats)
 
-    fun setTimeFormat() = repository.setTimeFormat()
+    fun setTimeFormat() = prayerRepo.setTimeFormat()
 
     fun formatDate(bundle: Bundle): String {
         val dayOfMonth = bundle.getInt("dayOfMonth")
@@ -102,5 +101,5 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    fun getNextTimeIndex() = repository.getNextTimeIndex()
+    fun getNextTimeIndex() = prayerRepo.getNextTimeIndex()
 }
