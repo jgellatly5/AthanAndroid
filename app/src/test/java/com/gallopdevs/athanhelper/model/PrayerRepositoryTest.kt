@@ -3,11 +3,14 @@ package com.gallopdevs.athanhelper.model
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.mockito.kotlin.mock
 import java.util.*
 
 class PrayerRepositoryTest {
 
     private lateinit var testObject: PrayerRepo
+
+    private val mockPrayerTime: PrayerTime = mock()
 
     @Test
     fun get_date_prayer_times() {
@@ -31,6 +34,5 @@ class PrayerRepositoryTest {
 //        for (i in prayerTimes?.indices!!) {
 //            println(prayerNames!![i] + " - " + prayerTimes[i])
 //        }
-
     }
 }

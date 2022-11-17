@@ -1,6 +1,6 @@
 package com.gallopdevs.athanhelper.model.utils
 
-import com.gallopdevs.athanhelper.model.PrayTime
+import com.gallopdevs.athanhelper.model.PrayerTime
 
 // set the angle for calculating Fajr
 fun setFajrAngle(angle: Double) {
@@ -36,11 +36,11 @@ fun setIshaMinutes(minutes: Double) {
 fun setCustomParams(params: DoubleArray) {
     for (i in 0..4) {
         if (params[i].equals(-1.0)) {
-            params[i] = PrayTime.methodParams[PrayTime.calcMethod]!![i]
-            PrayTime.methodParams[PrayTime.custom] = params
+            params[i] = PrayerTime.methodParams[PrayerTime.calcMethod]!![i]
+            PrayerTime.methodParams[PrayerTime.custom] = params
         } else {
-            PrayTime.methodParams[PrayTime.custom]!![i] = params[i]
+            PrayerTime.methodParams[PrayerTime.custom]!![i] = params[i]
         }
     }
-    PrayTime.calcMethod = PrayTime.custom
+    PrayerTime.calcMethod = PrayerTime.custom
 }

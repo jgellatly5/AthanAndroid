@@ -30,24 +30,13 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 
 */
 
-object PrayTime {
+object PrayerTime {
 
-    fun getNextPrayerName(): String {
-        val prayerNames = arrayOf(
-            "Dawn",
-            "Mid-day",
-            "Afternoon",
-            "Sunset",
-            "Night"
-        )
-        return prayerNames[nextTimeIndex]
-    }
-
-    val calendar = Calendar.getInstance()
+    private val calendar = Calendar.getInstance()
     val month = calendar.get(Calendar.MONTH)
     val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
     val year = calendar.get(Calendar.YEAR)
-    val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
+    private val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
     val timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset
 
     var lat = 0.0
@@ -141,9 +130,18 @@ object PrayTime {
         return computeDayTimes()
     }
 
-    private val differences = LongArray(6) { 0 }
+    fun getNextPrayerName(): String {
+        val prayerNames = arrayOf(
+            "Dawn",
+            "Mid-day",
+            "Afternoon",
+            "Sunset",
+            "Night"
+        )
+        return prayerNames[nextTimeIndex]
+    }
 
-    private val TAG = "PrayTime"
+    private val differences = LongArray(6) { 0 }
     private var _nextTimeIndex = 0
     val nextTimeIndex: Int
         get() {
@@ -181,13 +179,13 @@ object PrayTime {
 
         try {
             // get milliseconds from parsing dates
-            val currentTimeMillis = simpleDateFormat.parse(currentTime).time
-            val dawnMillis = simpleDateFormat.parse("${newTimes[0]}:00").time
-            val middayMillis = simpleDateFormat.parse("${newTimes[2]}:00").time
-            val afMillis = simpleDateFormat.parse("${newTimes[3]}:00").time
-            val sunsetMillis = simpleDateFormat.parse("${newTimes[5]}:00").time
-            val nightMillis = simpleDateFormat.parse("${newTimes[6]}:00").time
-            val nextDawnMillis = simpleDateFormat.parse("${nextDayTimes[0]}:00").time
+            val currentTimeMillis = simpleDateFormat.parse(currentTime)?.time ?: 0
+            val dawnMillis = simpleDateFormat.parse("${newTimes[0]}:00")?.time ?: 0
+            val middayMillis = simpleDateFormat.parse("${newTimes[2]}:00")?.time ?: 0
+            val afMillis = simpleDateFormat.parse("${newTimes[3]}:00")?.time ?: 0
+            val sunsetMillis = simpleDateFormat.parse("${newTimes[5]}:00")?.time ?: 0
+            val nightMillis = simpleDateFormat.parse("${newTimes[6]}:00")?.time ?: 0
+            val nextDawnMillis = simpleDateFormat.parse("${nextDayTimes[0]}:00")?.time ?: 0
             val MILLIS_IN_DAY = 86400000
 
             // set index of each element in differences array
