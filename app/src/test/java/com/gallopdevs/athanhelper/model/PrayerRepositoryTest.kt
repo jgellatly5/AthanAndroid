@@ -1,21 +1,16 @@
 package com.gallopdevs.athanhelper.model
 
-import android.system.StructUtsname
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.junit.Before
 import java.util.*
 
-class PrayTimeTest {
+class PrayerRepositoryTest {
 
-    @Before
-    fun setup() {
-
-    }
+    private lateinit var testObject: PrayerRepo
 
     @Test
-    fun pray_time() {
+    fun get_date_prayer_times() {
 //        val latitude = -37.823689
 //        val longitude = 145.121597
 //        val timezone = 10.0
@@ -36,5 +31,6 @@ class PrayTimeTest {
 //        for (i in prayerTimes?.indices!!) {
 //            println(prayerNames!![i] + " - " + prayerTimes[i])
 //        }
+
     }
 }
