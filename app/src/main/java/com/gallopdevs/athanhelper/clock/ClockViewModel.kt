@@ -8,7 +8,7 @@ import com.gallopdevs.athanhelper.model.PrayerRepo
 import com.gallopdevs.athanhelper.model.PrayerRepository
 
 class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : ViewModel() {
-    
+
     private var timer: CountDownTimer? = null
     private var isFinished: Boolean = true
 
@@ -37,9 +37,13 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
 
     fun getNextPrayerName() = prayerRepo.getNextPrayerName()
 
-    fun setLocation(latitude: Double, longitude: Double) = prayerRepo.setLocation(latitude, longitude)
+    fun getNextTimeIndex() = prayerRepo.getNextTimeIndex()
 
-    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats)
+    fun setLocation(latitude: Double, longitude: Double) =
+        prayerRepo.setLocation(latitude, longitude)
+
+    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
+        prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats)
 
     fun setTimeFormat() = prayerRepo.setTimeFormat()
 
@@ -86,20 +90,23 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
         val newSunsetTime = nextDayTimes[5].replaceFirst("^0+(?!$)".toRegex(), "")
         val newNightTime = nextDayTimes[6].replaceFirst("^0+(?!$)".toRegex(), "")
 
-        val splitDawnTime = newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitMiddayTime = newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitAfternoonTime = newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitSunsetTime = newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitNightTime = newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitDawnTime =
+            newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitMiddayTime =
+            newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitAfternoonTime =
+            newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitSunsetTime =
+            newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitNightTime =
+            newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
         return listOf(
-                splitDawnTime,
-                splitMiddayTime,
-                splitAfternoonTime,
-                splitSunsetTime,
-                splitNightTime
+            splitDawnTime,
+            splitMiddayTime,
+            splitAfternoonTime,
+            splitSunsetTime,
+            splitNightTime
         )
     }
-
-    fun getNextTimeIndex() = prayerRepo.getNextTimeIndex()
 }

@@ -1,33 +1,45 @@
 package com.gallopdevs.athanhelper.model
 
+import junit.framework.Assert.assertEquals
 import org.junit.Test
-
 import org.mockito.kotlin.mock
+
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.math.exp
 
 class PrayerRepositoryTest {
 
     private lateinit var testObject: PrayerRepo
 
-    private val mockPrayerTime: PrayerTime = mock()
+    private val mockPrayerTime: PrayerCalculator = mock()
 
     @Test
     fun get_date_prayer_times_successful() {
         val pageIndex = 0
+        val expectedList = arrayListOf("5:00", "10:00", "12:00", "3:00", "6:00")
 
-//        whenever(mockPrayerTime.getDatePrayerTimes(
-//            year = mockPrayerTime.year,
-//            month = mockPrayerTime.month + 1,
-//            day = mockPrayerTime.dayOfMonth + pageIndex,
-//            latitude = mockPrayerTime.lat,
-//            longitude = mockPrayerTime.lng,
-//            tZone = mockPrayerTime.timeZoneOffset.toDouble()
-//        )).thenReturn(arrayListOf("5:00", "10:00", "12:00", "3:00", "6:00"))
+        whenever(mockPrayerTime.getDatePrayerTimes(offset = pageIndex))
+            .thenReturn(expectedList)
 
         testObject = PrayerRepository(mockPrayerTime)
-
-//        testObject.getDatePrayerTimes(pageIndex)
-        verify(testObject).getDatePrayerTimes(pageIndex)
+        assertEquals(expectedList, testObject.getDatePrayerTimes(pageIndex))
     }
+
+//    @Test
+//    fun get_next_prayer_name_successful() {
+//
+//        val expectedName = "Dawn"
+//
+//        whenever(mockPrayerTime.getNextPrayerName())
+//            .thenReturn(expectedName)
+//    }
+//
+//    @Test
+//    fun get_next_time_millis_successful() {
+//        val expectedMillis = 0L
+//
+//        whenever(mockPrayerTime.getNextTimeMillis())
+//            .thenReturn(expectedMillis)
+//    }
 }

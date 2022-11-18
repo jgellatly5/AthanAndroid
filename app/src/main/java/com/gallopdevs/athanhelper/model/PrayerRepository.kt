@@ -1,6 +1,6 @@
 package com.gallopdevs.athanhelper.model
 
-class PrayerRepository(private val prayerTime: PrayerTime = PrayerTime) : PrayerRepo {
+class PrayerRepository(private val prayerTime: PrayerCalculator = PrayerCalculatorIpml) : PrayerRepo {
 
     override fun getDatePrayerTimes(pageIndex: Int): ArrayList<String> =
         prayerTime.getDatePrayerTimes(offset = pageIndex)
@@ -9,22 +9,15 @@ class PrayerRepository(private val prayerTime: PrayerTime = PrayerTime) : Prayer
 
     override fun getNextPrayerName(): String = prayerTime.getNextPrayerName()
 
-    override fun setLocation(latitude: Double, longitude: Double) {
-        prayerTime.lat = latitude
-        prayerTime.lng = longitude
-    }
+    override fun setLocation(latitude: Double, longitude: Double) =
+        prayerTime.setLocation(latitude, longitude)
 
-    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) {
-        prayerTime.calcMethod = calcMethod
-        prayerTime.asrJuristic = asrJuristic
-        prayerTime.adjustHighLats = adjustHighLats
-    }
+    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
+        prayerTime.setCalculations(calcMethod, asrJuristic, adjustHighLats)
 
-    override fun getNextTimeIndex(): Int = prayerTime.nextTimeIndex
+    override fun getNextTimeIndex(): Int = prayerTime.getNextTimeIndex()
 
-    override fun setTimeFormat() {
-        prayerTime.timeFormat = prayerTime.time12
-    }
+    override fun setTimeFormat() = prayerTime.setTimeFormat()
 }
 
 interface PrayerRepo {
