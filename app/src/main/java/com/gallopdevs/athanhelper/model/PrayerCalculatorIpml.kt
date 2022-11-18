@@ -95,7 +95,7 @@ object PrayerCalculatorIpml : PrayerCalculator {
     )
 
     // return prayer times for a given date
-    override fun getDatePrayerTimes(offset: Int): ArrayList<String> {
+    override fun getPrayerTimesForDate(offset: Int): ArrayList<String> {
         val month = calendar.get(Calendar.MONTH) + 1
         val year = calendar.get(Calendar.YEAR)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
@@ -150,8 +150,8 @@ object PrayerCalculatorIpml : PrayerCalculator {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        val newTimes = getDatePrayerTimes(dayOfMonth)
-        val nextDayTimes = getDatePrayerTimes(dayOfMonth + 1)
+        val newTimes = getPrayerTimesForDate(dayOfMonth)
+        val nextDayTimes = getPrayerTimesForDate(dayOfMonth + 1)
 
         try {
             // get milliseconds from parsing dates
@@ -189,7 +189,7 @@ object PrayerCalculatorIpml : PrayerCalculator {
 }
 
 interface PrayerCalculator {
-    fun getDatePrayerTimes(offset: Int): ArrayList<String>
+    fun getPrayerTimesForDate(offset: Int): ArrayList<String>
     fun getNextTimeMillis(): Long
     fun getNextPrayerName(): String
     fun setLocation(latitude: Double, longitude: Double)

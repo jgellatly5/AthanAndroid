@@ -31,7 +31,7 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
         }
     }
 
-    private fun getDatePrayerTimes(pageIndex: Int) = prayerRepo.getDatePrayerTimes(pageIndex)
+    private fun getPrayerTimesForDate(pageIndex: Int) = prayerRepo.getPrayerTimesForDate(pageIndex)
 
     private fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
@@ -82,7 +82,7 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
 
     fun formatTimes(bundle: Bundle): List<Array<String>> {
         val pageIndex = bundle.getInt("pageIndex")
-        val nextDayTimes = getDatePrayerTimes(pageIndex)
+        val nextDayTimes = getPrayerTimesForDate(pageIndex)
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
         val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")
