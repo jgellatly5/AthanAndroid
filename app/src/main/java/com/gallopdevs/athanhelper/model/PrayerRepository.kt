@@ -1,41 +1,27 @@
 package com.gallopdevs.athanhelper.model
 
-class PrayerRepository : PrayerRepo {
-    override fun getDatePrayerTimes(count: Int): ArrayList<String> {
-        return PrayTime.getDatePrayerTimes(
-                year = PrayTime.year,
-                month = PrayTime.month + 1,
-                day = PrayTime.dayOfMonth + count,
-                latitude = PrayTime.lat,
-                longitude = PrayTime.lng,
-                tZone = PrayTime.timeZoneOffset.toDouble()
-        )
-    }
+class PrayerRepository(private val prayerTime: PrayerCalculator = PrayerCalculatorIpml) : PrayerRepo {
 
-    override fun getNextTimeMillis(): Long = PrayTime.getNextTimeMillis()
+    override fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String> =
+        prayerTime.getPrayerTimesForDate(offset = pageIndex)
 
-    override fun getNextPrayerName(): String = PrayTime.getNextPrayerName()
+    override fun getNextTimeMillis(): Long = prayerTime.getNextTimeMillis()
 
-    override fun setLocation(latitude: Double, longitude: Double) {
-        PrayTime.lat = latitude
-        PrayTime.lng = longitude
-    }
+    override fun getNextPrayerName(): String = prayerTime.getNextPrayerName()
 
-    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) {
-        PrayTime.calcMethod = calcMethod
-        PrayTime.asrJuristic = asrJuristic
-        PrayTime.adjustHighLats = adjustHighLats
-    }
+    override fun setLocation(latitude: Double, longitude: Double) =
+        prayerTime.setLocation(latitude, longitude)
 
-    override fun getNextTimeIndex(): Int = PrayTime.nextTimeIndex
+    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
+        prayerTime.setCalculations(calcMethod, asrJuristic, adjustHighLats)
 
-    override fun setTimeFormat() {
-        PrayTime.timeFormat = PrayTime.time12
-    }
+    override fun getNextTimeIndex(): Int = prayerTime.getNextTimeIndex()
+
+    override fun setTimeFormat() = prayerTime.setTimeFormat()
 }
 
 interface PrayerRepo {
-    fun getDatePrayerTimes(count: Int): ArrayList<String>
+    fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String>
     fun getNextTimeMillis(): Long
     fun getNextPrayerName(): String
     fun setLocation(latitude: Double, longitude: Double)

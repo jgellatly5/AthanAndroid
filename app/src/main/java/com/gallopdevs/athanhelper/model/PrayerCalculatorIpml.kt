@@ -30,29 +30,15 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 
 */
 
-object PrayTime {
+object PrayerCalculatorIpml : PrayerCalculator {
 
-    fun getNextPrayerName(): String {
-        val prayerNames = arrayOf(
-            "Dawn",
-            "Mid-day",
-            "Afternoon",
-            "Sunset",
-            "Night"
-        )
-        return prayerNames[nextTimeIndex]
-    }
-
-    val calendar = Calendar.getInstance()
-    val month = calendar.get(Calendar.MONTH)
-    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-    val year = calendar.get(Calendar.YEAR)
-    val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
-    val timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset
+    private val calendar = Calendar.getInstance()
+    private val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
+    private val timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset
 
     var lat = 0.0
     var lng = 0.0
-    var timeZone = 0.0
+    var timeZone = timeZoneOffset
     var jDate = 0.0
 
     // Initialize vars
@@ -92,102 +78,90 @@ object PrayTime {
     val offsets = IntArray(7) { 0 }
 
     /*
-     *
      * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after
      * sunset) mv : maghrib parameter value (in angle or minutes) is : isha
      * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter
      * value (in angle or minutes)
      */
     val methodParams: HashMap<Int, DoubleArray> = hashMapOf(
-            jafari to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
-            karachi to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0),
-            iSNA to doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0),
-            mWL to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0),
-            makkah to doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0),
-            egypt to doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5),
-            tehran to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
-            custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
+        jafari to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
+        karachi to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0),
+        iSNA to doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0),
+        mWL to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0),
+        makkah to doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0),
+        egypt to doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5),
+        tehran to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
+        custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
     )
 
-    // -------------------- Interface Functions --------------------
     // return prayer times for a given date
-    fun getPrayerTimes(
-            date: Calendar,
-            latitude: Double,
-            longitude: Double,
-            tZone: Double
-    ): ArrayList<String> {
-        val year = date[Calendar.YEAR]
-        val month = date[Calendar.MONTH]
-        val day = date[Calendar.DATE]
-        return getDatePrayerTimes(year, month + 1, day, latitude, longitude, tZone)
-    }
-
-    // return prayer times for a given date
-    fun getDatePrayerTimes(
-            year: Int,
-            month: Int,
-            day: Int,
-            latitude: Double,
-            longitude: Double,
-            tZone: Double
-    ): ArrayList<String> {
-        lat = latitude
-        lng = longitude
-        timeZone = tZone
-        jDate = julianDate(year, month, day)
-        val lonDiff = longitude / (15.0 * 24.0)
+    override fun getPrayerTimesForDate(offset: Int): ArrayList<String> {
+        val month = calendar.get(Calendar.MONTH) + 1
+        val year = calendar.get(Calendar.YEAR)
+        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        jDate = julianDate(year, month, dayOfMonth + offset)
+        val lonDiff = lng / (15.0 * 24.0)
         jDate -= lonDiff
         return computeDayTimes()
     }
 
-    private val differences = LongArray(6) { 0 }
+    override fun getNextPrayerName(): String {
+        val prayerNames = arrayOf(
+            "Dawn",
+            "Mid-day",
+            "Afternoon",
+            "Sunset",
+            "Night"
+        )
+        return prayerNames[getNextTimeIndex()]
+    }
 
-    private val TAG = "PrayTime"
-    private var _nextTimeIndex = 0
-    val nextTimeIndex: Int
-        get() {
-            for (i in differences.indices) {
-                if (differences[i] < 0) {
-                    _nextTimeIndex = i + 1
-                    if (_nextTimeIndex > 5) {
-                        _nextTimeIndex = 0
-                    }
+    override fun setLocation(latitude: Double, longitude: Double) {
+        lat = latitude
+        lng = longitude
+    }
+
+    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) {
+        this.calcMethod = calcMethod
+        this.asrJuristic = asrJuristic
+        this.adjustHighLats = adjustHighLats
+    }
+
+    private val differences = LongArray(6) { 0 }
+    private var nextTimeIndex = 0
+
+    override fun getNextTimeIndex(): Int {
+        for (i in differences.indices) {
+            if (differences[i] < 0) {
+                nextTimeIndex = i + 1
+                if (nextTimeIndex >= 5) {
+                    nextTimeIndex = 0
                 }
             }
-            return _nextTimeIndex
         }
+        return nextTimeIndex
+    }
 
-    fun getNextTimeMillis(): Long {
+    override fun setTimeFormat() {
+        timeFormat = time12
+    }
+
+    override fun getNextTimeMillis(): Long {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
-
-        val newTimes = getDatePrayerTimes(
-                year,
-                month + 1,
-                dayOfMonth,
-                lat,
-                lng,
-                timeZoneOffset.toDouble()
-        )
-        val nextDayTimes = getDatePrayerTimes(
-                year,
-                month + 1,
-                dayOfMonth + 1,
-                lat,
-                lng,
-                timeZoneOffset.toDouble()
-        )
+        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        val newTimes = getPrayerTimesForDate(dayOfMonth)
+        val nextDayTimes = getPrayerTimesForDate(dayOfMonth + 1)
 
         try {
             // get milliseconds from parsing dates
-            val currentTimeMillis = simpleDateFormat.parse(currentTime).time
-            val dawnMillis = simpleDateFormat.parse("${newTimes[0]}:00").time
-            val middayMillis = simpleDateFormat.parse("${newTimes[2]}:00").time
-            val afMillis = simpleDateFormat.parse("${newTimes[3]}:00").time
-            val sunsetMillis = simpleDateFormat.parse("${newTimes[5]}:00").time
-            val nightMillis = simpleDateFormat.parse("${newTimes[6]}:00").time
-            val nextDawnMillis = simpleDateFormat.parse("${nextDayTimes[0]}:00").time
+            val currentTimeMillis = simpleDateFormat.parse(currentTime)?.time ?: 0
+            val dawnMillis = simpleDateFormat.parse("${newTimes[0]}:00")?.time ?: 0
+            val middayMillis = simpleDateFormat.parse("${newTimes[2]}:00")?.time ?: 0
+            val afMillis = simpleDateFormat.parse("${newTimes[3]}:00")?.time ?: 0
+            val sunsetMillis = simpleDateFormat.parse("${newTimes[5]}:00")?.time ?: 0
+            val nightMillis = simpleDateFormat.parse("${newTimes[6]}:00")?.time ?: 0
+            val nextDawnMillis = simpleDateFormat.parse("${nextDayTimes[0]}:00")?.time ?: 0
             val MILLIS_IN_DAY = 86400000
 
             // set index of each element in differences array
@@ -212,4 +186,14 @@ object PrayTime {
         }
         return differences[nextTimeIndex]
     }
+}
+
+interface PrayerCalculator {
+    fun getPrayerTimesForDate(offset: Int): ArrayList<String>
+    fun getNextTimeMillis(): Long
+    fun getNextPrayerName(): String
+    fun setLocation(latitude: Double, longitude: Double)
+    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
+    fun getNextTimeIndex(): Int
+    fun setTimeFormat()
 }

@@ -1,25 +1,51 @@
 package com.gallopdevs.athanhelper.clock
 
-import android.app.Application
 import android.os.Bundle
-import androidx.lifecycle.AndroidViewModel
+import android.os.CountDownTimer
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.gallopdevs.athanhelper.model.PrayerRepo
 import com.gallopdevs.athanhelper.model.PrayerRepository
 
-class ClockViewModel(application: Application) : AndroidViewModel(application) {
+class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : ViewModel() {
 
-    private val repository: PrayerRepository = PrayerRepository()
+    private var timer: CountDownTimer? = null
+    private var isFinished: Boolean = true
 
-    private fun getDatePrayerTimes(count: Int) = repository.getDatePrayerTimes(count)
+    val timerCountDown = MutableLiveData<Long>()
 
-    fun getNextTimeMillis() = repository.getNextTimeMillis()
+    fun startNewTimer() {
+        if (isFinished) {
+            timer?.cancel()
+            timer = object : CountDownTimer(getNextTimeMillis(), 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    isFinished = false
+                    timerCountDown.value = millisUntilFinished
+                }
 
-    fun getNextPrayerName() = repository.getNextPrayerName()
+                override fun onFinish() {
+                    isFinished = true
+                    startNewTimer()
+                }
+            }.start()
+        }
+    }
 
-    fun setLocation(latitude: Double, longitude: Double) = repository.setLocation(latitude, longitude)
+    private fun getPrayerTimesForDate(pageIndex: Int) = prayerRepo.getPrayerTimesForDate(pageIndex)
 
-    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) = repository.setCalculations(calcMethod, asrJuristic, adjustHighLats)
+    private fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
-    fun setTimeFormat() = repository.setTimeFormat()
+    fun getNextPrayerName() = prayerRepo.getNextPrayerName()
+
+    fun getNextTimeIndex() = prayerRepo.getNextTimeIndex()
+
+    fun setLocation(latitude: Double, longitude: Double) =
+        prayerRepo.setLocation(latitude, longitude)
+
+    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
+        prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats)
+
+    fun setTimeFormat() = prayerRepo.setTimeFormat()
 
     fun formatDate(bundle: Bundle): String {
         val dayOfMonth = bundle.getInt("dayOfMonth")
@@ -55,8 +81,8 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun formatTimes(bundle: Bundle): List<Array<String>> {
-        val count = bundle.getInt("count")
-        val nextDayTimes = getDatePrayerTimes(count)
+        val pageIndex = bundle.getInt("pageIndex")
+        val nextDayTimes = getPrayerTimesForDate(pageIndex)
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
         val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")
@@ -64,11 +90,16 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
         val newSunsetTime = nextDayTimes[5].replaceFirst("^0+(?!$)".toRegex(), "")
         val newNightTime = nextDayTimes[6].replaceFirst("^0+(?!$)".toRegex(), "")
 
-        val splitDawnTime = newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitMiddayTime = newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitAfternoonTime = newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitSunsetTime = newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitNightTime = newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitDawnTime =
+            newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitMiddayTime =
+            newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitAfternoonTime =
+            newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitSunsetTime =
+            newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val splitNightTime =
+            newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
         return listOf(
             splitDawnTime,
@@ -78,6 +109,4 @@ class ClockViewModel(application: Application) : AndroidViewModel(application) {
             splitNightTime
         )
     }
-
-    fun getNextTimeIndex() = repository.getNextTimeIndex()
 }

@@ -8,7 +8,7 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.model.PrayTime
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
 import java.util.*
 
 class CustomELVAdapter(private val context: Context?, private val expandableListHeader: List<String>, private val expandableListDetail: HashMap<String, List<String>>) : BaseExpandableListAdapter() {
@@ -57,15 +57,15 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
             val editor = sharedPreferences?.edit()
             when (groupPosition) {
                 0 -> {
-                    PrayTime.calcMethod = childPosition
+                    PrayerCalculatorIpml.calcMethod = childPosition
                     editor?.putInt("calcMethod", childPosition)
                 }
                 1 -> {
-                    PrayTime.asrJuristic = childPosition
+                    PrayerCalculatorIpml.asrJuristic = childPosition
                     editor?.putInt("asrMethod", childPosition)
                 }
                 2 -> {
-                    PrayTime.adjustHighLats = childPosition
+                    PrayerCalculatorIpml.adjustHighLats = childPosition
                     editor?.putInt("latitudes", childPosition)
                 }
             }

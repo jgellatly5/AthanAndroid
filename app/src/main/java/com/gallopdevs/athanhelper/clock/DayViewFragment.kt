@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.databinding.FragmentDayviewBinding
-import com.gallopdevs.athanhelper.model.PrayTime
 
 class DayViewFragment : Fragment() {
 
@@ -32,7 +31,7 @@ class DayViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(ClockViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this)[ClockViewModel::class.java].apply {
             setTimeFormat()
 
             binding.dayTextView.text = formatDate(requireArguments())
@@ -40,8 +39,13 @@ class DayViewFragment : Fragment() {
             val formattedTimes = formatTimes(requireArguments())
             updateText(formattedTimes)
 
-            val nextTimeIndex = getNextTimeIndex()
-            setOvalVisibility(nextTimeIndex)
+            setOvalVisibility(getNextTimeIndex())
+
+            timerCountDown.observe(viewLifecycleOwner) {
+                if (it.equals(0L)) {
+                    setOvalVisibility(getNextTimeIndex())
+                }
+            }
         }
     }
 
@@ -62,15 +66,14 @@ class DayViewFragment : Fragment() {
 
     private fun setOvalVisibility(i: Int) {
         binding.apply {
-            var item = i
-
-            val timeViewList = arrayListOf(dawnTextView, middayTextView, afternoonTextView, sunsetTextView, nightTextView)
-
-            if (item >= 5) {
-                item -= 5
-            }
-
-            timeViewList[item].addDrawable(R.drawable.green_oval)
+            val timeViewList = arrayListOf(
+                    dawnTextView,
+                    middayTextView,
+                    afternoonTextView,
+                    sunsetTextView,
+                    nightTextView
+            )
+            timeViewList[i].addDrawable(R.drawable.green_oval)
         }
     }
 }

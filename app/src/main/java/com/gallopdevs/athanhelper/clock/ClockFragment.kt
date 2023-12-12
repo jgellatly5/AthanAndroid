@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,13 +36,12 @@ class ClockFragment : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var viewModel: ClockViewModel
     private lateinit var dayViewAdapter: DayViewAdapter
-    private var timer: CountDownTimer? = null
 
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.forEach { actionMap ->
             when (actionMap.key) {
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION-> {
+                Manifest.permission.ACCESS_COARSE_LOCATION -> {
                     if (actionMap.value) {
                         getLocation()
                     } else {
@@ -68,7 +66,7 @@ class ClockFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(ClockViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ClockViewModel::class.java]
 
         getLocation()
 
@@ -96,8 +94,18 @@ class ClockFragment : Fragment() {
                         prayerTimerText.visibility = TextView.VISIBLE
                         nextPrayerText.visibility = TextView.VISIBLE
 
-                        val countDownTime = viewModel.getNextTimeMillis()
-                        startNewTimer(countDownTime)
+                        viewModel.startNewTimer()
+                        viewModel.timerCountDown.observe(viewLifecycleOwner) {
+                            if (!it.equals(0L)) {
+                                val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
+                                offset.timeZone = TimeZone.getTimeZone("GMT")
+                                prayerTimerText.text = getString(R.string.count_down_time, offset.format(it))
+                            } else {
+                                prayerTimerText.text = getString(R.string.end_time)
+                                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+                                if (sharedPref.getBoolean("enableNotifications", false)) createNotification()
+                            }
+                        }
 
                         viewPagerFragment.adapter = dayViewAdapter
                         TabLayoutMediator(tabDots, viewPagerFragment, true) { _, _ -> }.attach()
@@ -109,25 +117,6 @@ class ClockFragment : Fragment() {
                 Toast.makeText(requireContext(), "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun startNewTimer(countDownTime: Long) {
-        timer?.cancel()
-        timer = object : CountDownTimer(countDownTime, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
-                offset.timeZone = TimeZone.getTimeZone("GMT")
-                binding.prayerTimerText.text = getString(R.string.count_down_time, offset.format(millisUntilFinished))
-            }
-
-            override fun onFinish() {
-                binding.prayerTimerText.text = getString(R.string.end_time)
-                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                if (sharedPref.getBoolean("enableNotifications", false)) createNotification()
-                val newCountDownTime = viewModel.getNextTimeMillis()
-                startNewTimer(newCountDownTime)
-            }
-        }.start()
     }
 
     private fun createNotification() {
