@@ -34,9 +34,12 @@ class SettingsFragment : Fragment() {
         binding.apply {
             val listDataHeader = resources.getStringArray(R.array.method_settings).toMutableList()
             val listDataChild: HashMap<String, List<String>> = HashMap()
-            listDataChild[listDataHeader[0]] = resources.getStringArray(R.array.calculation_methods).toMutableList()
-            listDataChild[listDataHeader[1]] = resources.getStringArray(R.array.asr_methods).toMutableList()
-            listDataChild[listDataHeader[2]] = resources.getStringArray(R.array.latitudes_method).toMutableList()
+            listDataChild[listDataHeader[0]] =
+                resources.getStringArray(R.array.calculation_methods).toMutableList()
+            listDataChild[listDataHeader[1]] =
+                resources.getStringArray(R.array.asr_methods).toMutableList()
+            listDataChild[listDataHeader[2]] =
+                resources.getStringArray(R.array.latitudes_method).toMutableList()
 
             val adapter = CustomELVAdapter(context, listDataHeader, listDataChild)
             expandableListView.setAdapter(adapter)

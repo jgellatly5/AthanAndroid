@@ -26,7 +26,8 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 
 class ClockFragment : Fragment() {
 
@@ -37,27 +38,32 @@ class ClockFragment : Fragment() {
     private lateinit var viewModel: ClockViewModel
     private lateinit var dayViewAdapter: DayViewAdapter
 
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        permissions.forEach { actionMap ->
-            when (actionMap.key) {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION -> {
-                    if (actionMap.value) {
-                        getLocation()
-                    } else {
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                            Toast.makeText(requireContext(), "Location permissions denied.", Toast.LENGTH_SHORT).show()
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.forEach { actionMap ->
+                when (actionMap.key) {
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION -> {
+                        if (actionMap.value) {
+                            getLocation()
+                        } else {
+                            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Location permissions denied.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentClockBinding.inflate(inflater, container, false)
         return binding.root
@@ -79,11 +85,22 @@ class ClockFragment : Fragment() {
     }
 
     private fun getLocation() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
             requestPermissionLauncher.launch(permissions)
         } else {
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+            mFusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(requireActivity())
             mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 binding.apply {
                     if (location != null) {
@@ -99,36 +116,51 @@ class ClockFragment : Fragment() {
                             if (!it.equals(0L)) {
                                 val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
                                 offset.timeZone = TimeZone.getTimeZone("GMT")
-                                prayerTimerText.text = getString(R.string.count_down_time, offset.format(it))
+                                prayerTimerText.text =
+                                    getString(R.string.count_down_time, offset.format(it))
                             } else {
                                 prayerTimerText.text = getString(R.string.end_time)
-                                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                                if (sharedPref.getBoolean("enableNotifications", false)) createNotification()
+                                val sharedPref =
+                                    requireActivity().getPreferences(Context.MODE_PRIVATE)
+                                if (sharedPref.getBoolean(
+                                        "enableNotifications",
+                                        false
+                                    )
+                                ) createNotification()
                             }
                         }
 
                         viewPagerFragment.adapter = dayViewAdapter
                         TabLayoutMediator(tabDots, viewPagerFragment, true) { _, _ -> }.attach()
                     } else {
-                        Toast.makeText(requireContext(), "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "We cannot find your location. Please enable in settings.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }.addOnFailureListener {
-                Toast.makeText(requireContext(), "We cannot find your location. Please enable in settings.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "We cannot find your location. Please enable in settings.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
     private fun createNotification() {
         val intent = Intent(requireContext(), MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent =
+            PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.moon)
-                .setContentTitle("Athan")
-                .setContentText("Next prayer time: ${viewModel.getNextPrayerName()}")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
+            .setSmallIcon(R.drawable.moon)
+            .setContentTitle("Athan")
+            .setContentText("Next prayer time: ${viewModel.getNextPrayerName()}")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
         val notificationManager = NotificationManagerCompat.from(requireContext())
         notificationManager.notify(0, builder.build())
     }

@@ -1,6 +1,13 @@
 package com.gallopdevs.athanhelper.model.utils
 
-import kotlin.math.*
+import kotlin.math.acos
+import kotlin.math.asin
+import kotlin.math.atan
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.floor
+import kotlin.math.sin
+import kotlin.math.tan
 
 // range reduce angle in degrees.
 fun fixAngle(a: Double): Double {

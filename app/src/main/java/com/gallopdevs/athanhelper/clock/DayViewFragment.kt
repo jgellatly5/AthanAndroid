@@ -18,7 +18,11 @@ class DayViewFragment : Fragment() {
 
     private lateinit var viewModel: ClockViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentDayviewBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -67,11 +71,11 @@ class DayViewFragment : Fragment() {
     private fun setOvalVisibility(i: Int) {
         binding.apply {
             val timeViewList = arrayListOf(
-                    dawnTextView,
-                    middayTextView,
-                    afternoonTextView,
-                    sunsetTextView,
-                    nightTextView
+                dawnTextView,
+                middayTextView,
+                afternoonTextView,
+                sunsetTextView,
+                nightTextView
             )
             timeViewList[i].addDrawable(R.drawable.green_oval)
         }

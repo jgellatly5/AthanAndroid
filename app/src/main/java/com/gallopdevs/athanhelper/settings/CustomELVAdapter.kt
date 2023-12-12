@@ -9,20 +9,32 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
-import java.util.*
 
-class CustomELVAdapter(private val context: Context?, private val expandableListHeader: List<String>, private val expandableListDetail: HashMap<String, List<String>>) : BaseExpandableListAdapter() {
+class CustomELVAdapter(
+    private val context: Context?,
+    private val expandableListHeader: List<String>,
+    private val expandableListDetail: HashMap<String, List<String>>
+) : BaseExpandableListAdapter() {
+
     private var lastChildPosition = 0
     private var lastGroupPosition = 0
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Any = expandableListDetail[expandableListHeader[groupPosition]]!![childPosition]
+    override fun getChild(groupPosition: Int, childPosition: Int): Any =
+        expandableListDetail[expandableListHeader[groupPosition]]!![childPosition]
 
     override fun getChildId(groupPosition: Int, childPosition: Int): Long = childPosition.toLong()
 
-    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, cv: View?, parent: ViewGroup): View? {
+    override fun getChildView(
+        groupPosition: Int,
+        childPosition: Int,
+        isLastChild: Boolean,
+        cv: View?,
+        parent: ViewGroup
+    ): View? {
         var convertView = cv
         if (convertView == null) {
-            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_items, null)
         }
         val selectionIndicator = convertView?.findViewById<ImageView>(R.id.selection_indicator)
@@ -40,11 +52,13 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
                     selectionIndicator?.visibility = View.VISIBLE
                 }
             }
+
             1 -> {
                 if (sharedPreferences?.getInt("asrMethod", 0) == childPosition) {
                     selectionIndicator?.visibility = View.VISIBLE
                 }
             }
+
             2 -> {
                 if (sharedPreferences?.getInt("latitudes", 0) == childPosition) {
                     selectionIndicator?.visibility = View.VISIBLE
@@ -60,10 +74,12 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
                     PrayerCalculatorIpml.calcMethod = childPosition
                     editor?.putInt("calcMethod", childPosition)
                 }
+
                 1 -> {
                     PrayerCalculatorIpml.asrJuristic = childPosition
                     editor?.putInt("asrMethod", childPosition)
                 }
+
                 2 -> {
                     PrayerCalculatorIpml.adjustHighLats = childPosition
                     editor?.putInt("latitudes", childPosition)
@@ -82,7 +98,8 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
 
     override fun getGroupCount(): Int = expandableListHeader.size
 
-    override fun getChildrenCount(groupPosition: Int): Int = expandableListDetail[expandableListHeader[groupPosition]]!!.size
+    override fun getChildrenCount(groupPosition: Int): Int =
+        expandableListDetail[expandableListHeader[groupPosition]]!!.size
 
     override fun getGroup(groupPosition: Int): Any = expandableListHeader[groupPosition]
 
@@ -90,10 +107,16 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
 
     override fun hasStableIds(): Boolean = false
 
-    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, cv: View?, parent: ViewGroup): View {
+    override fun getGroupView(
+        groupPosition: Int,
+        isExpanded: Boolean,
+        cv: View?,
+        parent: ViewGroup
+    ): View {
         var convertView = cv
         if (convertView == null) {
-            val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_settings_header, null)
         }
 
@@ -114,7 +137,8 @@ class CustomELVAdapter(private val context: Context?, private val expandableList
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean = true
 
     private fun getImageDrawable(index: Int): Int {
-        val drawables = intArrayOf(R.drawable.sum_icon, R.drawable.sun_icon, R.drawable.compass_icon)
+        val drawables =
+            intArrayOf(R.drawable.sum_icon, R.drawable.sun_icon, R.drawable.compass_icon)
         return drawables[index]
     }
 }
