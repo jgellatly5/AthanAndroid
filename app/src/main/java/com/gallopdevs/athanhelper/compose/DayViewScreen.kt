@@ -2,7 +2,6 @@ package com.gallopdevs.athanhelper.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,7 +27,7 @@ private fun DayOfWeekPlusDateHeader() {
         color = colorResource(id = R.color.colorPrimaryDark),
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .padding(top = 32.dp)
+            .padding(top = 32.dp, bottom = 40.dp)
             .fillMaxWidth()
     )
 }
@@ -69,8 +68,7 @@ private fun PrayerRow(
     prayerTitle: String,
     prayerTime: String,
     prayerTimePostFix: String,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(start = 60.dp, end = 60.dp)
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -80,7 +78,7 @@ private fun PrayerRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(contentPadding)
+                .padding(start = 60.dp, end = 60.dp)
         ) {
             Text(
                 text = prayerTitle,
@@ -116,8 +114,7 @@ fun DayViewScreen() {
         PrayerRow(
             prayerTitle = stringResource(id = R.string.dawn),
             prayerTime = stringResource(id = R.string.dawn_time_placeholder),
-            prayerTimePostFix = stringResource(id = R.string.postfix_am),
-            contentPadding = PaddingValues(top = 40.dp, start = 60.dp, end = 60.dp)
+            prayerTimePostFix = stringResource(id = R.string.postfix_am)
         )
         PrayerRow(
             prayerTitle = stringResource(id = R.string.mid_day),
