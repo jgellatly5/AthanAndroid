@@ -40,9 +40,35 @@ private fun DayOfWeekPlusDateHeaderPreview() {
 }
 
 @Composable
+private fun PrayerTime(prayerTime: String, prayerTimePostFix: String) {
+    Row {
+        Text(
+            text = prayerTime,
+            fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
+            color = colorResource(id = R.color.colorPrimaryDark)
+        )
+        Text(
+            text = prayerTimePostFix,
+            fontSize = dimensionResource(id = R.dimen.postfix_text_size).value.sp,
+            color = colorResource(id = R.color.colorPrimaryDark)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PrayerTimePreview() {
+    PrayerTime(
+        prayerTime = stringResource(id = R.string.dawn_time_placeholder),
+        prayerTimePostFix = stringResource(id = R.string.postfix_am)
+    )
+}
+
+@Composable
 private fun PrayerRow(
     prayerTitle: String,
     prayerTime: String,
+    prayerTimePostFix: String,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(start = 60.dp, end = 60.dp)
 ) {
@@ -61,13 +87,15 @@ private fun PrayerRow(
                 fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
                 color = colorResource(id = R.color.colorPrimaryDark)
             )
-            Text(
-                text = prayerTime,
-                fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
-                color = colorResource(id = R.color.colorPrimaryDark)
+            PrayerTime(
+                prayerTime = prayerTime,
+                prayerTimePostFix = prayerTimePostFix
             )
         }
-        Divider()
+        Divider(
+            modifier = modifier
+                .padding(start = 60.dp, end = 60.dp)
+        )
     }
 }
 
@@ -76,7 +104,8 @@ private fun PrayerRow(
 private fun PrayerRowPreview() {
     PrayerRow(
         prayerTitle = stringResource(id = R.string.dawn),
-        prayerTime = stringResource(id = R.string.dawn_time_placeholder)
+        prayerTime = stringResource(id = R.string.dawn_time_placeholder),
+        prayerTimePostFix = stringResource(id = R.string.postfix_am)
     )
 }
 
@@ -87,23 +116,28 @@ fun DayViewScreen() {
         PrayerRow(
             prayerTitle = stringResource(id = R.string.dawn),
             prayerTime = stringResource(id = R.string.dawn_time_placeholder),
+            prayerTimePostFix = stringResource(id = R.string.postfix_am),
             contentPadding = PaddingValues(top = 40.dp, start = 60.dp, end = 60.dp)
         )
         PrayerRow(
             prayerTitle = stringResource(id = R.string.mid_day),
-            prayerTime = stringResource(id = R.string.midday_text_placeholder)
+            prayerTime = stringResource(id = R.string.midday_text_placeholder),
+            prayerTimePostFix = stringResource(id = R.string.postfix_pm)
         )
         PrayerRow(
             prayerTitle = stringResource(id = R.string.afternoon),
-            prayerTime = stringResource(id = R.string.afternoon_time_placeholder)
+            prayerTime = stringResource(id = R.string.afternoon_time_placeholder),
+            prayerTimePostFix = stringResource(id = R.string.postfix_pm)
         )
         PrayerRow(
             prayerTitle = stringResource(id = R.string.sunset),
-            prayerTime = stringResource(id = R.string.sunset_time_placeholder)
+            prayerTime = stringResource(id = R.string.sunset_time_placeholder),
+            prayerTimePostFix = stringResource(id = R.string.postfix_pm)
         )
         PrayerRow(
             prayerTitle = stringResource(id = R.string.night),
-            prayerTime = stringResource(id = R.string.night_text_placeholder)
+            prayerTime = stringResource(id = R.string.night_text_placeholder),
+            prayerTimePostFix = stringResource(id = R.string.postfix_pm)
         )
     }
 }
