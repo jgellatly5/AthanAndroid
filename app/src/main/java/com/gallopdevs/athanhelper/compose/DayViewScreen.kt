@@ -1,10 +1,12 @@
 package com.gallopdevs.athanhelper.compose
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -46,7 +49,44 @@ private fun DayOfWeekPlusDateHeaderPreview() {
 }
 
 @Composable
-private fun PrayerTime(prayerTime: String, prayerTimePostFix: String) {
+private fun PrayerName(
+    prayerTitle: String,
+    showHighlighted: Boolean
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (showHighlighted) {
+            Image(
+                painterResource(id = R.drawable.green_oval),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(25.dp)
+                    .padding(end = 20.dp)
+            )
+        }
+        Text(
+            text = prayerTitle,
+            fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
+            color = colorResource(id = R.color.colorPrimaryDark)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PrayerNamePreview() {
+    PrayerName(
+        prayerTitle = stringResource(id = R.string.dawn),
+        showHighlighted = true
+    )
+}
+
+@Composable
+private fun PrayerTime(
+    prayerTime: String,
+    prayerTimePostFix: String
+) {
     Row {
         Text(
             text = prayerTime,
@@ -75,6 +115,7 @@ private fun PrayerRow(
     prayerTitle: String,
     prayerTime: String,
     prayerTimePostFix: String,
+    showHighlighted: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -87,10 +128,9 @@ private fun PrayerRow(
                 .fillMaxWidth()
                 .padding(start = 60.dp, end = 60.dp)
         ) {
-            Text(
-                text = prayerTitle,
-                fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
-                color = colorResource(id = R.color.colorPrimaryDark)
+            PrayerName(
+                prayerTitle = prayerTitle,
+                showHighlighted = showHighlighted
             )
             PrayerTime(
                 prayerTime = prayerTime,
@@ -112,7 +152,8 @@ private fun PrayerRowPreview() {
     PrayerRow(
         prayerTitle = stringResource(id = R.string.dawn),
         prayerTime = stringResource(id = R.string.dawn_time_placeholder),
-        prayerTimePostFix = stringResource(id = R.string.postfix_am)
+        prayerTimePostFix = stringResource(id = R.string.postfix_am),
+        showHighlighted = true
     )
 }
 
@@ -124,6 +165,7 @@ fun DayViewScreen(
     pageIndex: Int?,
     clockViewModel: ClockViewModel = viewModel()
 ) {
+    clockViewModel.setTimeFormat()
     Column {
         if (weekDay != null && month != null && dayOfMonth != null) {
             DayOfWeekPlusDateHeader(
@@ -137,11 +179,14 @@ fun DayViewScreen(
         val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
         pageIndex?.let {
             val prayerTimes = clockViewModel.formatTimes(it)
+            val nextTimeIndex = clockViewModel.getNextTimeIndex()
             for (i in prayerTimes.indices) {
+                val showHighlighted = i == nextTimeIndex
                 PrayerRow(
                     prayerTitle = prayerTitles[i],
                     prayerTime = prayerTimes[i][0],
-                    prayerTimePostFix = prayerTimes[i][1]
+                    prayerTimePostFix = prayerTimes[i][1],
+                    showHighlighted = showHighlighted
                 )
             }
         }
