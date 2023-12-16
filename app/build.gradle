@@ -76,6 +76,9 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Mockito
+    testImplementation 'org.mockito:mockito-core:5.8.0'
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
+    
     androidTestImplementation 'org.mockito:mockito-core:5.8.0'
     androidTestImplementation 'org.mockito:mockito-android:5.8.0'
     androidTestImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'

@@ -1,25 +1,25 @@
 package com.gallopdevs.athanhelper.model
 
 class PrayerRepository(
-    private val prayerTime: PrayerCalculator = PrayerCalculatorIpml
+    private val prayerCalculator: PrayerCalculator = PrayerCalculatorIpml
 ) : PrayerRepo {
 
     override fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String> =
-        prayerTime.getPrayerTimesForDate(offset = pageIndex)
+        prayerCalculator.getPrayerTimesForDate(offset = pageIndex)
 
-    override fun getNextTimeMillis(): Long = prayerTime.getNextTimeMillis()
+    override fun getNextTimeMillis(): Long = prayerCalculator.getNextTimeMillis()
 
-    override fun getNextPrayerName(): String = prayerTime.getNextPrayerName()
+    override fun getNextPrayerName(): String = prayerCalculator.getNextPrayerName()
 
     override fun setLocation(latitude: Double, longitude: Double) =
-        prayerTime.setLocation(latitude, longitude)
+        prayerCalculator.setLocation(latitude, longitude)
 
     override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
-        prayerTime.setCalculations(calcMethod, asrJuristic, adjustHighLats)
+        prayerCalculator.setCalculations(calcMethod, asrJuristic, adjustHighLats)
 
-    override fun getNextTimeIndex(): Int = prayerTime.getNextTimeIndex()
+    override fun getNextTimeIndex(): Int = prayerCalculator.getNextTimeIndex()
 
-    override fun setTimeFormat() = prayerTime.setTimeFormat()
+    override fun setTimeFormat() = prayerCalculator.setTimeFormat()
 }
 
 interface PrayerRepo {
