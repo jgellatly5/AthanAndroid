@@ -1,6 +1,5 @@
 package com.gallopdevs.athanhelper.settings
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.clock.DayViewAdapter
-import com.gallopdevs.athanhelper.compose.DayViewScreen
 import com.gallopdevs.athanhelper.compose.SettingsScreen
-import com.gallopdevs.athanhelper.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
 
@@ -24,9 +19,7 @@ class SettingsFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                SettingsScreen(
-
-                )
+                SettingsScreen()
             }
         }
     }
@@ -47,19 +40,6 @@ class SettingsFragment : Fragment() {
 //            val adapter = CustomELVAdapter(context, listDataHeader, listDataChild)
 //            expandableListView.setAdapter(adapter)
 //
-//            val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-//            notificationSwitch.isChecked = sharedPref.getBoolean("enableNotifications", false)
-//
-//            val editor = sharedPref.edit()
-//            with(editor) {
-//                putBoolean("enableNotifications", notificationSwitch.isChecked)
-//                apply()
-//            }
-//
-//            notificationSwitch.setOnCheckedChangeListener { _, b ->
-//                editor.putBoolean("enableNotifications", b)
-//                editor.apply()
-//            }
 //        }
     }
 }

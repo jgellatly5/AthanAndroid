@@ -56,4 +56,19 @@ class SettingsScreenTest {
                 .assertIsOff()
         }
     }
+
+    @Test
+    fun notificationsOptionSwitchIsOnIfSharedPrefsExist() {
+        composeTestRule.apply {
+            setContent {
+                SettingsScreen()
+            }
+
+            this.onNode(isToggleable())
+                .performClick()
+                .assertIsOn()
+                .performClick()
+                .assertIsOff()
+        }
+    }
 }
