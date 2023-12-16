@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.compose.DayViewScreen
 
 class DayViewFragment : Fragment() {
-
-    private lateinit var viewModel: ClockViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,20 +26,6 @@ class DayViewFragment : Fragment() {
                         dayOfMonth = arguments?.getInt(DayViewAdapter.DAY_OF_MONTH),
                         pageIndex = getInt(DayViewAdapter.PAGE_INDEX)
                     )
-                }
-            }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[ClockViewModel::class.java].apply {
-
-
-            timerCountDown.observe(viewLifecycleOwner) {
-                if (it.equals(0L)) {
-//                    setOvalVisibility(getNextTimeIndex())
                 }
             }
         }
