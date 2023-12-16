@@ -5,8 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.R
+import com.gallopdevs.athanhelper.clock.DayViewAdapter
+import com.gallopdevs.athanhelper.compose.DayViewScreen
+import com.gallopdevs.athanhelper.compose.SettingsScreen
 import com.gallopdevs.athanhelper.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
@@ -19,13 +24,14 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                SettingsScreen(
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+                )
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
