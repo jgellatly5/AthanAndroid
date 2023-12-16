@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockViewModel
 import com.gallopdevs.athanhelper.compose.DayViewScreenConstants.DAY_VIEW_SCREEN
+import com.gallopdevs.athanhelper.compose.DayViewScreenConstants.NEXT_PRAYER
 
 @Composable
 private fun DayOfWeekPlusDateHeader(
@@ -51,7 +52,7 @@ private fun DayOfWeekPlusDateHeaderPreview() {
 }
 
 @Composable
-private fun PrayerName(
+fun PrayerName(
     prayerTitle: String,
     showHighlighted: Boolean
 ) {
@@ -61,7 +62,7 @@ private fun PrayerName(
         if (showHighlighted) {
             Image(
                 painterResource(id = R.drawable.green_oval),
-                contentDescription = null,
+                contentDescription = NEXT_PRAYER,
                 modifier = Modifier
                     .size(25.dp)
                     .padding(end = 20.dp)
@@ -200,4 +201,5 @@ fun DayViewScreen(
 
 object DayViewScreenConstants {
     const val DAY_VIEW_SCREEN = "DAY_VIEW_SCREEN"
+    const val NEXT_PRAYER = "NEXT_PRAYER"
 }
