@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockViewModel
+import com.gallopdevs.athanhelper.compose.DayViewScreenConstants.DAY_VIEW_SCREEN
 
 @Composable
 private fun DayOfWeekPlusDateHeader(
@@ -166,7 +168,10 @@ fun DayViewScreen(
     clockViewModel: ClockViewModel = viewModel()
 ) {
     clockViewModel.setTimeFormat()
-    Column {
+    Column(
+        modifier = Modifier
+            .testTag(DAY_VIEW_SCREEN)
+    ) {
         if (weekDay != null && month != null && dayOfMonth != null) {
             DayOfWeekPlusDateHeader(
                 dayOfWeekPlusDate = clockViewModel.formatDate(
@@ -191,4 +196,8 @@ fun DayViewScreen(
             }
         }
     }
+}
+
+object DayViewScreenConstants {
+    const val DAY_VIEW_SCREEN = "DAY_VIEW_SCREEN"
 }
