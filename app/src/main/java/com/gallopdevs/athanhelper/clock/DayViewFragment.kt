@@ -24,8 +24,13 @@ class DayViewFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                arguments?.getInt(DayViewAdapter.PAGE_INDEX)?.let {
-                    DayViewScreen(pageIndex = it)
+                arguments?.apply {
+                    DayViewScreen(
+                        weekDay = arguments?.getInt(DayViewAdapter.WEEK_DAY),
+                        month = arguments?.getInt(DayViewAdapter.MONTH),
+                        dayOfMonth = arguments?.getInt(DayViewAdapter.DAY_OF_MONTH),
+                        pageIndex = getInt(DayViewAdapter.PAGE_INDEX)
+                    )
                 }
             }
         }

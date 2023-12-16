@@ -23,9 +23,11 @@ import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockViewModel
 
 @Composable
-private fun DayOfWeekPlusDateHeader() {
+private fun DayOfWeekPlusDateHeader(
+    dayOfWeekPlusDate: String
+) {
     Text(
-        text = stringResource(id = R.string.day_placeholder),
+        text = dayOfWeekPlusDate,
         fontSize = dimensionResource(id = R.dimen.day_text_size).value.sp,
         color = colorResource(id = R.color.colorPrimaryDark),
         textAlign = TextAlign.Center,
@@ -38,7 +40,9 @@ private fun DayOfWeekPlusDateHeader() {
 @Preview(showBackground = true)
 @Composable
 private fun DayOfWeekPlusDateHeaderPreview() {
-    DayOfWeekPlusDateHeader()
+    DayOfWeekPlusDateHeader(
+        dayOfWeekPlusDate = stringResource(id = R.string.day_placeholder)
+    )
 }
 
 @Composable
@@ -114,19 +118,32 @@ private fun PrayerRowPreview() {
 
 @Composable
 fun DayViewScreen(
-    pageIndex: Int,
+    weekDay: Int?,
+    month: Int?,
+    dayOfMonth: Int?,
+    pageIndex: Int?,
     clockViewModel: ClockViewModel = viewModel()
 ) {
     Column {
-        DayOfWeekPlusDateHeader()
-        val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
-        val prayerTimes = clockViewModel.formatTimes(pageIndex)
-        for (i in prayerTimes.indices) {
-            PrayerRow(
-                prayerTitle = prayerTitles[i],
-                prayerTime = prayerTimes[i][0],
-                prayerTimePostFix = prayerTimes[i][1]
+        if (weekDay != null && month != null && dayOfMonth != null) {
+            DayOfWeekPlusDateHeader(
+                dayOfWeekPlusDate = clockViewModel.formatDate(
+                    weekDay,
+                    month,
+                    dayOfMonth
+                )
             )
+        }
+        val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
+        pageIndex?.let {
+            val prayerTimes = clockViewModel.formatTimes(it)
+            for (i in prayerTimes.indices) {
+                PrayerRow(
+                    prayerTitle = prayerTitles[i],
+                    prayerTime = prayerTimes[i][0],
+                    prayerTimePostFix = prayerTimes[i][1]
+                )
+            }
         }
     }
 }
