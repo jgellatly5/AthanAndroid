@@ -19,7 +19,10 @@ class SettingsFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                SettingsScreen()
+                context?.let {
+                    val preferencesManager = PreferencesManagerImpl(it)
+                    SettingsScreen(preferencesManager)
+                }
             }
         }
     }

@@ -12,13 +12,19 @@ import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import com.gallopdevs.athanhelper.compose.NotificationsOption
 import com.gallopdevs.athanhelper.compose.SettingsScreen
+import com.gallopdevs.athanhelper.settings.PreferencesManager
+import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.whenever
 
 class SettingsScreenTest {
 
     private val context: Context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
+
+    private val preferencesManager: PreferencesManager = mock()
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -44,9 +50,10 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchTogglesOnAndOff() {
+        whenever(preferencesManager.getData(ENABLE_NOTIFICATIONS, false)).thenReturn(false)
         composeTestRule.apply {
             setContent {
-                SettingsScreen()
+                SettingsScreen(preferencesManager)
             }
 
             this.onNode(isToggleable())
@@ -58,17 +65,15 @@ class SettingsScreenTest {
     }
 
     @Test
-    fun notificationsOptionSwitchIsOnIfSharedPrefsExist() {
+    fun notificationsOptionSwitchIsOnIfSharedPrefsTrue() {
+        whenever(preferencesManager.getData(ENABLE_NOTIFICATIONS, false)).thenReturn(true)
         composeTestRule.apply {
             setContent {
-                SettingsScreen()
+                SettingsScreen(preferencesManager)
             }
 
             this.onNode(isToggleable())
-                .performClick()
                 .assertIsOn()
-                .performClick()
-                .assertIsOff()
         }
     }
 }
