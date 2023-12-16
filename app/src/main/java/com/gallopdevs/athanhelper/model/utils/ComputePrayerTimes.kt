@@ -15,13 +15,18 @@ fun computeDayTimes(): ArrayList<String> {
 // compute prayer times at given julian date
 fun computeTimes(times: DoubleArray): DoubleArray {
     val t = dayPortion(times)
-    val fajr = computeTime(180 - PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![0], t[0])
+    val fajr = computeTime(
+        180 - PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![0],
+        t[0]
+    )
     val sunrise = computeTime(180 - 0.833, t[1])
     val dhuhr = computeMidDay(t[2])
     val asr = computeAsr(1 + PrayerCalculatorIpml.asrJuristic.toDouble(), t[3])
     val sunset = computeTime(0.833, t[4])
-    val maghrib = computeTime(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![2], t[5])
-    val isha = computeTime(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![4], t[6])
+    val maghrib =
+        computeTime(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![2], t[5])
+    val isha =
+        computeTime(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![4], t[6])
     return doubleArrayOf(fajr, sunrise, dhuhr, asr, sunset, maghrib, isha)
 }
 
@@ -43,11 +48,13 @@ fun adjustTimes(t: DoubleArray): DoubleArray {
     times[2] = times[2] + PrayerCalculatorIpml.dhuhrMinutes / 60
     // Maghrib
     if (PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![1].equals(1.0)) {
-        times[5] = times[4] + PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![2] / 60
+        times[5] =
+            times[4] + PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![2] / 60
     }
     // Isha
     if (PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![3].equals(1.0)) {
-        times[6] = times[5] + PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![4] / 60
+        times[6] =
+            times[5] + PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![4] / 60
     }
     if (PrayerCalculatorIpml.adjustHighLats != PrayerCalculatorIpml.none) {
         times = adjustHighLatTimes(times)
@@ -61,7 +68,8 @@ fun adjustHighLatTimes(times: DoubleArray): DoubleArray {
     val nightTime = timeDiff(times[4], times[1]) // sunset to sunrise
 
     // Adjust Fajr
-    val fajrDiff = nightPortion(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![0]) * nightTime
+    val fajrDiff =
+        nightPortion(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![0]) * nightTime
     if (java.lang.Double.isNaN(times[0]) || timeDiff(times[0], times[1]) > fajrDiff) {
         times[0] = times[1] - fajrDiff
     }
@@ -109,9 +117,11 @@ fun adjustTimesFormat(times: DoubleArray): ArrayList<String> {
             PrayerCalculatorIpml.time12 -> {
                 result.add(floatToTime12(times[i], false))
             }
+
             PrayerCalculatorIpml.time12NS -> {
                 result.add(floatToTime12(times[i], true))
             }
+
             else -> {
                 result.add(floatToTime24(times[i]))
             }

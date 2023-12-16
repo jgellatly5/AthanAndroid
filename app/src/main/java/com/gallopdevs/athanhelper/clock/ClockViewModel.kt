@@ -1,7 +1,7 @@
 package com.gallopdevs.athanhelper.clock
 
-import android.os.Bundle
 import android.os.CountDownTimer
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gallopdevs.athanhelper.model.PrayerRepo
@@ -12,7 +12,9 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
     private var timer: CountDownTimer? = null
     private var isFinished: Boolean = true
 
-    val timerCountDown = MutableLiveData<Long>()
+    private val _timerCountDown = MutableLiveData<Long>()
+    val timerCountDown: LiveData<Long>
+        get() = _timerCountDown
 
     fun startNewTimer() {
         if (isFinished) {
@@ -20,7 +22,7 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
             timer = object : CountDownTimer(getNextTimeMillis(), 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     isFinished = false
-                    timerCountDown.value = millisUntilFinished
+                    _timerCountDown.value = millisUntilFinished
                 }
 
                 override fun onFinish() {
@@ -47,18 +49,20 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
 
     fun setTimeFormat() = prayerRepo.setTimeFormat()
 
-    fun formatDate(bundle: Bundle): String {
-        val dayOfMonth = bundle.getInt("dayOfMonth")
-        val dayOfMonthString = dayOfMonth.toString()
+    fun formatDate(
+        weekDayArg: Int,
+        monthArg: Int,
+        dayOfMonthArg: Int,
+    ): String {
+        val dayOfMonthString = dayOfMonthArg.toString()
 
-        val month = bundle.getInt("month")
-        val monthString = if (month < 10) {
-            "0$month"
+        val monthString = if (monthArg < 10) {
+            "0$monthArg"
         } else {
-            month.toString()
+            monthArg.toString()
         }
 
-        var weekDay = bundle.getInt("day")
+        var weekDay = weekDayArg
         if (weekDay >= 8) {
             weekDay -= 7
         }
@@ -73,15 +77,14 @@ class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : 
             else -> "This is not a day"
         }
 
-        return if (dayOfMonth < 10) {
+        return if (dayOfMonthArg < 10) {
             "$weekDayString, $monthString/0$dayOfMonthString"
         } else {
             "$weekDayString, $monthString/$dayOfMonthString"
         }
     }
 
-    fun formatTimes(bundle: Bundle): List<Array<String>> {
-        val pageIndex = bundle.getInt("pageIndex")
+    fun formatTimes(pageIndex: Int): List<Array<String>> {
         val nextDayTimes = getPrayerTimesForDate(pageIndex)
 
         val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")

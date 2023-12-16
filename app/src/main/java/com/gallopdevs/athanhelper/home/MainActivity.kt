@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val description = getString(R.string.channel_description)
-            val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT)
+            val channel =
+                NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
@@ -62,7 +63,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.setCalculations(
             calcMethod = sharedPreferences.getInt("calcMethod", PrayerCalculatorIpml.calcMethod),
             asrJuristic = sharedPreferences.getInt("asrMethod", PrayerCalculatorIpml.asrJuristic),
-            adjustHighLats = sharedPreferences.getInt("latitudes", PrayerCalculatorIpml.adjustHighLats)
+            adjustHighLats = sharedPreferences.getInt(
+                "latitudes",
+                PrayerCalculatorIpml.adjustHighLats
+            )
         )
         // TODO add setting for adjusting time format
     }

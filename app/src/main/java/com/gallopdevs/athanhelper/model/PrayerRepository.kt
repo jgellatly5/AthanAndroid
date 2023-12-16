@@ -1,6 +1,8 @@
 package com.gallopdevs.athanhelper.model
 
-class PrayerRepository(private val prayerTime: PrayerCalculator = PrayerCalculatorIpml) : PrayerRepo {
+class PrayerRepository(
+    private val prayerTime: PrayerCalculator = PrayerCalculatorIpml
+) : PrayerRepo {
 
     override fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String> =
         prayerTime.getPrayerTimesForDate(offset = pageIndex)

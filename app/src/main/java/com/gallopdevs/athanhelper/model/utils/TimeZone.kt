@@ -1,6 +1,6 @@
 package com.gallopdevs.athanhelper.model.utils
 
-import java.util.*
+import java.util.TimeZone
 
 // compute local time-zone for a specific date
 val timeZone1: Double = TimeZone.getDefault().rawOffset / 1000.0 / 3600

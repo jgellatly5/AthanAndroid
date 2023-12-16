@@ -1,6 +1,6 @@
 package com.gallopdevs.athanhelper.model.utils
 
-import java.util.*
+import java.util.Date
 import kotlin.math.floor
 
 // calculate julian date from a calendar date
