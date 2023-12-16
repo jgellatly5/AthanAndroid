@@ -2,6 +2,7 @@ package com.gallopdevs.athanhelper
 
 import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -19,17 +20,20 @@ class SettingsScreenTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun settingsOptionIsDisplayedWithTextPassedIntoIt() {
+    fun notificationsOptionIsDisplayedCorrectly() {
         val notifications = context.getString(R.string.notifications)
-        composeTestRule.setContent {
-            NotificationsOption()
-        }
-        composeTestRule
-            .onNodeWithText(notifications)
-            .assertIsDisplayed()
+        composeTestRule.apply {
+            setContent {
+                NotificationsOption(checked = false, onCheckedChange = {})
+            }
+            this.onNodeWithText(notifications)
+                .assertIsDisplayed()
 
-        composeTestRule
-            .onNodeWithContentDescription(notifications)
-            .assertIsDisplayed()
+            this.onNodeWithContentDescription(notifications)
+                .assertIsDisplayed()
+
+            this.onNode(isToggleable())
+                .assertIsDisplayed()
+        }
     }
 }

@@ -1,9 +1,12 @@
 package com.gallopdevs.athanhelper.compose
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.gallopdevs.athanhelper.R
 
 @Composable
-fun NotificationsOption() {
+private fun NotificationsLabel() {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -29,7 +32,7 @@ fun NotificationsOption() {
         )
         Text(
             text = stringResource(id = R.string.notifications),
-            modifier = Modifier.padding(top = 30.dp, bottom = 30.dp),
+            modifier = Modifier.padding(top = 30.dp, bottom = 30.dp, end = 30.dp),
             color = colorResource(id = R.color.colorPrimaryDark)
         )
     }
@@ -37,13 +40,36 @@ fun NotificationsOption() {
 
 @Preview(showBackground = true)
 @Composable
+private fun NotificationsLabelPreview() {
+    NotificationsLabel()
+}
+
+@Composable
+fun NotificationsOption(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        NotificationsLabel()
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            modifier = Modifier
+                .padding(end = 30.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 private fun NotificationsOptionPreview() {
-    NotificationsOption()
+    NotificationsOption(checked = false, onCheckedChange = {})
 }
 
 @Composable
 fun SettingsScreen() {
-    NotificationsOption()
+    NotificationsOption(checked = false, onCheckedChange = {})
 }
 
 @Preview(showBackground = true)
