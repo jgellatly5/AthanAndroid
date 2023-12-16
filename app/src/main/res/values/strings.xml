@@ -7,7 +7,7 @@
     <string name="sunset">Sunset</string>
     <string name="night">Night</string>
 
-    <string-array name="ui_names">
+    <string-array name="prayer_titles">
         <item>@string/dawn</item>
         <item>@string/mid_day</item>
         <item>@string/afternoon</item>
@@ -21,10 +21,10 @@
     <string name="day_placeholder">Monday, 03/17</string>
 
     <string name="dawn_time_placeholder">5:45</string>
-    <string name="midday_text_placeholder">12:20</string>
+    <string name="midday_time_placeholder">12:20</string>
     <string name="afternoon_time_placeholder">3:37</string>
     <string name="sunset_time_placeholder">6:07</string>
-    <string name="night_text_placeholder">7:07</string>
+    <string name="night_time_placeholder">7:07</string>
 
     <string name="postfix_am">am</string>
     <string name="postfix_pm">pm</string>

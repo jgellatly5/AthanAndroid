@@ -17,10 +17,10 @@ class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
         val month = c.get(Calendar.MONTH) + 1
 
         val bundle = Bundle().apply {
-            putInt("pageIndex", i)
-            putInt("day", day + i)
-            putInt("dayOfMonth", dayOfMonth + i)
-            putInt("month", month)
+            putInt(PAGE_INDEX, i)
+            putInt(DAY, day + i)
+            putInt(DAY_OF_MONTH, dayOfMonth + i)
+            putInt(MONTH, month)
         }
 
         fragment.arguments = bundle
@@ -31,5 +31,9 @@ class DayViewAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(
 
     companion object {
         private const val NUM_ITEMS = 7
+        const val PAGE_INDEX = "PAGE_INDEX"
+        const val DAY = "DAY"
+        const val DAY_OF_MONTH = "DAY_OF_MONTH"
+        const val MONTH = "MONTH"
     }
 }

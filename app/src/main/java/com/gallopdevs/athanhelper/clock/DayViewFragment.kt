@@ -10,9 +10,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.compose.DayViewScreen
-import com.gallopdevs.athanhelper.databinding.FragmentDayviewBinding
 
 class DayViewFragment : Fragment() {
 
@@ -26,7 +24,9 @@ class DayViewFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                DayViewScreen()
+                arguments?.getInt(DayViewAdapter.PAGE_INDEX)?.let {
+                    DayViewScreen(pageIndex = it)
+                }
             }
         }
     }
