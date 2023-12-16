@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -69,7 +73,8 @@ private fun NotificationsOptionPreview() {
 
 @Composable
 fun SettingsScreen() {
-    NotificationsOption(checked = false, onCheckedChange = {})
+    var checked by remember { mutableStateOf(false) }
+    NotificationsOption(checked = checked, onCheckedChange = { checked = !checked })
 }
 
 @Preview(showBackground = true)
