@@ -10,6 +10,8 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
+import com.gallopdevs.athanhelper.compose.ExpandableItem
+import com.gallopdevs.athanhelper.compose.ExpandableListItem
 import com.gallopdevs.athanhelper.compose.NotificationsOption
 import com.gallopdevs.athanhelper.compose.SettingsScreen
 import com.gallopdevs.athanhelper.settings.PreferencesManager
@@ -74,6 +76,25 @@ class SettingsScreenTest {
 
             this.onNode(isToggleable())
                 .assertIsOn()
+        }
+    }
+
+    @Test
+    fun calculationMethodsOptionIsDisplayedCorrectly() {
+        val calculationMethod = context.resources.getString(R.string.calculation_method)
+        val expandableItem = ExpandableItem(
+            title = calculationMethod,
+            drawableId = R.drawable.sum_icon
+        )
+        composeTestRule.apply {
+            setContent {
+                ExpandableListItem(expandableItem)
+            }
+            this.onNodeWithText(calculationMethod)
+                .assertIsDisplayed()
+
+            this.onNodeWithContentDescription(calculationMethod)
+                .assertIsDisplayed()
         }
     }
 }
