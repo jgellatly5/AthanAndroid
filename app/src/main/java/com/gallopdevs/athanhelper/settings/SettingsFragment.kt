@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import com.gallopdevs.athanhelper.compose.SettingsScreen
+import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 class SettingsFragment : Fragment() {
 
@@ -21,7 +22,9 @@ class SettingsFragment : Fragment() {
             setContent {
                 context?.let {
                     val preferencesManager = PreferencesManagerImpl(it)
-                    SettingsScreen(preferencesManager)
+                    AthanHelperTheme {
+                        SettingsScreen(preferencesManager)
+                    }
                 }
             }
         }

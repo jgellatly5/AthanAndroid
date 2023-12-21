@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import com.gallopdevs.athanhelper.compose.DayViewScreen
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 class DayViewFragment : Fragment() {
 
@@ -20,12 +21,14 @@ class DayViewFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 arguments?.apply {
-                    DayViewScreen(
-                        weekDay = arguments?.getInt(DayViewAdapter.WEEK_DAY),
-                        month = arguments?.getInt(DayViewAdapter.MONTH),
-                        dayOfMonth = arguments?.getInt(DayViewAdapter.DAY_OF_MONTH),
-                        pageIndex = getInt(DayViewAdapter.PAGE_INDEX)
-                    )
+                    AthanHelperTheme {
+                        DayViewScreen(
+                            weekDay = arguments?.getInt(DayViewAdapter.WEEK_DAY),
+                            month = arguments?.getInt(DayViewAdapter.MONTH),
+                            dayOfMonth = arguments?.getInt(DayViewAdapter.DAY_OF_MONTH),
+                            pageIndex = getInt(DayViewAdapter.PAGE_INDEX)
+                        )
+                    }
                 }
             }
         }

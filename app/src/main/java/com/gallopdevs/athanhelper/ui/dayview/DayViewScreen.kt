@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.compose
+package com.gallopdevs.athanhelper.ui.dayview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockViewModel
-import com.gallopdevs.athanhelper.compose.DayViewScreenConstants.DAY_VIEW_SCREEN
-import com.gallopdevs.athanhelper.compose.DayViewScreenConstants.NEXT_PRAYER
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.NEXT_PRAYER
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 @Composable
 private fun DayOfWeekPlusDateHeader(
@@ -46,9 +47,11 @@ private fun DayOfWeekPlusDateHeader(
 @Preview(showBackground = true)
 @Composable
 private fun DayOfWeekPlusDateHeaderPreview() {
-    DayOfWeekPlusDateHeader(
-        dayOfWeekPlusDate = stringResource(id = R.string.day_placeholder)
-    )
+    AthanHelperTheme {
+        DayOfWeekPlusDateHeader(
+            dayOfWeekPlusDate = stringResource(id = R.string.day_placeholder)
+        )
+    }
 }
 
 @Composable
@@ -79,10 +82,12 @@ fun PrayerName(
 @Preview(showBackground = true)
 @Composable
 private fun PrayerNamePreview() {
-    PrayerName(
-        prayerTitle = stringResource(id = R.string.dawn),
-        showHighlighted = true
-    )
+    AthanHelperTheme {
+        PrayerName(
+            prayerTitle = stringResource(id = R.string.dawn),
+            showHighlighted = true
+        )
+    }
 }
 
 @Composable
@@ -107,10 +112,12 @@ private fun PrayerTime(
 @Preview(showBackground = true)
 @Composable
 private fun PrayerTimePreview() {
-    PrayerTime(
-        prayerTime = stringResource(id = R.string.dawn_time_placeholder),
-        prayerTimePostFix = stringResource(id = R.string.postfix_am)
-    )
+    AthanHelperTheme {
+        PrayerTime(
+            prayerTime = stringResource(id = R.string.dawn_time_placeholder),
+            prayerTimePostFix = stringResource(id = R.string.postfix_am)
+        )
+    }
 }
 
 @Composable
@@ -152,12 +159,14 @@ private fun PrayerRow(
 @Preview(showBackground = true)
 @Composable
 private fun PrayerRowPreview() {
-    PrayerRow(
-        prayerTitle = stringResource(id = R.string.dawn),
-        prayerTime = stringResource(id = R.string.dawn_time_placeholder),
-        prayerTimePostFix = stringResource(id = R.string.postfix_am),
-        showHighlighted = true
-    )
+    AthanHelperTheme {
+        PrayerRow(
+            prayerTitle = stringResource(id = R.string.dawn),
+            prayerTime = stringResource(id = R.string.dawn_time_placeholder),
+            prayerTimePostFix = stringResource(id = R.string.postfix_am),
+            showHighlighted = true
+        )
+    }
 }
 
 @Composable

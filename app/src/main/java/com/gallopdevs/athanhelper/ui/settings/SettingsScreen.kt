@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.compose
+package com.gallopdevs.athanhelper.ui.settings
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.settings.PreferencesManager
 import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 @Composable
 private fun SettingsLabel(settingsIcon: Painter, settingsHeader: String) {
@@ -58,10 +60,12 @@ private fun SettingsLabel(settingsIcon: Painter, settingsHeader: String) {
 @Preview(showBackground = true)
 @Composable
 private fun SettingsLabelPreview() {
-    SettingsLabel(
-        settingsIcon = painterResource(id = R.drawable.bell_icon),
-        settingsHeader = stringResource(id = R.string.notifications)
-    )
+    AthanHelperTheme {
+        SettingsLabel(
+            settingsIcon = painterResource(id = R.drawable.bell_icon),
+            settingsHeader = stringResource(id = R.string.notifications)
+        )
+    }
 }
 
 @Composable
@@ -87,7 +91,9 @@ fun NotificationsOption(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun NotificationsOptionPreview() {
-    NotificationsOption(checked = false, onCheckedChange = {})
+    AthanHelperTheme {
+        NotificationsOption(checked = false, onCheckedChange = {})
+    }
 }
 
 data class ExpandableItem(
@@ -108,9 +114,11 @@ fun ExpandableListItem(item: ExpandableItem) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.clickable {
-                isExpanded = !isExpanded
-            }
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    isExpanded = !isExpanded
+                }
         ) {
             SettingsLabel(
                 settingsIcon = painterResource(id = item.drawableId),
@@ -122,7 +130,7 @@ fun ExpandableListItem(item: ExpandableItem) {
                 tint = MaterialTheme.colors.primary
             )
         }
-
+        Divider()
         if (isExpanded) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Additional content goes here...")
@@ -156,7 +164,9 @@ fun ExpandableListPreview() {
             drawableId = R.drawable.compass_icon
         )
     )
-    ExpandableList(items = expandableItems)
+    AthanHelperTheme {
+        ExpandableList(items = expandableItems)
+    }
 }
 
 @Composable

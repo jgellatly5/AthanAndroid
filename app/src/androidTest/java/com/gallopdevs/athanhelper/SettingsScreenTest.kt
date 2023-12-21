@@ -10,10 +10,10 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
-import com.gallopdevs.athanhelper.compose.ExpandableItem
-import com.gallopdevs.athanhelper.compose.ExpandableListItem
-import com.gallopdevs.athanhelper.compose.NotificationsOption
-import com.gallopdevs.athanhelper.compose.SettingsScreen
+import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
+import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
+import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
+import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import com.gallopdevs.athanhelper.settings.PreferencesManager
 import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import org.junit.Rule
