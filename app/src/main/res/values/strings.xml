@@ -68,7 +68,7 @@
         <item>Hanafi</item>
     </string-array>
 
-    <string-array name="latitudes_method">
+    <string-array name="latitudes_methods">
         <item>None</item>
         <item>MidNight</item>
         <item>One/Seventh</item>
