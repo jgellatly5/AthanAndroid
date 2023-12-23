@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,20 +52,19 @@ class ClockViewModel @Inject constructor(
 
     fun setTimeFormat() = prayerRepo.setTimeFormat()
 
-    fun formatDate(
-        weekDayArg: Int,
-        monthArg: Int,
-        dayOfMonthArg: Int,
-    ): String {
-        val dayOfMonthString = dayOfMonthArg.toString()
+    fun formatDate(pageIndex: Int): String {
+        val c = Calendar.getInstance()
+        var weekDay = c.get(Calendar.DAY_OF_WEEK) + pageIndex
+        val month = c.get(Calendar.MONTH) + 1
+        val dayOfMonth = c.get(Calendar.DAY_OF_MONTH) + pageIndex
+        val dayOfMonthString = dayOfMonth.toString()
 
-        val monthString = if (monthArg < 10) {
-            "0$monthArg"
+        val monthString = if (month < 10) {
+            "0$month"
         } else {
-            monthArg.toString()
+            month.toString()
         }
 
-        var weekDay = weekDayArg
         if (weekDay >= 8) {
             weekDay -= 7
         }
@@ -79,7 +79,7 @@ class ClockViewModel @Inject constructor(
             else -> "This is not a day"
         }
 
-        return if (dayOfMonthArg < 10) {
+        return if (dayOfMonth < 10) {
             "$weekDayString, $monthString/0$dayOfMonthString"
         } else {
             "$weekDayString, $monthString/$dayOfMonthString"

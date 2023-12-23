@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.ui.clock
+package com.gallopdevs.athanhelper.ui.dayview
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,9 +24,6 @@ class DayViewFragment : Fragment() {
                 arguments?.apply {
                     AthanHelperTheme {
                         DayViewScreen(
-                            weekDay = arguments?.getInt(DayViewAdapter.WEEK_DAY),
-                            month = arguments?.getInt(DayViewAdapter.MONTH),
-                            dayOfMonth = arguments?.getInt(DayViewAdapter.DAY_OF_MONTH),
                             pageIndex = getInt(DayViewAdapter.PAGE_INDEX)
                         )
                     }

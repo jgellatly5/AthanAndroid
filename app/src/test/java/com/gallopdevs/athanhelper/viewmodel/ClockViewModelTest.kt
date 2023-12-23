@@ -29,4 +29,13 @@ class ClockViewModelTest {
         testObject = ClockViewModel(mockPrayerRepo)
         assertEquals(expectedNextTimeIndex, testObject.getNextTimeIndex())
     }
+
+    @Test
+    fun format_date_successful() {
+//        val expectedFormatDate = "Saturday, December 23"
+//        whenever(mockPrayerRepo.format()).thenReturn(expectedformatDate)
+//
+//        testObject = ClockViewModel(mockPrayerRepo)
+//        assertEquals(expectedformatDate, testObject.getNextTimeIndex())
+    }
 }

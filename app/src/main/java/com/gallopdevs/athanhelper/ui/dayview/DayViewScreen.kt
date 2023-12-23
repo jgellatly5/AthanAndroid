@@ -12,9 +12,6 @@ import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCR
 
 @Composable
 fun DayViewScreen(
-    weekDay: Int?,
-    month: Int?,
-    dayOfMonth: Int?,
     pageIndex: Int?,
     clockViewModel: ClockViewModel = viewModel()
 ) {
@@ -23,17 +20,11 @@ fun DayViewScreen(
         modifier = Modifier
             .testTag(DAY_VIEW_SCREEN)
     ) {
-        if (weekDay != null && month != null && dayOfMonth != null) {
-            DayOfWeekPlusDateHeader(
-                dayOfWeekPlusDate = clockViewModel.formatDate(
-                    weekDay,
-                    month,
-                    dayOfMonth
-                )
-            )
-        }
         val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
         pageIndex?.let {
+            DayOfWeekPlusDateHeader(
+                dayOfWeekPlusDate = clockViewModel.formatDate(it)
+            )
             val prayerTimes = clockViewModel.formatTimes(it)
             val nextTimeIndex = clockViewModel.getNextTimeIndex()
             for (i in prayerTimes.indices) {

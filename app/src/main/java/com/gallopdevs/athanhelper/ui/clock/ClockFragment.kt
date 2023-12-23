@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
 import com.gallopdevs.athanhelper.MainActivity
+import com.gallopdevs.athanhelper.ui.dayview.DayViewAdapter
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
