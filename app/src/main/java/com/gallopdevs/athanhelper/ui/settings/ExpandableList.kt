@@ -4,9 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
@@ -68,13 +66,32 @@ fun ExpandableListItem(item: ExpandableItem) {
         }
         Divider()
         if (isExpanded) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Column {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
                 for (option in item.options) {
-                    Text(text = option)
+                    Text(
+                        text = option,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ExpandableListItemPreview() {
+    AthanHelperTheme {
+        ExpandableListItem(
+            item = ExpandableItem(
+                title = stringResource(id = R.string.calculation_method),
+                drawableId = R.drawable.sum_icon,
+                options = stringArrayResource(id = R.array.calculation_methods).toList(),
+                isExpanded = true
+            )
+        )
     }
 }
 
