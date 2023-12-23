@@ -5,8 +5,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.ClockViewModel
@@ -14,18 +14,18 @@ import com.gallopdevs.athanhelper.databinding.ActivityMainBinding
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
 import com.gallopdevs.athanhelper.settings.SettingsFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: ClockViewModel
+    private val clockViewModel: ClockViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).apply {
             setContentView(root)
-
-            viewModel = ViewModelProvider(this@MainActivity)[ClockViewModel::class.java]
 
             createNotificationChannel()
             loadSettings()
@@ -41,8 +41,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             TabLayoutMediator(tabLayoutActivity, viewPagerActivity, true) { _, _ -> }.attach()
-            tabLayoutActivity.getTabAt(0)?.setIcon(R.drawable.clock_icon)
-            tabLayoutActivity.getTabAt(1)?.setIcon(R.drawable.settings_icon)
+            tabLayoutActivity.apply {
+                getTabAt(0)?.setIcon(R.drawable.clock_icon)
+                getTabAt(1)?.setIcon(R.drawable.settings_icon)
+            }
         }
     }
 
@@ -59,16 +61,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSettings() {
-        val sharedPreferences = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        viewModel.setCalculations(
-            calcMethod = sharedPreferences.getInt("calcMethod", PrayerCalculatorIpml.calcMethod),
-            asrJuristic = sharedPreferences.getInt("asrMethod", PrayerCalculatorIpml.asrJuristic),
-            adjustHighLats = sharedPreferences.getInt(
-                "latitudes",
-                PrayerCalculatorIpml.adjustHighLats
+        getSharedPreferences("settings", Context.MODE_PRIVATE).apply {
+            clockViewModel.setCalculations(
+                calcMethod = getInt("calcMethod", PrayerCalculatorIpml.jafari),
+                asrJuristic = getInt("asrMethod", PrayerCalculatorIpml.shafii),
+                adjustHighLats = getInt("latitudes", PrayerCalculatorIpml.midNight)
             )
-        )
-        // TODO add setting for adjusting time format
+            // TODO add setting for adjusting time format
+        }
     }
 
     companion object {

@@ -1,7 +1,9 @@
 package com.gallopdevs.athanhelper.model
 
-class PrayerRepository(
-    private val prayerCalculator: PrayerCalculator = PrayerCalculatorIpml
+import javax.inject.Inject
+
+class PrayerRepository @Inject constructor(
+    private val prayerCalculator: PrayerCalculator
 ) : PrayerRepo {
 
     override fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String> =

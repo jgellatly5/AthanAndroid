@@ -14,10 +14,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
@@ -25,18 +27,21 @@ import com.gallopdevs.athanhelper.home.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+@AndroidEntryPoint
 class ClockFragment : Fragment() {
 
     private var _binding: FragmentClockBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private lateinit var viewModel: ClockViewModel
     private lateinit var dayViewAdapter: DayViewAdapter
+
+    private val clockViewModel: ClockViewModel by viewModels()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -72,8 +77,6 @@ class ClockFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[ClockViewModel::class.java]
-
         getLocation()
 
         dayViewAdapter = DayViewAdapter(requireActivity())
@@ -104,15 +107,15 @@ class ClockFragment : Fragment() {
             mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 binding.apply {
                     if (location != null) {
-                        viewModel.setLocation(location.latitude, location.longitude)
+                        clockViewModel.setLocation(location.latitude, location.longitude)
 
                         progressBar.visibility = ProgressBar.INVISIBLE
                         moonIcon.visibility = ImageView.VISIBLE
                         prayerTimerText.visibility = TextView.VISIBLE
                         nextPrayerText.visibility = TextView.VISIBLE
 
-                        viewModel.startNewTimer()
-                        viewModel.timerCountDown.observe(viewLifecycleOwner) {
+                        clockViewModel.startNewTimer()
+                        clockViewModel.timerCountDown.observe(viewLifecycleOwner) {
                             if (!it.equals(0L)) {
                                 val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
                                 offset.timeZone = TimeZone.getTimeZone("GMT")
@@ -157,7 +160,7 @@ class ClockFragment : Fragment() {
         val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
             .setSmallIcon(R.drawable.moon)
             .setContentTitle("Athan")
-            .setContentText("Next prayer time: ${viewModel.getNextPrayerName()}")
+            .setContentText("Next prayer time: ${clockViewModel.getNextPrayerName()}")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)

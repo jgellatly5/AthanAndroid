@@ -1,7 +1,6 @@
 package com.gallopdevs.athanhelper.model.utils
 
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.jDate
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.lat
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
 import kotlin.math.abs
 
 // References:
@@ -34,13 +33,13 @@ fun equationOfTime(jd: Double): Double = sunPosition(jd)[1]
 fun sunDeclination(jd: Double): Double = sunPosition(jd)[0]
 
 // compute mid-day (Dhuhr, Zawal) time
-fun computeMidDay(t: Double): Double {
+fun PrayerCalculatorIpml.computeMidDay(t: Double): Double {
     val time = equationOfTime(jDate + t)
     return fixHour(12 - time)
 }
 
 // compute time for a given angle G
-fun computeTime(G: Double, t: Double): Double {
+fun PrayerCalculatorIpml.computeTime(G: Double, t: Double): Double {
     val D = sunDeclination(jDate + t)
     val Z = computeMidDay(t)
     val Beg = -degreeSin(G) - degreeSin(D) * degreeSin(lat)
@@ -51,7 +50,7 @@ fun computeTime(G: Double, t: Double): Double {
 
 // compute the time of Asr
 // Shafii: step=1, Hanafi: step=2
-fun computeAsr(step: Double, t: Double): Double {
+fun PrayerCalculatorIpml.computeAsr(step: Double, t: Double): Double {
     val D = sunDeclination(jDate + t)
     val G = -degreeArccot(step + degreeTan(abs(lat - D)))
     return computeTime(G, t)

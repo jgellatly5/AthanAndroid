@@ -6,6 +6,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import javax.inject.Inject
 
 //--------------------- Copyright Block ----------------------
 /*
@@ -31,7 +32,7 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 
 */
 
-object PrayerCalculatorIpml : PrayerCalculator {
+class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
 
     private val calendar = Calendar.getInstance()
     private val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
@@ -49,51 +50,8 @@ object PrayerCalculatorIpml : PrayerCalculator {
     var adjustHighLats = 1
     var timeFormat = 0
 
-    // Juristic Methods
-    val shafii = 0 // Shafii (standard)
-    val hanafi = 1 // Hanafi
-
-    // Calculation Methods
-    const val jafari = 0 // Ithna Ashari
-    const val karachi = 1 // University of Islamic Sciences, Karachi
-    const val iSNA = 2 // Islamic Society of North America (ISNA)
-    const val mWL = 3 // Muslim World League (MWL)
-    const val makkah = 4 // Umm al-Qura, Makkah
-    const val egypt = 5 // Egyptian General Authority of Survey
-    const val tehran = 6 // Institute of Geophysics, University of Tehran
-    var custom = 7 // Custom Setting
-
-    // Adjusting Methods for Higher Latitudes
-    const val none = 0
-    const val midNight = 1 // middle of night
-    const val oneSeventh = 2 // 1/7th of night
-    const val angleBased = 3 // angle/60th of night
-
-    // Time Formats
-    const val time24 = 0 // 24-hour format
-    const val time12 = 1 // 12-hour format
-    const val time12NS = 2 // 12-hour format with no suffix
-    const val floating = 3 // floating point number
-
     // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}
     val offsets = IntArray(7) { 0 }
-
-    /*
-     * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after
-     * sunset) mv : maghrib parameter value (in angle or minutes) is : isha
-     * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter
-     * value (in angle or minutes)
-     */
-    val methodParams: HashMap<Int, DoubleArray> = hashMapOf(
-        jafari to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
-        karachi to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0),
-        iSNA to doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0),
-        mWL to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0),
-        makkah to doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0),
-        egypt to doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5),
-        tehran to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
-        custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
-    )
 
     // return prayer times for a given date
     override fun getPrayerTimesForDate(offset: Int): ArrayList<String> {
@@ -186,6 +144,51 @@ object PrayerCalculatorIpml : PrayerCalculator {
             }
         }
         return differences[nextTimeIndex]
+    }
+
+    companion object {
+        // Juristic Methods
+        const val shafii = 0 // Shafii (standard)
+        const val hanafi = 1 // Hanafi
+
+        // Calculation Methods
+        const val jafari = 0 // Ithna Ashari
+        const val karachi = 1 // University of Islamic Sciences, Karachi
+        const val iSNA = 2 // Islamic Society of North America (ISNA)
+        const val mWL = 3 // Muslim World League (MWL)
+        const val makkah = 4 // Umm al-Qura, Makkah
+        const val egypt = 5 // Egyptian General Authority of Survey
+        const val tehran = 6 // Institute of Geophysics, University of Tehran
+        var custom = 7 // Custom Setting
+
+        // Adjusting Methods for Higher Latitudes
+        const val none = 0
+        const val midNight = 1 // middle of night
+        const val oneSeventh = 2 // 1/7th of night
+        const val angleBased = 3 // angle/60th of night
+
+        // Time Formats
+        const val time24 = 0 // 24-hour format
+        const val time12 = 1 // 12-hour format
+        const val time12NS = 2 // 12-hour format with no suffix
+        const val floating = 3 // floating point number
+
+        /*
+         * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after
+         * sunset) mv : maghrib parameter value (in angle or minutes) is : isha
+         * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter
+         * value (in angle or minutes)
+         */
+        val methodParams: HashMap<Int, DoubleArray> = hashMapOf(
+            jafari to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
+            karachi to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0),
+            iSNA to doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0),
+            mWL to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0),
+            makkah to doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0),
+            egypt to doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5),
+            tehran to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
+            custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
+        )
     }
 }
 

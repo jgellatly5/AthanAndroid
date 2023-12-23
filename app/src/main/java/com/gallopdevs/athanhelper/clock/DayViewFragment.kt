@@ -9,7 +9,9 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DayViewFragment : Fragment() {
 
     override fun onCreateView(

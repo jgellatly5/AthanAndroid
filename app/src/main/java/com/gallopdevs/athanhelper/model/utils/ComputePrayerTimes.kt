@@ -1,9 +1,17 @@
 package com.gallopdevs.athanhelper.model.utils
 
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.angleBased
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.floating
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.methodParams
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.midNight
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.none
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.oneSeventh
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.time12
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.time12NS
 
 // compute prayer times at given julian date
-fun computeDayTimes(): ArrayList<String> {
+fun PrayerCalculatorIpml.computeDayTimes(): ArrayList<String> {
     // default times
     var times = doubleArrayOf(5.0, 6.0, 12.0, 13.0, 18.0, 18.0, 18.0)
     times = computeTimes(times)
@@ -13,20 +21,20 @@ fun computeDayTimes(): ArrayList<String> {
 }
 
 // compute prayer times at given julian date
-fun computeTimes(times: DoubleArray): DoubleArray {
+fun PrayerCalculatorIpml.computeTimes(times: DoubleArray): DoubleArray {
     val t = dayPortion(times)
     val fajr = computeTime(
-        180 - PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![0],
+        180 - methodParams[calcMethod]!![0],
         t[0]
     )
     val sunrise = computeTime(180 - 0.833, t[1])
     val dhuhr = computeMidDay(t[2])
-    val asr = computeAsr(1 + PrayerCalculatorIpml.asrJuristic.toDouble(), t[3])
+    val asr = computeAsr(1 + asrJuristic.toDouble(), t[3])
     val sunset = computeTime(0.833, t[4])
     val maghrib =
-        computeTime(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![2], t[5])
+        computeTime(methodParams[calcMethod]!![2], t[5])
     val isha =
-        computeTime(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![4], t[6])
+        computeTime(methodParams[calcMethod]!![4], t[6])
     return doubleArrayOf(fajr, sunrise, dhuhr, asr, sunset, maghrib, isha)
 }
 
@@ -39,24 +47,22 @@ fun dayPortion(times: DoubleArray): DoubleArray {
 }
 
 // adjust times in a prayer time array
-fun adjustTimes(t: DoubleArray): DoubleArray {
+fun PrayerCalculatorIpml.adjustTimes(t: DoubleArray): DoubleArray {
     var times = t
     for (i in times.indices) {
-        times[i] += PrayerCalculatorIpml.timeZone - PrayerCalculatorIpml.lng / 15
+        times[i] += timeZone - lng / 15
     }
     // Dhuhr
-    times[2] = times[2] + PrayerCalculatorIpml.dhuhrMinutes / 60
+    times[2] = times[2] + dhuhrMinutes / 60
     // Maghrib
-    if (PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![1].equals(1.0)) {
-        times[5] =
-            times[4] + PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![2] / 60
+    if (methodParams[calcMethod]!![1].equals(1.0)) {
+        times[5] = times[4] + methodParams[calcMethod]!![2] / 60
     }
     // Isha
-    if (PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![3].equals(1.0)) {
-        times[6] =
-            times[5] + PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![4] / 60
+    if (methodParams[calcMethod]!![3].equals(1.0)) {
+        times[6] = times[5] + methodParams[calcMethod]!![4] / 60
     }
-    if (PrayerCalculatorIpml.adjustHighLats != PrayerCalculatorIpml.none) {
+    if (adjustHighLats != none) {
         times = adjustHighLatTimes(times)
     }
     return times
@@ -64,19 +70,19 @@ fun adjustTimes(t: DoubleArray): DoubleArray {
 
 
 // adjust Fajr, Isha and Maghrib for locations in higher latitudes
-fun adjustHighLatTimes(times: DoubleArray): DoubleArray {
+fun PrayerCalculatorIpml.adjustHighLatTimes(times: DoubleArray): DoubleArray {
     val nightTime = timeDiff(times[4], times[1]) // sunset to sunrise
 
     // Adjust Fajr
     val fajrDiff =
-        nightPortion(PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![0]) * nightTime
+        nightPortion(methodParams[calcMethod]!![0]) * nightTime
     if (java.lang.Double.isNaN(times[0]) || timeDiff(times[0], times[1]) > fajrDiff) {
         times[0] = times[1] - fajrDiff
     }
 
     // Adjust Isha
     val ishaAngle: Double =
-        if (PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![3].equals(0.0)) PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![4] else 18.0
+        if (methodParams[calcMethod]!![3].equals(0.0)) methodParams[calcMethod]!![4] else 18.0
     val ishaDiff = nightPortion(ishaAngle) * nightTime
     if (java.lang.Double.isNaN(times[6]) || timeDiff(times[4], times[6]) > ishaDiff) {
         times[6] = times[4] + ishaDiff
@@ -84,7 +90,7 @@ fun adjustHighLatTimes(times: DoubleArray): DoubleArray {
 
     // Adjust Maghrib
     val maghribAngle: Double =
-        if (PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![1].equals(0.0)) PrayerCalculatorIpml.methodParams[PrayerCalculatorIpml.calcMethod]!![2] else 4.0
+        if (methodParams[calcMethod]!![1].equals(0.0)) methodParams[calcMethod]!![2] else 4.0
     val maghribDiff = nightPortion(maghribAngle) * nightTime
     if (java.lang.Double.isNaN(times[5]) || timeDiff(times[4], times[5]) > maghribDiff) {
         times[5] = times[4] + maghribDiff
@@ -93,32 +99,32 @@ fun adjustHighLatTimes(times: DoubleArray): DoubleArray {
 }
 
 // the night portion used for adjusting times in higher latitudes
-fun nightPortion(angle: Double): Double {
+fun PrayerCalculatorIpml.nightPortion(angle: Double): Double {
     var calc = 0.0
-    when (PrayerCalculatorIpml.adjustHighLats) {
-        PrayerCalculatorIpml.angleBased -> calc = angle / 60.0
-        PrayerCalculatorIpml.midNight -> calc = 0.5
-        PrayerCalculatorIpml.oneSeventh -> calc = 0.14286
+    when (adjustHighLats) {
+        angleBased -> calc = angle / 60.0
+        midNight -> calc = 0.5
+        oneSeventh -> calc = 0.14286
     }
     return calc
 }
 
 // convert times array to given time format
-fun adjustTimesFormat(times: DoubleArray): ArrayList<String> {
+fun PrayerCalculatorIpml.adjustTimesFormat(times: DoubleArray): ArrayList<String> {
     val result = ArrayList<String>()
-    if (PrayerCalculatorIpml.timeFormat == PrayerCalculatorIpml.floating) {
+    if (timeFormat == floating) {
         for (time in times) {
             result.add(time.toString())
         }
         return result
     }
     for (i in 0..6) {
-        when (PrayerCalculatorIpml.timeFormat) {
-            PrayerCalculatorIpml.time12 -> {
+        when (timeFormat) {
+            time12 -> {
                 result.add(floatToTime12(times[i], false))
             }
 
-            PrayerCalculatorIpml.time12NS -> {
+            time12NS -> {
                 result.add(floatToTime12(times[i], true))
             }
 
@@ -132,19 +138,19 @@ fun adjustTimesFormat(times: DoubleArray): ArrayList<String> {
 
 // Tune timings for adjustments
 // Set time offsets
-fun tune(offsetTimes: IntArray) {
+fun PrayerCalculatorIpml.tune(offsetTimes: IntArray) {
     for (i in offsetTimes.indices) { // offsetTimes length
         // should be 7 in order
         // of Fajr, Sunrise,
         // Dhuhr, Asr, Sunset,
         // Maghrib, Isha
-        PrayerCalculatorIpml.offsets[i] = offsetTimes[i]
+        offsets[i] = offsetTimes[i]
     }
 }
 
-fun tuneTimes(times: DoubleArray): DoubleArray {
+fun PrayerCalculatorIpml.tuneTimes(times: DoubleArray): DoubleArray {
     for (i in times.indices) {
-        times[i] = times[i] + PrayerCalculatorIpml.offsets[i] / 60.0
+        times[i] = times[i] + offsets[i] / 60.0
     }
     return times
 }

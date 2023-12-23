@@ -6,8 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gallopdevs.athanhelper.model.PrayerRepo
 import com.gallopdevs.athanhelper.model.PrayerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ClockViewModel(private val prayerRepo: PrayerRepo = PrayerRepository()) : ViewModel() {
+@HiltViewModel
+class ClockViewModel @Inject constructor(
+    private val prayerRepo: PrayerRepo
+) : ViewModel() {
 
     private var timer: CountDownTimer? = null
     private var isFinished: Boolean = true

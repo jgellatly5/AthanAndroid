@@ -70,20 +70,20 @@ class CustomELVAdapter(
             selectionIndicator?.visibility = View.VISIBLE
             val editor = sharedPreferences?.edit()
             when (groupPosition) {
-                0 -> {
-                    PrayerCalculatorIpml.calcMethod = childPosition
-                    editor?.putInt("calcMethod", childPosition)
-                }
-
-                1 -> {
-                    PrayerCalculatorIpml.asrJuristic = childPosition
-                    editor?.putInt("asrMethod", childPosition)
-                }
-
-                2 -> {
-                    PrayerCalculatorIpml.adjustHighLats = childPosition
-                    editor?.putInt("latitudes", childPosition)
-                }
+//                0 -> {
+//                    PrayerCalculatorIpml.calcMethod = childPosition
+//                    editor?.putInt("calcMethod", childPosition)
+//                }
+//
+//                1 -> {
+//                    PrayerCalculatorIpml.asrJuristic = childPosition
+//                    editor?.putInt("asrMethod", childPosition)
+//                }
+//
+//                2 -> {
+//                    PrayerCalculatorIpml.adjustHighLats = childPosition
+//                    editor?.putInt("latitudes", childPosition)
+//                }
             }
             editor?.apply()
             lastChildPosition = childPosition
