@@ -1,5 +1,6 @@
-package com.gallopdevs.athanhelper.model
+package com.gallopdevs.athanhelper.repository
 
+import com.gallopdevs.athanhelper.model.PrayerCalculator
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.kotlin.mock

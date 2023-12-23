@@ -1,23 +1,23 @@
-package com.gallopdevs.athanhelper.home
+package com.gallopdevs.athanhelper
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.clock.ClockFragment
-import com.gallopdevs.athanhelper.clock.ClockViewModel
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.gallopdevs.athanhelper.ui.clock.ClockFragment
+import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.gallopdevs.athanhelper.databinding.ActivityMainBinding
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
-import com.gallopdevs.athanhelper.settings.PreferencesManager
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.ASR_METHOD
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.CALCULATION_METHOD
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.LATITUDES
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.SETTINGS
-import com.gallopdevs.athanhelper.settings.SettingsFragment
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ASR_METHOD
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.CALCULATION_METHOD
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.LATITUDES
+import com.gallopdevs.athanhelper.ui.settings.SettingsFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -83,4 +83,17 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val CHANNEL_ID = "NOTIFICATION"
     }
+}
+
+class MainActivityPagerAdapter(
+    fragmentActivity: FragmentActivity
+) : FragmentStateAdapter(fragmentActivity) {
+
+    private val fragmentList = ArrayList<Fragment>()
+
+    override fun createFragment(position: Int): Fragment = fragmentList[position]
+
+    override fun getItemCount(): Int = fragmentList.size
+
+    fun addFrag(fragment: Fragment) = fragmentList.add(fragment)
 }

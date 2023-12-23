@@ -9,8 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.settings.PreferencesManager
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.SETTINGS
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.SETTINGS
 
 @Composable
 fun SettingsScreen(preferencesManager: PreferencesManager) {

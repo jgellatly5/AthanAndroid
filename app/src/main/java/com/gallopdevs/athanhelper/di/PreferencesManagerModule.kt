@@ -1,7 +1,7 @@
 package com.gallopdevs.athanhelper.di
 
-import com.gallopdevs.athanhelper.settings.PreferencesManager
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

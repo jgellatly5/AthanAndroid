@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.clock
+package com.gallopdevs.athanhelper.ui.clock
 
 import android.Manifest
 import android.app.PendingIntent
@@ -14,16 +14,15 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
-import com.gallopdevs.athanhelper.home.MainActivity
+import com.gallopdevs.athanhelper.MainActivity
+import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator

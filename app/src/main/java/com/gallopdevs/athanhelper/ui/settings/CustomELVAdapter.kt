@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.settings
+package com.gallopdevs.athanhelper.ui.settings
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -14,8 +14,8 @@ import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
 import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
 import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
-import com.gallopdevs.athanhelper.settings.PreferencesManager
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.SETTINGS
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.SETTINGS
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock

@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".home.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>

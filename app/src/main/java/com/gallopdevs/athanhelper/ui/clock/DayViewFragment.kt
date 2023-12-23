@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.clock
+package com.gallopdevs.athanhelper.ui.clock
 
 import android.os.Bundle
 import android.view.LayoutInflater

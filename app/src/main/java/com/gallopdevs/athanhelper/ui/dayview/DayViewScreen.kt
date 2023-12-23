@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringArrayResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.clock.ClockViewModel
+import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
 
 @Composable

@@ -1,11 +1,10 @@
-package com.gallopdevs.athanhelper.clock
+package com.gallopdevs.athanhelper.viewmodel
 
 import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gallopdevs.athanhelper.model.PrayerRepo
-import com.gallopdevs.athanhelper.model.PrayerRepository
+import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
