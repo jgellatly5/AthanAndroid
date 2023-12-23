@@ -37,8 +37,6 @@ class ClockViewModel @Inject constructor(
         }
     }
 
-    private fun getPrayerTimesForDate(pageIndex: Int) = prayerRepo.getPrayerTimesForDate(pageIndex)
-
     private fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
     fun getNextPrayerName() = prayerRepo.getNextPrayerName()
@@ -116,4 +114,6 @@ class ClockViewModel @Inject constructor(
             splitNightTime
         )
     }
+
+    private fun getPrayerTimesForDate(pageIndex: Int) = prayerRepo.getPrayerTimesForDate(pageIndex)
 }
