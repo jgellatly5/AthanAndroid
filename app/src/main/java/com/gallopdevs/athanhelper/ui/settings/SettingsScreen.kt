@@ -10,12 +10,12 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.settings.PreferencesManager
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.SETTINGS
 
 @Composable
 fun SettingsScreen(preferencesManager: PreferencesManager) {
     var isChecked by remember {
-        mutableStateOf(preferencesManager.getData(ENABLE_NOTIFICATIONS, false))
+        mutableStateOf(preferencesManager.getBoolean(SETTINGS, false))
     }
     val expandableItems = listOf(
         ExpandableItem(
@@ -39,7 +39,7 @@ fun SettingsScreen(preferencesManager: PreferencesManager) {
             checked = isChecked,
             onCheckedChange = { enableNotifications ->
                 isChecked = enableNotifications
-                preferencesManager.saveData(ENABLE_NOTIFICATIONS, enableNotifications)
+                preferencesManager.saveBoolean(SETTINGS, enableNotifications)
             }
         )
         ExpandableList(items = expandableItems)

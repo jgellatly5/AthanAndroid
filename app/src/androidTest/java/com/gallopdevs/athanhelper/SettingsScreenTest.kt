@@ -15,7 +15,7 @@ import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
 import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import com.gallopdevs.athanhelper.settings.PreferencesManager
-import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.SETTINGS
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
@@ -52,7 +52,7 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchTogglesOnAndOff() {
-        whenever(preferencesManager.getData(ENABLE_NOTIFICATIONS, false)).thenReturn(false)
+        whenever(preferencesManager.getBoolean(SETTINGS, false)).thenReturn(false)
         composeTestRule.apply {
             setContent {
                 SettingsScreen(preferencesManager)
@@ -68,7 +68,7 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchIsOnIfSharedPrefsTrue() {
-        whenever(preferencesManager.getData(ENABLE_NOTIFICATIONS, false)).thenReturn(true)
+        whenever(preferencesManager.getBoolean(SETTINGS, false)).thenReturn(true)
         composeTestRule.apply {
             setContent {
                 SettingsScreen(preferencesManager)
@@ -82,9 +82,11 @@ class SettingsScreenTest {
     @Test
     fun calculationMethodsOptionIsDisplayedCorrectly() {
         val calculationMethod = context.resources.getString(R.string.calculation_method)
+        val calculationMethodOptions = context.resources.getStringArray(R.array.calculation_methods).toList()
         val expandableItem = ExpandableItem(
             title = calculationMethod,
-            drawableId = R.drawable.sum_icon
+            drawableId = R.drawable.sum_icon,
+            options = calculationMethodOptions
         )
         composeTestRule.apply {
             setContent {

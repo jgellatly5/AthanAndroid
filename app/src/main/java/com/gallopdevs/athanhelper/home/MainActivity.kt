@@ -12,15 +12,24 @@ import com.gallopdevs.athanhelper.clock.ClockFragment
 import com.gallopdevs.athanhelper.clock.ClockViewModel
 import com.gallopdevs.athanhelper.databinding.ActivityMainBinding
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
+import com.gallopdevs.athanhelper.settings.PreferencesManager
+import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.ASR_METHOD
+import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.CALCULATION_METHOD
+import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.LATITUDES
+import com.gallopdevs.athanhelper.settings.PreferencesManagerImpl.Companion.SETTINGS
 import com.gallopdevs.athanhelper.settings.SettingsFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val clockViewModel: ClockViewModel by viewModels()
+
+    @Inject
+    lateinit var preferencesManager: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,17 +70,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSettings() {
-        getSharedPreferences("settings", Context.MODE_PRIVATE).apply {
+        preferencesManager.apply {
             clockViewModel.setCalculations(
-                calcMethod = getInt("calcMethod", PrayerCalculatorIpml.jafari),
-                asrJuristic = getInt("asrMethod", PrayerCalculatorIpml.shafii),
-                adjustHighLats = getInt("latitudes", PrayerCalculatorIpml.midNight)
+                calcMethod = getInt(CALCULATION_METHOD, PrayerCalculatorIpml.jafari),
+                asrJuristic = getInt(ASR_METHOD, PrayerCalculatorIpml.shafii),
+                adjustHighLats = getInt(LATITUDES, PrayerCalculatorIpml.midNight)
             )
             // TODO add setting for adjusting time format
         }
     }
 
     companion object {
-        private const val CHANNEL_ID = "Notification"
+        private const val CHANNEL_ID = "NOTIFICATION"
     }
 }
