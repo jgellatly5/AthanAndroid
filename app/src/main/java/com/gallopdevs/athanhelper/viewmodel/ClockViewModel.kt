@@ -52,6 +52,14 @@ class ClockViewModel @Inject constructor(
 
     fun setTimeFormat() = prayerRepo.setTimeFormat()
 
+    fun saveBoolean(key: String, value: Boolean) = prayerRepo.saveBoolean(key, value)
+
+    fun getBoolean(key: String, defaultValue: Boolean = false): Boolean = prayerRepo.getBoolean(key, defaultValue)
+
+    fun saveInt(key: String, value: Int) = prayerRepo.saveInt(key, value)
+
+    fun getInt(key: String, defaultValue: Int = 0): Int = prayerRepo.getInt(key, defaultValue)
+
     fun formatDate(pageIndex: Int): String {
         val c = Calendar.getInstance()
         var weekDay = c.get(Calendar.DAY_OF_WEEK) + pageIndex

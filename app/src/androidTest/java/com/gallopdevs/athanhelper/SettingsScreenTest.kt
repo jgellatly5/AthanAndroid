@@ -13,9 +13,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
 import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
-import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.SETTINGS
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
@@ -52,10 +52,10 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchTogglesOnAndOff() {
-        whenever(preferencesManager.getBoolean(SETTINGS, false)).thenReturn(false)
+        whenever(preferencesManager.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(false)
         composeTestRule.apply {
             setContent {
-                SettingsScreen(preferencesManager)
+                SettingsScreen()
             }
 
             this.onNode(isToggleable())
@@ -68,10 +68,10 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchIsOnIfSharedPrefsTrue() {
-        whenever(preferencesManager.getBoolean(SETTINGS, false)).thenReturn(true)
+        whenever(preferencesManager.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(true)
         composeTestRule.apply {
             setContent {
-                SettingsScreen(preferencesManager)
+                SettingsScreen()
             }
 
             this.onNode(isToggleable())
@@ -82,7 +82,8 @@ class SettingsScreenTest {
     @Test
     fun calculationMethodsOptionIsDisplayedCorrectly() {
         val calculationMethod = context.resources.getString(R.string.calculation_method)
-        val calculationMethodOptions = context.resources.getStringArray(R.array.calculation_methods).toList()
+        val calculationMethodOptions =
+            context.resources.getStringArray(R.array.calculation_methods).toList()
         val expandableItem = ExpandableItem(
             title = calculationMethod,
             drawableId = R.drawable.sum_icon,

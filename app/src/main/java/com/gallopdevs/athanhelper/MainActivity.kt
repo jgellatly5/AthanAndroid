@@ -9,27 +9,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.gallopdevs.athanhelper.ui.clock.ClockFragment
-import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.gallopdevs.athanhelper.databinding.ActivityMainBinding
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
+import com.gallopdevs.athanhelper.ui.clock.ClockFragment
 import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ASR_METHOD
 import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.LATITUDES
 import com.gallopdevs.athanhelper.ui.settings.SettingsFragment
+import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val clockViewModel: ClockViewModel by viewModels()
-
-    @Inject
-    lateinit var preferencesManager: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +65,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSettings() {
-        preferencesManager.apply {
-            clockViewModel.setCalculations(
+        clockViewModel.apply {
+            setCalculations(
                 calcMethod = getInt(CALCULATION_METHOD, PrayerCalculatorIpml.jafari),
                 asrJuristic = getInt(ASR_METHOD, PrayerCalculatorIpml.shafii),
                 adjustHighLats = getInt(LATITUDES, PrayerCalculatorIpml.midNight)

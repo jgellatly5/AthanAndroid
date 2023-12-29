@@ -8,13 +8,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.SETTINGS
+import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 
 @Composable
-fun SettingsScreen(preferencesManager: PreferencesManager) {
-    var isChecked by remember {
-        mutableStateOf(preferencesManager.getBoolean(SETTINGS, false))
+fun SettingsScreen(
+    clockViewModel: ClockViewModel = viewModel()
+) {
+    var areNotificationsEnabled by remember {
+        mutableStateOf(clockViewModel.getBoolean(ENABLE_NOTIFICATIONS, false))
     }
     val expandableItems = listOf(
         ExpandableItem(
@@ -35,10 +39,10 @@ fun SettingsScreen(preferencesManager: PreferencesManager) {
     )
     Column {
         NotificationsOption(
-            checked = isChecked,
+            checked = areNotificationsEnabled,
             onCheckedChange = { enableNotifications ->
-                isChecked = enableNotifications
-                preferencesManager.saveBoolean(SETTINGS, enableNotifications)
+                areNotificationsEnabled = enableNotifications
+                clockViewModel.saveBoolean(ENABLE_NOTIFICATIONS, enableNotifications)
             }
         )
         ExpandableList(items = expandableItems)
