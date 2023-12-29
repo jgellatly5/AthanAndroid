@@ -8,14 +8,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 
 @Composable
 fun SettingsScreen(
-    clockViewModel: ClockViewModel = viewModel()
+    clockViewModel: ClockViewModel = hiltViewModel()
 ) {
     var areNotificationsEnabled by remember {
         mutableStateOf(clockViewModel.getBoolean(ENABLE_NOTIFICATIONS, false))

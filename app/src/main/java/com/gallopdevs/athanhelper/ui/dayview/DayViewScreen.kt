@@ -5,15 +5,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringArrayResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
+import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 
 @Composable
 fun DayViewScreen(
     pageIndex: Int?,
-    clockViewModel: ClockViewModel = viewModel()
+    clockViewModel: ClockViewModel = hiltViewModel()
 ) {
     clockViewModel.setTimeFormat()
     Column(
