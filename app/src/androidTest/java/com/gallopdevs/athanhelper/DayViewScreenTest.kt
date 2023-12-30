@@ -5,7 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.NEXT_PRAYER
-import com.gallopdevs.athanhelper.ui.dayview.HighlightedOption
+import com.gallopdevs.athanhelper.ui.dayview.HighlightedPrayer
 import org.junit.Rule
 import org.junit.Test
 
@@ -17,7 +17,7 @@ class DayViewScreenTest {
     @Test
     fun whenPrayerNameIsHighlightedShowOval() {
         composeTestRule.setContent {
-            HighlightedOption(text = stringResource(id = R.string.dawn), showHighlighted = true)
+            HighlightedPrayer(prayerTitle = stringResource(id = R.string.dawn), showHighlighted = true)
         }
 
         composeTestRule
@@ -28,7 +28,7 @@ class DayViewScreenTest {
     @Test
     fun whenPrayerNameIsNotHighlightedDoNotShowOval() {
         composeTestRule.setContent {
-            HighlightedOption(text = stringResource(id = R.string.dawn), showHighlighted = false)
+            HighlightedPrayer(prayerTitle = stringResource(id = R.string.dawn), showHighlighted = false)
         }
 
         composeTestRule

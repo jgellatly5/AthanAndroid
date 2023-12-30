@@ -21,18 +21,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.JAFARI
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.MIDNIGHT
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.SHAFII
-import com.gallopdevs.athanhelper.ui.dayview.HighlightedOption
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 data class ExpandableItem(
@@ -78,15 +75,14 @@ fun ExpandableListItem(item: ExpandableItem) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 item.options.forEachIndexed { index, option ->
-                    HighlightedOption(
-                        text = option,
-                        fontSize = dimensionResource(id = R.dimen.settings_option_text_size).value.sp,
-                        showHighlighted = index == selectedOption,
-                        modifier = Modifier
-                            .clickable {
-                                selectedOption = index
-                                item.onSelectedOption(index)
-                            }
+                    HighlightedSetting(
+                        settingName = option,
+                        index = index,
+                        selectedOption = selectedOption,
+                        onClick = {
+                            selectedOption = index
+                            item.onSelectedOption(index)
+                        }
                     )
                 }
             }

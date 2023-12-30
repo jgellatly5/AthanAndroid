@@ -1,0 +1,71 @@
+package com.gallopdevs.athanhelper.ui.settings
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.gallopdevs.athanhelper.R
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
+
+@Composable
+fun HighlightedSetting(
+    settingName: String,
+    index: Int,
+    selectedOption: Int,
+    onClick: () -> Unit
+) {
+    var isHighlighted by remember { mutableStateOf(index == selectedOption) }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clickable {
+                onClick()
+                isHighlighted = index == selectedOption
+            }
+    ) {
+        if (isHighlighted) {
+            Image(
+                painterResource(id = R.drawable.green_oval),
+                contentDescription = DayViewScreenConstants.NEXT_PRAYER,
+                modifier = Modifier
+                    .size(25.dp)
+                    .padding(end = 20.dp)
+            )
+        }
+        Text(
+            text = settingName,
+            fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
+            color = colorResource(id = R.color.colorPrimaryDark)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HighlightedSettingPreview() {
+    AthanHelperTheme {
+        HighlightedSetting(
+            settingName = stringResource(id = R.string.dawn),
+            index = 0,
+            selectedOption = 0,
+            onClick = {}
+        )
+    }
+}
