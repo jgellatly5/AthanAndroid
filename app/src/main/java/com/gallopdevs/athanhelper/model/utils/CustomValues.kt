@@ -1,7 +1,7 @@
 package com.gallopdevs.athanhelper.model.utils
 
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.custom
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.CUSTOM
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.methodParams
 
 // set the angle for calculating Fajr
@@ -39,10 +39,10 @@ fun PrayerCalculatorIpml.setCustomParams(params: DoubleArray) {
     for (i in 0..4) {
         if (params[i].equals(-1.0)) {
             params[i] = methodParams[calcMethod]!![i]
-            methodParams[custom] = params
+            methodParams[CUSTOM] = params
         } else {
-            methodParams[custom]!![i] = params[i]
+            methodParams[CUSTOM]!![i] = params[i]
         }
     }
-    calcMethod = custom
+    calcMethod = CUSTOM
 }

@@ -1,14 +1,14 @@
 package com.gallopdevs.athanhelper.model.utils
 
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.angleBased
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.floating
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.ANGLE_BASED
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.FLOATING
 import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.methodParams
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.midNight
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.none
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.oneSeventh
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.time12
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.time12NS
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.NONE
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.ONE_SEVENTH
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.TIME_12
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.TIME_12_NS
 
 // compute prayer times at given julian date
 fun PrayerCalculatorIpml.computeDayTimes(): ArrayList<String> {
@@ -62,7 +62,7 @@ fun PrayerCalculatorIpml.adjustTimes(t: DoubleArray): DoubleArray {
     if (methodParams[calcMethod]!![3].equals(1.0)) {
         times[6] = times[5] + methodParams[calcMethod]!![4] / 60
     }
-    if (adjustHighLats != none) {
+    if (adjustHighLats != NONE) {
         times = adjustHighLatTimes(times)
     }
     return times
@@ -102,9 +102,9 @@ fun PrayerCalculatorIpml.adjustHighLatTimes(times: DoubleArray): DoubleArray {
 fun PrayerCalculatorIpml.nightPortion(angle: Double): Double {
     var calc = 0.0
     when (adjustHighLats) {
-        angleBased -> calc = angle / 60.0
-        midNight -> calc = 0.5
-        oneSeventh -> calc = 0.14286
+        ANGLE_BASED -> calc = angle / 60.0
+        MIDNIGHT -> calc = 0.5
+        ONE_SEVENTH -> calc = 0.14286
     }
     return calc
 }
@@ -112,7 +112,7 @@ fun PrayerCalculatorIpml.nightPortion(angle: Double): Double {
 // convert times array to given time format
 fun PrayerCalculatorIpml.adjustTimesFormat(times: DoubleArray): ArrayList<String> {
     val result = ArrayList<String>()
-    if (timeFormat == floating) {
+    if (timeFormat == FLOATING) {
         for (time in times) {
             result.add(time.toString())
         }
@@ -120,11 +120,11 @@ fun PrayerCalculatorIpml.adjustTimesFormat(times: DoubleArray): ArrayList<String
     }
     for (i in 0..6) {
         when (timeFormat) {
-            time12 -> {
+            TIME_12 -> {
                 result.add(floatToTime12(times[i], false))
             }
 
-            time12NS -> {
+            TIME_12_NS -> {
                 result.add(floatToTime12(times[i], true))
             }
 

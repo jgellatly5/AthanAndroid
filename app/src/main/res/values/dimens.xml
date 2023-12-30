@@ -18,4 +18,5 @@
     <dimen name="settings_row_margin_left">50dp</dimen>
     <dimen name="settings_row_margin_right">50dp</dimen>
     <dimen name="settings_row_margin_top">30dp</dimen>
+    <dimen name="settings_option_text_size">@dimen/day_text_size</dimen>
 </resources>

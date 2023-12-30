@@ -102,7 +102,7 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
     }
 
     override fun setTimeFormat() {
-        timeFormat = time12
+        timeFormat = TIME_12
     }
 
     override fun getNextTimeMillis(): Long {
@@ -147,31 +147,31 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
     }
 
     companion object {
-        // Juristic Methods
-        const val shafii = 0 // Shafii (standard)
-        const val hanafi = 1 // Hanafi
-
         // Calculation Methods
-        const val jafari = 0 // Ithna Ashari
-        const val karachi = 1 // University of Islamic Sciences, Karachi
-        const val iSNA = 2 // Islamic Society of North America (ISNA)
-        const val mWL = 3 // Muslim World League (MWL)
-        const val makkah = 4 // Umm al-Qura, Makkah
-        const val egypt = 5 // Egyptian General Authority of Survey
-        const val tehran = 6 // Institute of Geophysics, University of Tehran
-        var custom = 7 // Custom Setting
+        const val JAFARI = 0 // Ithna Ashari
+        const val KARACHI = 1 // University of Islamic Sciences, Karachi
+        const val ISNA = 2 // Islamic Society of North America (ISNA)
+        const val MWL = 3 // Muslim World League (MWL)
+        const val MAKKAH = 4 // Umm al-Qura, Makkah
+        const val EGYPT = 5 // Egyptian General Authority of Survey
+        const val TEHRAN = 6 // Institute of Geophysics, University of Tehran
+        var CUSTOM = 7 // Custom Setting
+
+        // Asr Juristic Methods
+        const val SHAFII = 0 // Shafii (standard)
+        const val HANAFI = 1 // Hanafi
 
         // Adjusting Methods for Higher Latitudes
-        const val none = 0
-        const val midNight = 1 // middle of night
-        const val oneSeventh = 2 // 1/7th of night
-        const val angleBased = 3 // angle/60th of night
+        const val NONE = 0
+        const val MIDNIGHT = 1 // middle of night
+        const val ONE_SEVENTH = 2 // 1/7th of night
+        const val ANGLE_BASED = 3 // angle/60th of night
 
         // Time Formats
-        const val time24 = 0 // 24-hour format
-        const val time12 = 1 // 12-hour format
-        const val time12NS = 2 // 12-hour format with no suffix
-        const val floating = 3 // floating point number
+        const val TIME_24 = 0 // 24-hour format
+        const val TIME_12 = 1 // 12-hour format
+        const val TIME_12_NS = 2 // 12-hour format with no suffix
+        const val FLOATING = 3 // floating point number
 
         /*
          * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after
@@ -180,14 +180,14 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
          * value (in angle or minutes)
          */
         val methodParams: HashMap<Int, DoubleArray> = hashMapOf(
-            jafari to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
-            karachi to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0),
-            iSNA to doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0),
-            mWL to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0),
-            makkah to doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0),
-            egypt to doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5),
-            tehran to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
-            custom to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
+            JAFARI to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
+            KARACHI to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 18.0),
+            ISNA to doubleArrayOf(15.0, 1.0, 0.0, 0.0, 15.0),
+            MWL to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0),
+            MAKKAH to doubleArrayOf(18.5, 1.0, 0.0, 1.0, 90.0),
+            EGYPT to doubleArrayOf(19.5, 1.0, 0.0, 0.0, 17.5),
+            TEHRAN to doubleArrayOf(17.7, 0.0, 4.5, 0.0, 14.0),
+            CUSTOM to doubleArrayOf(18.0, 1.0, 0.0, 0.0, 17.0)
         )
     }
 }

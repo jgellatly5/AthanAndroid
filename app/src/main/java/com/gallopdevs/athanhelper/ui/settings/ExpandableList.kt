@@ -10,36 +10,44 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.gallopdevs.athanhelper.R
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.JAFARI
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.SHAFII
+import com.gallopdevs.athanhelper.ui.dayview.HighlightedOption
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 data class ExpandableItem(
     val title: String,
     val drawableId: Int,
     val options: List<String>,
+    var selectedOption: Int,
+    val onSelectedOption: (Int) -> Unit,
     var isExpanded: Boolean = false
 )
 
 @Composable
 fun ExpandableListItem(item: ExpandableItem) {
     var isExpanded by remember { mutableStateOf(item.isExpanded) }
-
+    var selectedOption by remember { mutableIntStateOf(item.selectedOption) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,10 +77,16 @@ fun ExpandableListItem(item: ExpandableItem) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                for (option in item.options) {
-                    Text(
+                item.options.forEachIndexed { index, option ->
+                    HighlightedOption(
                         text = option,
-                        modifier = Modifier.padding(16.dp)
+                        fontSize = dimensionResource(id = R.dimen.settings_option_text_size).value.sp,
+                        showHighlighted = index == selectedOption,
+                        modifier = Modifier
+                            .clickable {
+                                selectedOption = index
+                                item.onSelectedOption(index)
+                            }
                     )
                 }
             }
@@ -89,6 +103,8 @@ fun ExpandableListItemPreview() {
                 title = stringResource(id = R.string.calculation_method),
                 drawableId = R.drawable.sum_icon,
                 options = stringArrayResource(id = R.array.calculation_methods).toList(),
+                selectedOption = JAFARI,
+                onSelectedOption = {},
                 isExpanded = true
             )
         )
@@ -111,20 +127,28 @@ fun ExpandableListPreview() {
         ExpandableItem(
             title = stringResource(id = R.string.calculation_method),
             drawableId = R.drawable.sum_icon,
-            options = stringArrayResource(id = R.array.calculation_methods).toList()
+            options = stringArrayResource(id = R.array.calculation_methods).toList(),
+            selectedOption = JAFARI,
+            onSelectedOption = {}
         ),
         ExpandableItem(
             title = stringResource(id = R.string.asr_method),
             drawableId = R.drawable.sun_icon,
-            options = stringArrayResource(id = R.array.asr_methods).toList()
+            options = stringArrayResource(id = R.array.asr_methods).toList(),
+            selectedOption = SHAFII,
+            onSelectedOption = {}
         ),
         ExpandableItem(
             title = stringResource(id = R.string.latitudes_method),
             drawableId = R.drawable.compass_icon,
-            options = stringArrayResource(id = R.array.latitudes_methods).toList()
+            options = stringArrayResource(id = R.array.latitudes_methods).toList(),
+            selectedOption = MIDNIGHT,
+            onSelectedOption = {}
         )
     )
     AthanHelperTheme {
-        ExpandableList(items = expandableItems)
+        ExpandableList(
+            items = expandableItems
+        )
     }
 }

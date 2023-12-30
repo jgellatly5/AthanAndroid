@@ -33,7 +33,7 @@ class PreferencesManagerImpl @Inject constructor(
         const val ENABLE_NOTIFICATIONS = "ENABLE_NOTIFICATIONS"
         const val CALCULATION_METHOD = "CALCULATION_METHOD"
         const val ASR_METHOD = "ASR_METHOD"
-        const val LATITUDES = "LATITUDES"
+        const val LATITUDES_METHOD = "LATITUDES_METHOD"
     }
 }
 

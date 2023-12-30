@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
+import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.JAFARI
 import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
 import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
@@ -87,7 +88,9 @@ class SettingsScreenTest {
         val expandableItem = ExpandableItem(
             title = calculationMethod,
             drawableId = R.drawable.sum_icon,
-            options = calculationMethodOptions
+            options = calculationMethodOptions,
+            selectedOption = JAFARI,
+            onSelectedOption = {}
         )
         composeTestRule.apply {
             setContent {

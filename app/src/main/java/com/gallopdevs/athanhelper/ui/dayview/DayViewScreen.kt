@@ -28,12 +28,11 @@ fun DayViewScreen(
             val prayerTimes = clockViewModel.formatTimes(it)
             val nextTimeIndex = clockViewModel.getNextTimeIndex()
             for (i in prayerTimes.indices) {
-                val showHighlighted = i == nextTimeIndex
                 PrayerRow(
                     prayerTitle = prayerTitles[i],
                     prayerTime = prayerTimes[i][0],
                     prayerTimePostFix = prayerTimes[i][1],
-                    showHighlighted = showHighlighted
+                    showHighlighted = i == nextTimeIndex
                 )
             }
         }
