@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.model.utils
+package com.gallopdevs.athanhelper.data.utils
 
 import java.util.Date
 import kotlin.math.floor

@@ -1,7 +1,7 @@
 package com.gallopdevs.athanhelper.repository
 
-import com.gallopdevs.athanhelper.model.PrayerCalculator
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
+import com.gallopdevs.athanhelper.data.PrayerCalculator
+import com.gallopdevs.athanhelper.data.PreferencesManager
 import javax.inject.Inject
 
 class PrayerRepository @Inject constructor(

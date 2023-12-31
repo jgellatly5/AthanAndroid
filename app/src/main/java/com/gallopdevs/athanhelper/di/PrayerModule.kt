@@ -1,11 +1,11 @@
 package com.gallopdevs.athanhelper.di
 
-import com.gallopdevs.athanhelper.model.PrayerCalculator
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
+import com.gallopdevs.athanhelper.data.PrayerCalculator
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.PrayerRepository
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl
+import com.gallopdevs.athanhelper.data.PreferencesManager
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

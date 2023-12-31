@@ -1,6 +1,6 @@
-package com.gallopdevs.athanhelper.model.utils
+package com.gallopdevs.athanhelper.data.utils
 
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml
 import kotlin.math.abs
 
 // References:

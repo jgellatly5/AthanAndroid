@@ -1,14 +1,14 @@
-package com.gallopdevs.athanhelper.model.utils
+package com.gallopdevs.athanhelper.data.utils
 
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.ANGLE_BASED
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.FLOATING
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.methodParams
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.MIDNIGHT
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.NONE
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.ONE_SEVENTH
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.TIME_12
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.TIME_12_NS
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ANGLE_BASED
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.FLOATING
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.methodParams
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.NONE
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ONE_SEVENTH
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12_NS
 
 // compute prayer times at given julian date
 fun PrayerCalculatorIpml.computeDayTimes(): ArrayList<String> {

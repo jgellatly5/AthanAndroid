@@ -10,12 +10,12 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.JAFARI
 import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
 import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManager
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.PreferencesManager
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import org.junit.Rule
 import org.junit.Test

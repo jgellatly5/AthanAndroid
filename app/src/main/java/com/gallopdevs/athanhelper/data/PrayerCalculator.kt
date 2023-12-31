@@ -1,7 +1,7 @@
-package com.gallopdevs.athanhelper.model
+package com.gallopdevs.athanhelper.data
 
-import com.gallopdevs.athanhelper.model.utils.computeDayTimes
-import com.gallopdevs.athanhelper.model.utils.julianDate
+import com.gallopdevs.athanhelper.data.utils.computeDayTimes
+import com.gallopdevs.athanhelper.data.utils.julianDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar

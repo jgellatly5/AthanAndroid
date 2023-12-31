@@ -11,13 +11,13 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.JAFARI
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.MIDNIGHT
-import com.gallopdevs.athanhelper.model.PrayerCalculatorIpml.Companion.SHAFII
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ASR_METHOD
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.CALCULATION_METHOD
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
-import com.gallopdevs.athanhelper.ui.settings.PreferencesManagerImpl.Companion.LATITUDES_METHOD
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.SHAFII
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ASR_METHOD
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.CALCULATION_METHOD
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.LATITUDES_METHOD
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.ui.settings
+package com.gallopdevs.athanhelper.data
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext

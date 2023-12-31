@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.model.utils
+package com.gallopdevs.athanhelper.data.utils
 
 import kotlin.math.acos
 import kotlin.math.asin
