@@ -13,6 +13,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -25,6 +27,8 @@ import com.gallopdevs.athanhelper.R.string.end_time
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
 import com.gallopdevs.athanhelper.ui.dayview.DayViewAdapter
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -53,7 +57,7 @@ class ClockFragment : Fragment() {
                     Manifest.permission.ACCESS_COARSE_LOCATION -> {
                         activity?.let { activity ->
                             if (actionMap.value) {
-                                getLocation(activity)
+//                                getLocation(activity)
                             } else {
                                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                                     Toast.makeText(
@@ -74,8 +78,14 @@ class ClockFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentClockBinding.inflate(inflater, container, false)
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AthanHelperTheme {
+                    ClockScreen()
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,13 +94,8 @@ class ClockFragment : Fragment() {
         activity?.let { activity ->
             dayViewAdapter = DayViewAdapter(activity)
 
-            getLocation(activity)
+//            getLocation(activity)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun getLocation(fragmentActivity: FragmentActivity) {
