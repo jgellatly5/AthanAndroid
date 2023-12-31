@@ -2,7 +2,6 @@ package com.gallopdevs.athanhelper.ui.clock
 
 import android.Manifest
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -18,10 +17,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
-import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
 import com.gallopdevs.athanhelper.MainActivity
+import com.gallopdevs.athanhelper.R
+import com.gallopdevs.athanhelper.R.string.end_time
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
 import com.gallopdevs.athanhelper.ui.dayview.DayViewAdapter
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -38,7 +40,7 @@ class ClockFragment : Fragment() {
     private var _binding: FragmentClockBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var dayViewAdapter: DayViewAdapter
 
     private val clockViewModel: ClockViewModel by viewModels()
@@ -49,15 +51,17 @@ class ClockFragment : Fragment() {
                 when (actionMap.key) {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION -> {
-                        if (actionMap.value) {
-                            getLocation()
-                        } else {
-                            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Location permissions denied.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                        activity?.let { activity ->
+                            if (actionMap.value) {
+                                getLocation(activity)
+                            } else {
+                                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                                    Toast.makeText(
+                                        activity,
+                                        "Location permissions denied.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
                     }
@@ -77,9 +81,11 @@ class ClockFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getLocation()
+        activity?.let { activity ->
+            dayViewAdapter = DayViewAdapter(activity)
 
-        dayViewAdapter = DayViewAdapter(requireActivity())
+            getLocation(activity)
+        }
     }
 
     override fun onDestroyView() {
@@ -87,12 +93,12 @@ class ClockFragment : Fragment() {
         _binding = null
     }
 
-    private fun getLocation() {
+    private fun getLocation(fragmentActivity: FragmentActivity) {
         if (ActivityCompat.checkSelfPermission(
-                requireContext(),
+                fragmentActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
+                fragmentActivity,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -102,9 +108,9 @@ class ClockFragment : Fragment() {
             )
             requestPermissionLauncher.launch(permissions)
         } else {
-            mFusedLocationClient =
-                LocationServices.getFusedLocationProviderClient(requireActivity())
-            mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            fusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(fragmentActivity)
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                 binding.apply {
                     if (location != null) {
                         clockViewModel.setLocation(location.latitude, location.longitude)
@@ -122,14 +128,10 @@ class ClockFragment : Fragment() {
                                 prayerTimerText.text =
                                     getString(R.string.count_down_time, offset.format(it))
                             } else {
-                                prayerTimerText.text = getString(R.string.end_time)
-                                val sharedPref =
-                                    requireActivity().getPreferences(Context.MODE_PRIVATE)
-                                if (sharedPref.getBoolean(
-                                        "enableNotifications",
-                                        false
-                                    )
-                                ) createNotification()
+                                prayerTimerText.text = getString(end_time)
+                                val enableNotifications =
+                                    clockViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
+                                if (enableNotifications) createNotification()
                             }
                         }
 
@@ -137,7 +139,7 @@ class ClockFragment : Fragment() {
                         TabLayoutMediator(tabDots, viewPagerFragment, true) { _, _ -> }.attach()
                     } else {
                         Toast.makeText(
-                            requireContext(),
+                            fragmentActivity,
                             "We cannot find your location. Please enable in settings.",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -145,7 +147,7 @@ class ClockFragment : Fragment() {
                 }
             }.addOnFailureListener {
                 Toast.makeText(
-                    requireContext(),
+                    fragmentActivity,
                     "We cannot find your location. Please enable in settings.",
                     Toast.LENGTH_SHORT
                 ).show()
