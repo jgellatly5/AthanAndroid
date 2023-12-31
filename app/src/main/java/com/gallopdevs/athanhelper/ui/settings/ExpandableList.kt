@@ -75,14 +75,17 @@ fun ExpandableListItem(item: ExpandableItem) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 item.options.forEachIndexed { index, option ->
+                    val isHighlighted = selectedOption == index
                     HighlightedSetting(
                         settingName = option,
-                        index = index,
-                        selectedOption = selectedOption,
-                        onClick = {
-                            selectedOption = index
-                            item.onSelectedOption(index)
-                        }
+                        isHighlighted = isHighlighted,
+                        modifier = Modifier
+                            .clickable {
+                                item.onSelectedOption(index)
+                                if (selectedOption != index) {
+                                    selectedOption = index
+                                }
+                            }
                     )
                 }
             }
