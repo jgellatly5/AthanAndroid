@@ -20,16 +20,18 @@ fun PrayerRow(
     prayerTitle: String,
     prayerTime: String,
     prayerTimePostFix: String,
-    showHighlighted: Boolean,
-    modifier: Modifier = Modifier
+    showHighlighted: Boolean
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 60.dp, end = 60.dp)
         ) {
@@ -44,7 +46,7 @@ fun PrayerRow(
         }
         if (prayerTitle != stringResource(id = R.string.night)) {
             Divider(
-                modifier = modifier
+                modifier = Modifier
                     .padding(start = 60.dp, end = 60.dp)
             )
         }

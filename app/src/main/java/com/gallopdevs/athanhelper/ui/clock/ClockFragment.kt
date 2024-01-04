@@ -26,8 +26,6 @@ import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.R.string.end_time
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.databinding.FragmentClockBinding
-import com.gallopdevs.athanhelper.ui.dayview.DayViewAdapter
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -45,7 +43,6 @@ class ClockFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var dayViewAdapter: DayViewAdapter
 
     private val clockViewModel: ClockViewModel by viewModels()
 
@@ -92,8 +89,6 @@ class ClockFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.let { activity ->
-            dayViewAdapter = DayViewAdapter(activity)
-
 //            getLocation(activity)
         }
     }
@@ -140,7 +135,6 @@ class ClockFragment : Fragment() {
                             }
                         }
 
-                        viewPagerFragment.adapter = dayViewAdapter
                         TabLayoutMediator(tabDots, viewPagerFragment, true) { _, _ -> }.attach()
                     } else {
                         Toast.makeText(

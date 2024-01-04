@@ -1,7 +1,10 @@
 package com.gallopdevs.athanhelper.ui.dayview
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringArrayResource
@@ -18,7 +21,10 @@ fun DayViewScreen(
     clockViewModel.setTimeFormat()
     Column(
         modifier = Modifier
-            .testTag(DAY_VIEW_SCREEN)
+            .fillMaxWidth()
+            .testTag(DAY_VIEW_SCREEN),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
         pageIndex?.let {
