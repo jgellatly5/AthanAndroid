@@ -1,18 +1,25 @@
 package com.gallopdevs.athanhelper.ui.clock
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -62,20 +69,46 @@ fun NextPrayerHeaderPreview() {
 }
 
 @Composable
+fun TabDots() {
+    var tabIndex by remember { mutableIntStateOf(0) }
+    val tabs = listOf("Basic", "Medium", "Hard")
+    Column(modifier = Modifier.fillMaxHeight()) {
+        TabRow(
+            selectedTabIndex = tabIndex,
+            modifier = Modifier.align(androidx.compose.ui.Alignment.Start)
+        ) {
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(title) },
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index }
+                )
+            }
+        }
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TabDotsPreview() {
+    AthanHelperTheme {
+        TabDots()
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
 fun ClockScreen(
 //    clockViewModel: ClockViewModel = hiltViewModel()
 ) {
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
     Column {
         NextPrayerHeader()
-        LazyRow(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            items(NUM_ITEMS) {
-                DayViewScreen(
-                    pageIndex = it
-                )
-            }
+        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
+            DayViewScreen(
+                pageIndex = it
+            )
         }
     }
 }
