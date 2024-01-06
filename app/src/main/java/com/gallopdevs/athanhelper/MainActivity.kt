@@ -3,8 +3,6 @@ package com.gallopdevs.athanhelper
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,8 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -154,23 +150,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createNotification() {
-        val intent = Intent(this@MainActivity, MainActivity::class.java)
-        val pendingIntent =
-            PendingIntent.getActivity(this@MainActivity, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        val builder = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
-            .setSmallIcon(R.drawable.moon)
-            .setContentTitle("Athan")
-            .setContentText("Next prayer time: ${clockViewModel.getNextPrayerName()}")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-        val notificationManager = NotificationManagerCompat.from(this@MainActivity)
-        notificationManager.notify(0, builder.build())
-    }
-
     companion object {
-        private const val CHANNEL_ID = "NOTIFICATION"
+        const val CHANNEL_ID = "NOTIFICATION"
     }
 }
 

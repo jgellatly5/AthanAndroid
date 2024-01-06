@@ -1,5 +1,8 @@
 package com.gallopdevs.athanhelper.ui.clock
 
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,13 +19,18 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gallopdevs.athanhelper.MainActivity
+import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
@@ -73,15 +81,30 @@ fun NextPrayerHeader(
                     fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
                 )
             } else {
+                val enableNotifications = clockViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
+                if (enableNotifications) createNotification(LocalContext.current, clockViewModel)
                 Text(
                     text = stringResource(id = R.string.end_time),
                     fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
                 )
-                val enableNotifications = clockViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
-                //        if (enableNotifications) createNotification()
             }
         }
     }
+}
+
+private fun createNotification(context: Context, clockViewModel: ClockViewModel) {
+    val intent = Intent(context, MainActivity::class.java)
+    val pendingIntent =
+        PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        .setSmallIcon(R.drawable.moon)
+        .setContentTitle("Athan")
+        .setContentText("Next prayer time: ${clockViewModel.getNextPrayerName()}")
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setContentIntent(pendingIntent)
+        .setAutoCancel(true)
+    val notificationManager = NotificationManagerCompat.from(context)
+    notificationManager.notify(0, builder.build())
 }
 
 @Preview(showBackground = true)
