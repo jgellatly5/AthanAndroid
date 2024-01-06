@@ -17,9 +17,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gallopdevs.athanhelper.MainPagerConstants.NUM_ITEMS
@@ -32,7 +34,15 @@ import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 fun MainPager() {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
-    Column {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painterResource(id = R.drawable.athan),
+            contentDescription = stringResource(id = R.string.app_name),
+            alignment = Alignment.Center,
+            modifier = Modifier.size(100.dp)
+        )
         HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
             when (it) {
                 0 -> ClockScreen()
@@ -55,14 +65,6 @@ fun MainPager() {
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MainPagerPreview() {
-    AthanHelperTheme {
-        MainPager()
     }
 }
 
@@ -109,14 +111,6 @@ private fun TabIcon(index: Int) {
         contentDescription = contentDescription,
         modifier = Modifier.size(30.dp)
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TabIconPreview() {
-    AthanHelperTheme {
-        TabIcon(index = 0)
-    }
 }
 
 object MainPagerConstants {
