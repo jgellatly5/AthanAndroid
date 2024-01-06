@@ -2,13 +2,15 @@ package com.gallopdevs.athanhelper.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.gallopdevs.athanhelper.repository.PrayerRepo
+import com.gallopdevs.athanhelper.repository.SettingsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class ClockViewModel @Inject constructor(
-    private val prayerRepo: PrayerRepo
+    private val prayerRepo: PrayerRepo,
+    private val settingsRepo: SettingsRepo
 ) : ViewModel() {
 
     fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
@@ -25,14 +27,14 @@ class ClockViewModel @Inject constructor(
 
     fun setTimeFormat() = prayerRepo.setTimeFormat()
 
-    fun saveBoolean(key: String, value: Boolean) = prayerRepo.saveBoolean(key, value)
+    fun saveBoolean(key: String, value: Boolean) = settingsRepo.saveBoolean(key, value)
 
     fun getBoolean(key: String, defaultValue: Boolean = false): Boolean =
-        prayerRepo.getBoolean(key, defaultValue)
+        settingsRepo.getBoolean(key, defaultValue)
 
-    fun saveInt(key: String, value: Int) = prayerRepo.saveInt(key, value)
+    fun saveInt(key: String, value: Int) = settingsRepo.saveInt(key, value)
 
-    fun getInt(key: String, defaultValue: Int = 0): Int = prayerRepo.getInt(key, defaultValue)
+    fun getInt(key: String, defaultValue: Int = 0): Int = settingsRepo.getInt(key, defaultValue)
 
     fun formatDate(pageIndex: Int): String {
         val c = Calendar.getInstance()

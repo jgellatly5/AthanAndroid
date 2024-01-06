@@ -6,6 +6,8 @@ import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.PrayerRepository
 import com.gallopdevs.athanhelper.data.PreferencesManager
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl
+import com.gallopdevs.athanhelper.repository.SettingsRepo
+import com.gallopdevs.athanhelper.repository.SettingsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,6 +19,9 @@ abstract class PrayerModule {
 
     @Binds
     abstract fun bindPrayerRepo(prayerRepository: PrayerRepository): PrayerRepo
+
+    @Binds
+    abstract fun bindSettingsRepo(settingsRepository: SettingsRepository): SettingsRepo
 
     @Binds
     abstract fun bindPrayerCalculator(prayerCalculatorImpl: PrayerCalculatorIpml): PrayerCalculator
