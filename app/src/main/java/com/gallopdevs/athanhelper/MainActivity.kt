@@ -7,32 +7,51 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.gallopdevs.athanhelper.MainActivity.Companion.NUM_ITEMS
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.SHAFII
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ASR_METHOD
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.LATITUDES_METHOD
-import com.gallopdevs.athanhelper.databinding.ActivityMainBinding
-import com.gallopdevs.athanhelper.ui.clock.ClockFragment
-import com.gallopdevs.athanhelper.ui.settings.SettingsFragment
+import com.gallopdevs.athanhelper.ui.clock.ClockScreen
+import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
-    private lateinit var binding: ActivityMainBinding
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val clockViewModel: ClockViewModel by viewModels()
 
@@ -60,29 +79,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater).apply {
-            setContentView(root)
 
-            createNotificationChannel()
-            loadSettings()
+        createNotificationChannel()
+        loadSettings()
+        getLocation()
 
-            val mainActivityPagerAdapter = MainActivityPagerAdapter(this@MainActivity).apply {
-                addFrag(ClockFragment())
-                addFrag(SettingsFragment())
-            }
-
-            viewPagerActivity.apply {
-                adapter = mainActivityPagerAdapter
-                isUserInputEnabled = false
-            }
-
-            TabLayoutMediator(tabLayoutActivity, viewPagerActivity, true) { _, _ -> }.attach()
-            tabLayoutActivity.apply {
-                getTabAt(0)?.setIcon(R.drawable.clock_icon)
-                getTabAt(1)?.setIcon(R.drawable.settings_icon)
-            }
-
-            getLocation()
+        setContent {
+            MainPager()
         }
     }
 
@@ -127,18 +130,16 @@ class MainActivity : AppCompatActivity() {
             fusedLocationProviderClient =
                 LocationServices.getFusedLocationProviderClient(this@MainActivity)
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                binding.apply {
-                    if (location != null) {
-                        clockViewModel.apply {
-                            setLocation(location.latitude, location.longitude)
-                        }
-                    } else {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "We cannot find your location. Please enable in settings.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                if (location != null) {
+                    clockViewModel.apply {
+                        setLocation(location.latitude, location.longitude)
                     }
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "We cannot find your location. Please enable in settings.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }.addOnFailureListener {
                 Toast.makeText(
@@ -152,18 +153,79 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val CHANNEL_ID = "NOTIFICATION"
+        const val NUM_ITEMS = 2
     }
 }
 
-class MainActivityPagerAdapter(
-    fragmentActivity: FragmentActivity
-) : FragmentStateAdapter(fragmentActivity) {
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MainPager() {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
+    Column {
+        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
+            when (it) {
+                0 -> ClockScreen()
+                1 -> SettingsScreen()
+            }
+        }
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            indicator = { tabPositions ->
+                // Custom indicator
+                TabRowDefaults.Indicator(
+                    Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = colorResource(id = R.color.colorPrimaryDark)
+                )
+            }
+        ) {
+            for (i in 0 until NUM_ITEMS) {
+                TabElement(index = i, selectedTabIndex = selectedTabIndex) {
+                    selectedTabIndex = it
+                }
+            }
+        }
+    }
 
-    private val fragmentList = ArrayList<Fragment>()
+}
 
-    override fun createFragment(position: Int): Fragment = fragmentList[position]
+@Composable
+private fun TabElement(
+    index: Int,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit
+) {
+    Tab(
+        icon = { TabIcon(index) },
+        selected = index == selectedTabIndex,
+        onClick = { onTabSelected(index) },
+        modifier = Modifier
+            .background(colorResource(id = R.color.colorPrimary))
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    )
+}
 
-    override fun getItemCount(): Int = fragmentList.size
+@Composable
+private fun TabIcon(index: Int) {
+    val painterId = when (index) {
+        0 -> R.drawable.clock_icon
+        else -> R.drawable.settings_icon
+    }
+    val contentDescription = when (index) {
+        0 -> "clock"
+        else -> "settings"
+    }
+    Image(
+        painterResource(id = painterId),
+        contentDescription = contentDescription,
+        modifier = Modifier.size(30.dp)
+    )
+}
 
-    fun addFrag(fragment: Fragment) = fragmentList.add(fragment)
+@Preview(showBackground = true)
+@Composable
+private fun MainPagerPreview() {
+    AthanHelperTheme {
+        MainPager()
+    }
 }

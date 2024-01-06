@@ -106,11 +106,3 @@ private fun createNotification(context: Context, clockViewModel: ClockViewModel)
     val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.notify(0, builder.build())
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun NextPrayerHeaderPreview() {
-    AthanHelperTheme {
-        NextPrayerHeader()
-    }
-}
