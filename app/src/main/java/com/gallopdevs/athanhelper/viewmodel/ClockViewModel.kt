@@ -1,8 +1,5 @@
 package com.gallopdevs.athanhelper.viewmodel
 
-import android.os.CountDownTimer
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,31 +11,7 @@ class ClockViewModel @Inject constructor(
     private val prayerRepo: PrayerRepo
 ) : ViewModel() {
 
-    private var timer: CountDownTimer? = null
-    private var isFinished: Boolean = true
-
-    private val _timerCountDown = MutableLiveData<Long>()
-    val timerCountDown: LiveData<Long>
-        get() = _timerCountDown
-
-    fun startNewTimer() {
-        if (isFinished) {
-            timer?.cancel()
-            timer = object : CountDownTimer(getNextTimeMillis(), 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    isFinished = false
-                    _timerCountDown.value = millisUntilFinished
-                }
-
-                override fun onFinish() {
-                    isFinished = true
-                    startNewTimer()
-                }
-            }.start()
-        }
-    }
-
-    private fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
+    fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
     fun getNextPrayerName() = prayerRepo.getNextPrayerName()
 
@@ -54,7 +27,8 @@ class ClockViewModel @Inject constructor(
 
     fun saveBoolean(key: String, value: Boolean) = prayerRepo.saveBoolean(key, value)
 
-    fun getBoolean(key: String, defaultValue: Boolean = false): Boolean = prayerRepo.getBoolean(key, defaultValue)
+    fun getBoolean(key: String, defaultValue: Boolean = false): Boolean =
+        prayerRepo.getBoolean(key, defaultValue)
 
     fun saveInt(key: String, value: Int) = prayerRepo.saveInt(key, value)
 

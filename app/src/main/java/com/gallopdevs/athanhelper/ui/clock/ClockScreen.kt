@@ -11,9 +11,7 @@ import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ClockScreen(
-//    clockViewModel: ClockViewModel = hiltViewModel()
-) {
+fun ClockScreen() {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
     Column {
         NextPrayerHeader()
