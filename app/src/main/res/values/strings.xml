@@ -42,6 +42,8 @@
     <string name="asr_method">Asr Method</string>
     <string name="latitudes_method">Latitudes Method</string>
     <string name="item_title">Item Title</string>
+    <string name="location_permissions_denied">Location permissions denied.</string>
+    <string name="cannot_find_location_message">We cannot find your location. Please enable in settings.</string>
 
     <string-array name="time_names">
         <item>Fajr</item>
