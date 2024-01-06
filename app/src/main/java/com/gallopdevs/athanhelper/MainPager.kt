@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,12 +29,14 @@ import com.gallopdevs.athanhelper.MainPagerConstants.NUM_ITEMS
 import com.gallopdevs.athanhelper.ui.clock.ClockScreen
 import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainPager() {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
+    val scope = rememberCoroutineScope()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -62,6 +65,9 @@ fun MainPager() {
             for (i in 0 until NUM_ITEMS) {
                 TabElement(index = i, selectedTabIndex = selectedTabIndex) {
                     selectedTabIndex = it
+                    scope.launch {
+                        pagerState.animateScrollToPage(it)
+                    }
                 }
             }
         }
