@@ -34,15 +34,4 @@ class PrayerRepositoryTest {
         testObject = PrayerRepository(mockPrayerCalculator)
         assertEquals(expectedMillis, testObject.getNextTimeMillis())
     }
-
-    @Test
-    fun get_next_prayer_name_successful() {
-        val expectedName = "Dawn"
-
-        whenever(mockPrayerCalculator.getNextPrayerName())
-            .thenReturn(expectedName)
-
-        testObject = PrayerRepository(mockPrayerCalculator)
-        assertEquals(expectedName, testObject.getNextPrayerName())
-    }
 }

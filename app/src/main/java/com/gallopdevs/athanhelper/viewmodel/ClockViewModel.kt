@@ -1,16 +1,17 @@
 package com.gallopdevs.athanhelper.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.gallopdevs.athanhelper.domain.GetNextTimeMillisUseCase
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class ClockViewModel @Inject constructor(
-    getNextTimeMillisUseCase: GetNextTimeMillisUseCase,
+//    getNextTimeMillisUseCase: GetNextTimeMillisUseCase,
     private val prayerRepo: PrayerRepo,
     private val settingsRepo: SettingsRepo
 ) : ViewModel() {
@@ -40,66 +41,40 @@ class ClockViewModel @Inject constructor(
 
     fun formatDate(pageIndex: Int): String {
         val c = Calendar.getInstance()
-        var weekDay = c.get(Calendar.DAY_OF_WEEK) + pageIndex
-        val month = c.get(Calendar.MONTH) + 1
-        val dayOfMonth = c.get(Calendar.DAY_OF_MONTH) + pageIndex
-        val dayOfMonthString = dayOfMonth.toString()
+        c.add(Calendar.DAY_OF_MONTH, pageIndex)
 
-        val monthString = if (month < 10) {
-            "0$month"
-        } else {
-            month.toString()
-        }
-
-        if (weekDay >= 8) {
-            weekDay -= 7
-        }
-        val weekDayString = when (weekDay) {
-            1 -> "Sunday"
-            2 -> "Monday"
-            3 -> "Tuesday"
-            4 -> "Wednesday"
-            5 -> "Thursday"
-            6 -> "Friday"
-            7 -> "Saturday"
-            else -> "This is not a day"
-        }
-
-        return if (dayOfMonth < 10) {
-            "$weekDayString, $monthString/0$dayOfMonthString"
-        } else {
-            "$weekDayString, $monthString/$dayOfMonthString"
-        }
+        val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
+        return sdf.format(c.time)
     }
 
     fun formatTimes(pageIndex: Int): List<Array<String>> {
-        val nextDayTimes = getPrayerTimesForDate(pageIndex)
-
-        val newDawnTime = nextDayTimes[0].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newMiddayTime = nextDayTimes[2].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newAfternoonTime = nextDayTimes[3].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newSunsetTime = nextDayTimes[5].replaceFirst("^0+(?!$)".toRegex(), "")
-        val newNightTime = nextDayTimes[6].replaceFirst("^0+(?!$)".toRegex(), "")
-
-        val splitDawnTime =
-            newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitMiddayTime =
-            newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitAfternoonTime =
-            newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitSunsetTime =
-            newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val splitNightTime =
-            newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-        return listOf(
-            splitDawnTime,
-            splitMiddayTime,
-            splitAfternoonTime,
-            splitSunsetTime,
-            splitNightTime
-        )
+        return prayerRepo.getPrayerTimesForDate(pageIndex).formatTimes()
     }
+}
 
-    private fun getPrayerTimesForDate(pageIndex: Int) = prayerRepo.getPrayerTimesForDate(pageIndex)
+fun ArrayList<String>.formatTimes(): List<Array<String>> {
+    val newDawnTime = this[0].replaceFirst("^0+(?!$)".toRegex(), "")
+    val newMiddayTime = this[2].replaceFirst("^0+(?!$)".toRegex(), "")
+    val newAfternoonTime = this[3].replaceFirst("^0+(?!$)".toRegex(), "")
+    val newSunsetTime = this[5].replaceFirst("^0+(?!$)".toRegex(), "")
+    val newNightTime = this[6].replaceFirst("^0+(?!$)".toRegex(), "")
+
+    val splitDawnTime =
+        newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    val splitMiddayTime =
+        newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    val splitAfternoonTime =
+        newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    val splitSunsetTime =
+        newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    val splitNightTime =
+        newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+
+    return listOf(
+        splitDawnTime,
+        splitMiddayTime,
+        splitAfternoonTime,
+        splitSunsetTime,
+        splitNightTime
+    )
 }

@@ -65,17 +65,6 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
         return computeDayTimes()
     }
 
-    override fun getNextPrayerName(): String {
-        val prayerNames = arrayOf(
-            "Dawn",
-            "Mid-day",
-            "Afternoon",
-            "Sunset",
-            "Night"
-        )
-        return prayerNames[getNextTimeIndex()]
-    }
-
     override fun setLocation(latitude: Double, longitude: Double) {
         lat = latitude
         lng = longitude
@@ -191,7 +180,6 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
 interface PrayerCalculator {
     fun getPrayerTimesForDate(offset: Int): ArrayList<String>
     fun getNextTimeMillis(): Long
-    fun getNextPrayerName(): String
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
     fun getNextTimeIndex(): Int
