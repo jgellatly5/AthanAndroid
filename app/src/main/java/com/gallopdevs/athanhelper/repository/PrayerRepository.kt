@@ -13,8 +13,6 @@ class PrayerRepository @Inject constructor(
 
     override fun getNextTimeMillis(): Long = prayerCalculator.getNextTimeMillis()
 
-    override fun getNextPrayerName(): String = prayerCalculator.getNextPrayerName()
-
     override fun setLocation(latitude: Double, longitude: Double) =
         prayerCalculator.setLocation(latitude, longitude)
 
@@ -30,7 +28,6 @@ class PrayerRepository @Inject constructor(
 interface PrayerRepo {
     fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String>
     fun getNextTimeMillis(): Long
-    fun getNextPrayerName(): String
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
     fun getNextTimeIndex(): Int

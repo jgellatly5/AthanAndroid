@@ -52,6 +52,7 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
 
     // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}
     val offsets = IntArray(7) { 0 }
+    private val differences = LongArray(6) { 0 }
 
     // return prayer times for a given date
     override fun getPrayerTimesForDate(offset: Int): ArrayList<String> {
@@ -86,16 +87,11 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
         this.adjustHighLats = adjustHighLats
     }
 
-    private val differences = LongArray(6) { 0 }
-    private var nextTimeIndex = 0
-
     override fun getNextTimeIndex(): Int {
+        var nextTimeIndex = 0
         for (i in differences.indices) {
             if (differences[i] < 0) {
-                nextTimeIndex = i + 1
-                if (nextTimeIndex >= 5) {
-                    nextTimeIndex = 0
-                }
+                nextTimeIndex = (i + 1) % 5
             }
         }
         return nextTimeIndex

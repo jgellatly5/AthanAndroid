@@ -96,10 +96,12 @@ private fun createNotification(context: Context, clockViewModel: ClockViewModel)
     val intent = Intent(context, MainActivity::class.java)
     val pendingIntent =
         PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    val prayerNames = context.resources.getStringArray(R.array.prayer_titles)
+    val nextPrayerName = prayerNames[clockViewModel.getNextTimeIndex()]
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.moon)
         .setContentTitle("Athan")
-        .setContentText("Next prayer time: ${clockViewModel.getNextPrayerName()}")
+        .setContentText("Next prayer time: $nextPrayerName")
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)

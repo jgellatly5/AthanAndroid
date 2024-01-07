@@ -1,6 +1,7 @@
 package com.gallopdevs.athanhelper.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.gallopdevs.athanhelper.domain.GetNextTimeMillisUseCase
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,13 +10,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClockViewModel @Inject constructor(
+    getNextTimeMillisUseCase: GetNextTimeMillisUseCase,
     private val prayerRepo: PrayerRepo,
     private val settingsRepo: SettingsRepo
 ) : ViewModel() {
 
-    fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
+//    val nextTimeMillisUiState: StateFlow<NextTimeMillisUiState> = getNextTimeMillisUseCase()
 
-    fun getNextPrayerName() = prayerRepo.getNextPrayerName()
+    fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
     fun getNextTimeIndex() = prayerRepo.getNextTimeIndex()
 

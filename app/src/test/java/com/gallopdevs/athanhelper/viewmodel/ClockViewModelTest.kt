@@ -13,15 +13,6 @@ class ClockViewModelTest {
     private val mockPrayerRepo: PrayerRepo = mock()
 
     @Test
-    fun get_next_prayer_name_successful() {
-        val expectedNextPrayerName = "Sunset"
-        whenever(mockPrayerRepo.getNextPrayerName()).thenReturn(expectedNextPrayerName)
-
-        testObject = ClockViewModel(mockPrayerRepo)
-        assertEquals(expectedNextPrayerName, testObject.getNextPrayerName())
-    }
-
-    @Test
     fun get_next_time_index_successful() {
         val expectedNextTimeIndex = 1
         whenever(mockPrayerRepo.getNextTimeIndex()).thenReturn(expectedNextTimeIndex)
