@@ -1,6 +1,7 @@
 package com.gallopdevs.athanhelper.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.gallopdevs.athanhelper.data.utils.formatTimes
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,31 +51,4 @@ class ClockViewModel @Inject constructor(
     fun formatTimes(pageIndex: Int): List<Array<String>> {
         return prayerRepo.getPrayerTimesForDate(pageIndex).formatTimes()
     }
-}
-
-fun ArrayList<String>.formatTimes(): List<Array<String>> {
-    val newDawnTime = this[0].replaceFirst("^0+(?!$)".toRegex(), "")
-    val newMiddayTime = this[2].replaceFirst("^0+(?!$)".toRegex(), "")
-    val newAfternoonTime = this[3].replaceFirst("^0+(?!$)".toRegex(), "")
-    val newSunsetTime = this[5].replaceFirst("^0+(?!$)".toRegex(), "")
-    val newNightTime = this[6].replaceFirst("^0+(?!$)".toRegex(), "")
-
-    val splitDawnTime =
-        newDawnTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    val splitMiddayTime =
-        newMiddayTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    val splitAfternoonTime =
-        newAfternoonTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    val splitSunsetTime =
-        newSunsetTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    val splitNightTime =
-        newNightTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-    return listOf(
-        splitDawnTime,
-        splitMiddayTime,
-        splitAfternoonTime,
-        splitSunsetTime,
-        splitNightTime
-    )
 }

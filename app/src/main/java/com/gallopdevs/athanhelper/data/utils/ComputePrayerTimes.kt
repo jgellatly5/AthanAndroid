@@ -3,12 +3,25 @@ package com.gallopdevs.athanhelper.data.utils
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ANGLE_BASED
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.FLOATING
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.methodParams
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.NONE
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ONE_SEVENTH
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12_NS
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.methodParams
+
+fun ArrayList<String>.formatTimes(): List<Array<String>> {
+    fun formatTime(time: String): Array<String> =
+        time.replaceFirst("^0+(?!$)".toRegex(), "").split(" ".toRegex()).toTypedArray()
+
+    return listOf(
+        formatTime(this[0]),
+        formatTime(this[2]),
+        formatTime(this[3]),
+        formatTime(this[5]),
+        formatTime(this[6])
+    )
+}
 
 // compute prayer times at given julian date
 fun PrayerCalculatorIpml.computeDayTimes(): ArrayList<String> {
