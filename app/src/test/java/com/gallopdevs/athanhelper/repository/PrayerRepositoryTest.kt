@@ -15,7 +15,13 @@ class PrayerRepositoryTest {
     @Test
     fun get_prayer_times_for_date_successful() {
         val pageIndex = 0
-        val expectedList = arrayListOf("5:00", "10:00", "12:00", "3:00", "6:00")
+        val expectedList = listOf(
+            arrayOf("5:00", "am"),
+            arrayOf("10:00", "am"),
+            arrayOf("12:00", "pm"),
+            arrayOf("3:00", "pm"),
+            arrayOf("6:00", "pm")
+        )
 
         whenever(mockPrayerCalculator.getPrayerTimesForDate(offset = pageIndex))
             .thenReturn(expectedList)

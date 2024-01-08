@@ -12,14 +12,13 @@ class ClockViewModelTest {
     private lateinit var testObject: ClockViewModel
 
     private val mockPrayerRepo: PrayerRepo = mock()
-    private val mockSettingsRepo: SettingsRepo = mock()
 
     @Test
     fun get_next_time_index_successful() {
         val expectedNextTimeIndex = 1
         whenever(mockPrayerRepo.getNextTimeIndex()).thenReturn(expectedNextTimeIndex)
 
-        testObject = ClockViewModel(mockPrayerRepo, mockSettingsRepo)
+        testObject = ClockViewModel(mockPrayerRepo)
         assertEquals(expectedNextTimeIndex, testObject.getNextTimeIndex())
     }
 }
