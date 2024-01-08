@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
@@ -33,8 +32,8 @@ import com.gallopdevs.athanhelper.MainActivity
 import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
-import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
+import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -43,7 +42,8 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun NextPrayerHeader(
-    clockViewModel: ClockViewModel = hiltViewModel()
+    clockViewModel: ClockViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     var timerCountDown by remember { mutableLongStateOf(clockViewModel.getNextTimeMillis()) }
     LaunchedEffect(timerCountDown) {
@@ -81,7 +81,7 @@ fun NextPrayerHeader(
                     fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
                 )
             } else {
-                val enableNotifications = clockViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
+                val enableNotifications = settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
                 if (enableNotifications) createNotification(LocalContext.current, clockViewModel)
                 Text(
                     text = stringResource(id = R.string.end_time),

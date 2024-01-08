@@ -18,13 +18,13 @@ import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ASR_METH
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.LATITUDES_METHOD
-import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
+import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
-    clockViewModel: ClockViewModel = hiltViewModel()
+    settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    clockViewModel.apply {
+    settingsViewModel.apply {
         var areNotificationsEnabled by remember {
             mutableStateOf(getBoolean(ENABLE_NOTIFICATIONS, false))
         }

@@ -19,6 +19,7 @@ import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ASR_METH
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.LATITUDES_METHOD
 import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
+import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val clockViewModel: ClockViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -76,8 +78,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadSettings() {
-        clockViewModel.apply {
-            setCalculations(
+        settingsViewModel.apply {
+            clockViewModel.setCalculations(
                 calcMethod = getInt(CALCULATION_METHOD, JAFARI),
                 asrJuristic = getInt(ASR_METHOD, SHAFII),
                 adjustHighLats = getInt(LATITUDES_METHOD, MIDNIGHT)
