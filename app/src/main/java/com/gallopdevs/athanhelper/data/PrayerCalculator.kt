@@ -37,6 +37,7 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
     private val calendar = Calendar.getInstance()
     private val dstOffset = calendar.get(Calendar.DST_OFFSET) / 3600000
     private val timeZoneOffset = calendar.get(Calendar.ZONE_OFFSET) / 3600000 + dstOffset
+    private val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
 
     var lat = 0.0
     var lng = 0.0
@@ -51,11 +52,11 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
     var timeFormat = 0
 
     // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}
-    val offsets = IntArray(7) { 0 }
-    private val differences = LongArray(6) { 0 }
+    val offsets = IntArray(7)
+    private val differences = LongArray(6)
 
     // return prayer times for a given date
-    override fun getPrayerTimesForDate(offset: Int): ArrayList<String> {
+    override fun getPrayerTimesForDate(offset: Int): List<Array<String>> {
         val month = calendar.get(Calendar.MONTH) + 1
         val year = calendar.get(Calendar.YEAR)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
@@ -76,6 +77,10 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
         this.adjustHighLats = adjustHighLats
     }
 
+    override fun setTimeFormat() {
+        timeFormat = TIME_12
+    }
+
     override fun getNextTimeIndex(): Int {
         var nextTimeIndex = 0
         for (i in differences.indices) {
@@ -86,49 +91,41 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
         return nextTimeIndex
     }
 
-    override fun setTimeFormat() {
-        timeFormat = TIME_12
+    private fun getCurrentTimeMillis(): Long {
+        val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
+        return parseTimeToMillis(currentTime)
+    }
+
+    private fun parseTimeToMillis(time: String): Long {
+        return try {
+            simpleDateFormat.parse("$time:00")?.time ?: 0
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            0
+        }
     }
 
     override fun getNextTimeMillis(): Long {
-        val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
-        val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        val newTimes = getPrayerTimesForDate(dayOfMonth)
-        val nextDayTimes = getPrayerTimesForDate(dayOfMonth + 1)
+        val currentTimeMillis = getCurrentTimeMillis()
+        val newTimes = getPrayerTimesForDate(calendar.get(Calendar.DAY_OF_MONTH))
+        val nextMorningTime = getPrayerTimesForDate(calendar.get(Calendar.DAY_OF_MONTH) + 1)
 
         try {
-            // get milliseconds from parsing dates
-            val currentTimeMillis = simpleDateFormat.parse(currentTime)?.time ?: 0
-            val dawnMillis = simpleDateFormat.parse("${newTimes[0]}:00")?.time ?: 0
-            val middayMillis = simpleDateFormat.parse("${newTimes[2]}:00")?.time ?: 0
-            val afMillis = simpleDateFormat.parse("${newTimes[3]}:00")?.time ?: 0
-            val sunsetMillis = simpleDateFormat.parse("${newTimes[5]}:00")?.time ?: 0
-            val nightMillis = simpleDateFormat.parse("${newTimes[6]}:00")?.time ?: 0
-            val nextDawnMillis = simpleDateFormat.parse("${nextDayTimes[0]}:00")?.time ?: 0
-            val MILLIS_IN_DAY = 86400000
+            val times = arrayOf(newTimes[0], newTimes[1], newTimes[2], newTimes[3], newTimes[4], nextMorningTime[0])
+            val millisArray = times.map { parseTimeToMillis(it[0]) }
 
-            // set index of each element in differences array
-            differences[0] = dawnMillis - currentTimeMillis
-            differences[1] = middayMillis - currentTimeMillis
-            differences[2] = afMillis - currentTimeMillis
-            differences[3] = sunsetMillis - currentTimeMillis
-            differences[4] = nightMillis - currentTimeMillis
-            differences[5] = nextDawnMillis - currentTimeMillis + MILLIS_IN_DAY
+            // Calculate differences
+            for (i in differences.indices) {
+                differences[i] = millisArray[i] - currentTimeMillis
+                if (i == differences.lastIndex) {
+                    differences[i] = differences[i] + 86400000
+                }
+            }
         } catch (e: ParseException) {
             e.printStackTrace()
         }
 
-        var nextTimeIndex = 0
-        for (i in differences.indices) {
-            if (differences[i] < 0) {
-                nextTimeIndex = i + 1
-                if (nextTimeIndex > 5) {
-                    nextTimeIndex = 0
-                }
-            }
-        }
-        return differences[nextTimeIndex]
+        return differences[getNextTimeIndex()]
     }
 
     companion object {
@@ -178,7 +175,7 @@ class PrayerCalculatorIpml @Inject constructor() : PrayerCalculator {
 }
 
 interface PrayerCalculator {
-    fun getPrayerTimesForDate(offset: Int): ArrayList<String>
+    fun getPrayerTimesForDate(offset: Int): List<Array<String>>
     fun getNextTimeMillis(): Long
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)

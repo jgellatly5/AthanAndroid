@@ -10,7 +10,7 @@ import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12_NS
 import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.methodParams
 
-fun ArrayList<String>.formatTimes(): List<Array<String>> {
+fun ArrayList<String>.getPrayerTimesForDate(): List<Array<String>> {
     fun formatTime(time: String): Array<String> =
         time.replaceFirst("^0+(?!$)".toRegex(), "").split(" ".toRegex()).toTypedArray()
 
@@ -24,13 +24,13 @@ fun ArrayList<String>.formatTimes(): List<Array<String>> {
 }
 
 // compute prayer times at given julian date
-fun PrayerCalculatorIpml.computeDayTimes(): ArrayList<String> {
+fun PrayerCalculatorIpml.computeDayTimes(): List<Array<String>> {
     // default times
     var times = doubleArrayOf(5.0, 6.0, 12.0, 13.0, 18.0, 18.0, 18.0)
     times = computeTimes(times)
     times = adjustTimes(times)
     times = tuneTimes(times)
-    return adjustTimesFormat(times)
+    return adjustTimesFormat(times).getPrayerTimesForDate()
 }
 
 // compute prayer times at given julian date

@@ -1,7 +1,6 @@
 package com.gallopdevs.athanhelper.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.gallopdevs.athanhelper.data.utils.formatTimes
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +39,7 @@ class ClockViewModel @Inject constructor(
 
     fun getInt(key: String, defaultValue: Int = 0): Int = settingsRepo.getInt(key, defaultValue)
 
-    fun formatDate(pageIndex: Int): String {
+    fun getDate(pageIndex: Int): String {
         val c = Calendar.getInstance()
         c.add(Calendar.DAY_OF_MONTH, pageIndex)
 
@@ -48,7 +47,7 @@ class ClockViewModel @Inject constructor(
         return sdf.format(c.time)
     }
 
-    fun formatTimes(pageIndex: Int): List<Array<String>> {
-        return prayerRepo.getPrayerTimesForDate(pageIndex).formatTimes()
+    fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>> {
+        return prayerRepo.getPrayerTimesForDate(pageIndex)
     }
 }

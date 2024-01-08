@@ -8,7 +8,7 @@ class PrayerRepository @Inject constructor(
     private val prayerCalculator: PrayerCalculator
 ) : PrayerRepo {
 
-    override fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String> =
+    override fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>> =
         prayerCalculator.getPrayerTimesForDate(offset = pageIndex)
 
     override fun getNextTimeMillis(): Long = prayerCalculator.getNextTimeMillis()
@@ -26,7 +26,7 @@ class PrayerRepository @Inject constructor(
 }
 
 interface PrayerRepo {
-    fun getPrayerTimesForDate(pageIndex: Int): ArrayList<String>
+    fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>>
     fun getNextTimeMillis(): Long
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
