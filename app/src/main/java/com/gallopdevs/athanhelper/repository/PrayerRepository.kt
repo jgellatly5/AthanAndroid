@@ -1,7 +1,6 @@
 package com.gallopdevs.athanhelper.repository
 
 import com.gallopdevs.athanhelper.data.PrayerCalculator
-import com.gallopdevs.athanhelper.data.PreferencesManager
 import javax.inject.Inject
 
 class PrayerRepository @Inject constructor(
@@ -13,23 +12,22 @@ class PrayerRepository @Inject constructor(
 
     override fun getNextTimeMillis(): Long = prayerCalculator.getNextTimeMillis()
 
+    override fun getNextTimeIndex(): Int = prayerCalculator.getNextTimeIndex()
+
     override fun setLocation(latitude: Double, longitude: Double) =
         prayerCalculator.setLocation(latitude, longitude)
 
     override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
         prayerCalculator.setCalculations(calcMethod, asrJuristic, adjustHighLats)
 
-    override fun getNextTimeIndex(): Int = prayerCalculator.getNextTimeIndex()
-
     override fun setTimeFormat() = prayerCalculator.setTimeFormat()
-
 }
 
 interface PrayerRepo {
     fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>>
     fun getNextTimeMillis(): Long
+    fun getNextTimeIndex(): Int
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
-    fun getNextTimeIndex(): Int
     fun setTimeFormat()
 }

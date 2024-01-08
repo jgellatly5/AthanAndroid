@@ -18,7 +18,7 @@ import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.SHAFII
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ASR_METHOD
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.LATITUDES_METHOD
-import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
+import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private val clockViewModel: ClockViewModel by viewModels()
+    private val prayerViewModel: PrayerViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     private val requestPermissionLauncher =
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
 
     private fun loadSettings() {
         settingsViewModel.apply {
-            clockViewModel.setCalculations(
+            prayerViewModel.setCalculations(
                 calcMethod = getInt(CALCULATION_METHOD, JAFARI),
                 asrJuristic = getInt(ASR_METHOD, SHAFII),
                 adjustHighLats = getInt(LATITUDES_METHOD, MIDNIGHT)
@@ -107,7 +107,7 @@ class MainActivity : ComponentActivity() {
                 LocationServices.getFusedLocationProviderClient(this@MainActivity)
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                 if (location != null) {
-                    clockViewModel.apply {
+                    prayerViewModel.apply {
                         setLocation(location.latitude, location.longitude)
                     }
                 } else {

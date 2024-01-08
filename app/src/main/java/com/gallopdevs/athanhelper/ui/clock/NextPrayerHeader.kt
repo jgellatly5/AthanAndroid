@@ -32,7 +32,7 @@ import com.gallopdevs.athanhelper.MainActivity
 import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
-import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
+import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -42,7 +42,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun NextPrayerHeader(
-    clockViewModel: ClockViewModel = hiltViewModel(),
+    clockViewModel: PrayerViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     var timerCountDown by remember { mutableLongStateOf(clockViewModel.getNextTimeMillis()) }
@@ -92,12 +92,12 @@ fun NextPrayerHeader(
     }
 }
 
-private fun createNotification(context: Context, clockViewModel: ClockViewModel) {
+private fun createNotification(context: Context, prayerViewModel: PrayerViewModel) {
     val intent = Intent(context, MainActivity::class.java)
     val pendingIntent =
         PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     val prayerNames = context.resources.getStringArray(R.array.prayer_titles)
-    val nextPrayerName = prayerNames[clockViewModel.getNextTimeIndex()]
+    val nextPrayerName = prayerNames[prayerViewModel.getNextTimeIndex()]
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.moon)
         .setContentTitle("Athan")

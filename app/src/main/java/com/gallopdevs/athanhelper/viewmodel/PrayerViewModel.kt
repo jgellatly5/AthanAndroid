@@ -9,12 +9,16 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class ClockViewModel @Inject constructor(
+class PrayerViewModel @Inject constructor(
 //    getNextTimeMillisUseCase: GetNextTimeMillisUseCase,
     private val prayerRepo: PrayerRepo
 ) : ViewModel() {
 
 //    val nextTimeMillisUiState: StateFlow<NextTimeMillisUiState> = getNextTimeMillisUseCase()
+
+    fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>> {
+        return prayerRepo.getPrayerTimesForDate(pageIndex)
+    }
 
     fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
@@ -34,9 +38,5 @@ class ClockViewModel @Inject constructor(
 
         val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
         return sdf.format(c.time)
-    }
-
-    fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>> {
-        return prayerRepo.getPrayerTimesForDate(pageIndex)
     }
 }

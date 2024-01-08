@@ -1,16 +1,16 @@
-package com.gallopdevs.athanhelper.repository
+package com.gallopdevs.athanhelper.viewmodel
 
-import com.gallopdevs.athanhelper.data.PrayerCalculator
+import com.gallopdevs.athanhelper.repository.PrayerRepo
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.kotlin.mock
+import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
 
-class PrayerRepositoryTest {
+class PrayerViewModelTest {
 
-    private lateinit var testObject: PrayerRepo
+    private lateinit var testObject: PrayerViewModel
 
-    private val mockPrayerCalculator: PrayerCalculator = mock()
+    private val mockPrayerRepo: PrayerRepo = mock()
 
     @Test
     fun get_prayer_times_for_date_successful() {
@@ -23,30 +23,28 @@ class PrayerRepositoryTest {
             arrayOf("6:00", "pm")
         )
 
-        whenever(mockPrayerCalculator.getPrayerTimesForDate(offset = pageIndex))
+        whenever(mockPrayerRepo.getPrayerTimesForDate(pageIndex = pageIndex))
             .thenReturn(expectedList)
 
-        testObject = PrayerRepository(mockPrayerCalculator)
+        testObject = PrayerViewModel(mockPrayerRepo)
         assertEquals(expectedList, testObject.getPrayerTimesForDate(pageIndex))
     }
 
     @Test
     fun get_next_time_millis_successful() {
         val expectedNextTimeMillis = 80_000_000L
+        whenever(mockPrayerRepo.getNextTimeMillis()).thenReturn(expectedNextTimeMillis)
 
-        whenever(mockPrayerCalculator.getNextTimeMillis())
-            .thenReturn(expectedNextTimeMillis)
-
-        testObject = PrayerRepository(mockPrayerCalculator)
+        testObject = PrayerViewModel(mockPrayerRepo)
         assertEquals(expectedNextTimeMillis, testObject.getNextTimeMillis())
     }
 
     @Test
     fun get_next_time_index_successful() {
         val expectedNextTimeIndex = 1
-        whenever(mockPrayerCalculator.getNextTimeIndex()).thenReturn(expectedNextTimeIndex)
+        whenever(mockPrayerRepo.getNextTimeIndex()).thenReturn(expectedNextTimeIndex)
 
-        testObject = PrayerRepository(mockPrayerCalculator)
+        testObject = PrayerViewModel(mockPrayerRepo)
         assertEquals(expectedNextTimeIndex, testObject.getNextTimeIndex())
     }
 }

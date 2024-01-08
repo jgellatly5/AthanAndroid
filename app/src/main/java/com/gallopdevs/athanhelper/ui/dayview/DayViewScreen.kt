@@ -11,12 +11,12 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
-import com.gallopdevs.athanhelper.viewmodel.ClockViewModel
+import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 
 @Composable
 fun DayViewScreen(
     pageIndex: Int?,
-    clockViewModel: ClockViewModel = hiltViewModel()
+    clockViewModel: PrayerViewModel = hiltViewModel()
 ) {
     clockViewModel.setTimeFormat()
     Column(
