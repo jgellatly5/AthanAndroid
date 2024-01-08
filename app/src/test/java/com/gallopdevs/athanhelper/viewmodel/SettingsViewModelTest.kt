@@ -1,6 +1,15 @@
 package com.gallopdevs.athanhelper.viewmodel
 
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.HANAFI
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ISNA
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ONE_SEVENTH
+import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.SHAFII
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ASR_METHOD
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.LATITUDES_METHOD
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -21,5 +30,35 @@ class SettingsViewModelTest {
 
         testObject = SettingsViewModel(mockSettingsRepo)
         assertEquals(expectedBoolean, testObject.getBoolean(ENABLE_NOTIFICATIONS, false))
+    }
+
+    @Test
+    fun get_int_calculation_method_isna_successful() {
+        val expectedInt = ISNA
+        whenever(mockSettingsRepo.getInt(CALCULATION_METHOD, JAFARI))
+            .thenReturn(expectedInt)
+
+        testObject = SettingsViewModel(mockSettingsRepo)
+        assertEquals(expectedInt, testObject.getInt(CALCULATION_METHOD, JAFARI))
+    }
+
+    @Test
+    fun get_int_asr_method_hanafi_successful() {
+        val expectedInt = HANAFI
+        whenever(mockSettingsRepo.getInt(ASR_METHOD, SHAFII))
+            .thenReturn(expectedInt)
+
+        testObject = SettingsViewModel(mockSettingsRepo)
+        assertEquals(expectedInt, testObject.getInt(ASR_METHOD, SHAFII))
+    }
+
+    @Test
+    fun get_int_latitudes_method_one_seventh_successful() {
+        val expectedInt = ONE_SEVENTH
+        whenever(mockSettingsRepo.getInt(LATITUDES_METHOD, MIDNIGHT))
+            .thenReturn(expectedInt)
+
+        testObject = SettingsViewModel(mockSettingsRepo)
+        assertEquals(expectedInt, testObject.getInt(LATITUDES_METHOD, MIDNIGHT))
     }
 }
