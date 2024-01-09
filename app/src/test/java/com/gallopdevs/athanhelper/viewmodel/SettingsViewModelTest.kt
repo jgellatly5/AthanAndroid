@@ -1,15 +1,15 @@
 package com.gallopdevs.athanhelper.viewmodel
 
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.HANAFI
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ISNA
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.JAFARI
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ONE_SEVENTH
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.SHAFII
-import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ASR_METHOD
-import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.CALCULATION_METHOD
-import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
-import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.LATITUDES_METHOD
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.HANAFI
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.ISNA
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.ONE_SEVENTH
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.SHAFII
+import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.ASR_METHOD
+import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.CALCULATION_METHOD
+import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.LATITUDES_METHOD
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import org.junit.Assert.assertEquals
 import org.junit.Test

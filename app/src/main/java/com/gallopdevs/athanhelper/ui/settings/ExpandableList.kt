@@ -27,9 +27,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.JAFARI
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.SHAFII
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.SHAFII
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 data class ExpandableItem(

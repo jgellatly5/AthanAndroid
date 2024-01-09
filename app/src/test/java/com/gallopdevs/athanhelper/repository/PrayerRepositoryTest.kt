@@ -1,6 +1,6 @@
 package com.gallopdevs.athanhelper.repository
 
-import com.gallopdevs.athanhelper.data.PrayerCalculator
+import com.gallopdevs.athanhelper.data.PrayerCalc
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -10,7 +10,7 @@ class PrayerRepositoryTest {
 
     private lateinit var testObject: PrayerRepo
 
-    private val mockPrayerCalculator: PrayerCalculator = mock()
+    private val mockPrayerCalc: PrayerCalc = mock()
 
     @Test
     fun get_prayer_times_for_date_successful() {
@@ -23,10 +23,10 @@ class PrayerRepositoryTest {
             arrayOf("6:00", "pm")
         )
 
-        whenever(mockPrayerCalculator.getPrayerTimesForDate(offset = pageIndex))
+        whenever(mockPrayerCalc.getPrayerTimesForDate(offset = pageIndex))
             .thenReturn(expectedList)
 
-        testObject = PrayerRepository(mockPrayerCalculator)
+        testObject = PrayerRepository(mockPrayerCalc)
         assertEquals(expectedList, testObject.getPrayerTimesForDate(pageIndex))
     }
 
@@ -34,19 +34,19 @@ class PrayerRepositoryTest {
     fun get_next_time_millis_successful() {
         val expectedNextTimeMillis = 80_000_000L
 
-        whenever(mockPrayerCalculator.getNextTimeMillis())
+        whenever(mockPrayerCalc.getNextTimeMillis())
             .thenReturn(expectedNextTimeMillis)
 
-        testObject = PrayerRepository(mockPrayerCalculator)
+        testObject = PrayerRepository(mockPrayerCalc)
         assertEquals(expectedNextTimeMillis, testObject.getNextTimeMillis())
     }
 
     @Test
     fun get_next_time_index_successful() {
         val expectedNextTimeIndex = 1
-        whenever(mockPrayerCalculator.getNextTimeIndex()).thenReturn(expectedNextTimeIndex)
+        whenever(mockPrayerCalc.getNextTimeIndex()).thenReturn(expectedNextTimeIndex)
 
-        testObject = PrayerRepository(mockPrayerCalculator)
+        testObject = PrayerRepository(mockPrayerCalc)
         assertEquals(expectedNextTimeIndex, testObject.getNextTimeIndex())
     }
 }

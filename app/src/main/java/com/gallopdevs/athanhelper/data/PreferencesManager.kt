@@ -4,9 +4,9 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class PreferencesManagerImpl @Inject constructor(
+class PreferencesManager @Inject constructor(
     @ApplicationContext context: Context
-) : PreferencesManager {
+) : PreferencesMgr {
     private val sharedPreferences =
         context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE)
 
@@ -37,7 +37,7 @@ class PreferencesManagerImpl @Inject constructor(
     }
 }
 
-interface PreferencesManager {
+interface PreferencesMgr {
     fun saveBoolean(key: String, value: Boolean)
     fun getBoolean(key: String, defaultValue: Boolean): Boolean
     fun saveInt(key: String, value: Int)

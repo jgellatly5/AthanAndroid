@@ -1,19 +1,19 @@
 package com.gallopdevs.athanhelper.repository
 
-import com.gallopdevs.athanhelper.data.PreferencesManager
+import com.gallopdevs.athanhelper.data.PreferencesMgr
 import javax.inject.Inject
 
 class SettingsRepository @Inject constructor(
-    private val preferencesManager: PreferencesManager
+    private val preferencesMgr: PreferencesMgr
 ) : SettingsRepo {
 
-    override fun saveBoolean(key: String, value: Boolean) = preferencesManager.saveBoolean(key, value)
+    override fun saveBoolean(key: String, value: Boolean) = preferencesMgr.saveBoolean(key, value)
 
-    override fun getBoolean(key: String, defaultValue: Boolean): Boolean = preferencesManager.getBoolean(key, defaultValue)
+    override fun getBoolean(key: String, defaultValue: Boolean): Boolean = preferencesMgr.getBoolean(key, defaultValue)
 
-    override fun saveInt(key: String, value: Int) = preferencesManager.saveInt(key, value)
+    override fun saveInt(key: String, value: Int) = preferencesMgr.saveInt(key, value)
 
-    override fun getInt(key: String, defaultValue: Int): Int = preferencesManager.getInt(key, defaultValue)
+    override fun getInt(key: String, defaultValue: Int): Int = preferencesMgr.getInt(key, defaultValue)
 }
 
 interface SettingsRepo {

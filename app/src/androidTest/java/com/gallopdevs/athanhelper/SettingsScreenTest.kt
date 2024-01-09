@@ -10,12 +10,12 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
 import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
-import com.gallopdevs.athanhelper.data.PreferencesManager
-import com.gallopdevs.athanhelper.data.PreferencesManagerImpl.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.PreferencesMgr
+import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +27,7 @@ class SettingsScreenTest {
     private val context: Context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
-    private val preferencesManager: PreferencesManager = mock()
+    private val preferencesMgr: PreferencesMgr = mock()
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -53,7 +53,7 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchTogglesOnAndOff() {
-        whenever(preferencesManager.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(false)
+        whenever(preferencesMgr.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(false)
         composeTestRule.apply {
             setContent {
                 SettingsScreen()
@@ -69,7 +69,7 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchIsOnIfSharedPrefsTrue() {
-        whenever(preferencesManager.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(true)
+        whenever(preferencesMgr.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(true)
         composeTestRule.apply {
             setContent {
                 SettingsScreen()

@@ -1,14 +1,14 @@
 package com.gallopdevs.athanhelper.data.utils
 
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ANGLE_BASED
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.FLOATING
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.MIDNIGHT
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.NONE
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.ONE_SEVENTH
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.TIME_12_NS
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml.Companion.methodParams
+import com.gallopdevs.athanhelper.data.PrayerCalculator
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.ANGLE_BASED
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.FLOATING
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.MIDNIGHT
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.NONE
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.ONE_SEVENTH
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.TIME_12
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.TIME_12_NS
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.methodParams
 
 fun ArrayList<String>.getPrayerTimesForDate(): List<Array<String>> {
     fun formatTime(time: String): Array<String> =
@@ -24,7 +24,7 @@ fun ArrayList<String>.getPrayerTimesForDate(): List<Array<String>> {
 }
 
 // compute prayer times at given julian date
-fun PrayerCalculatorIpml.computeDayTimes(): List<Array<String>> {
+fun PrayerCalculator.computeDayTimes(): List<Array<String>> {
     // default times
     var times = doubleArrayOf(5.0, 6.0, 12.0, 13.0, 18.0, 18.0, 18.0)
     times = computeTimes(times)
@@ -34,7 +34,7 @@ fun PrayerCalculatorIpml.computeDayTimes(): List<Array<String>> {
 }
 
 // compute prayer times at given julian date
-fun PrayerCalculatorIpml.computeTimes(times: DoubleArray): DoubleArray {
+fun PrayerCalculator.computeTimes(times: DoubleArray): DoubleArray {
     val t = dayPortion(times)
     val fajr = computeTime(
         180 - methodParams[calcMethod]!![0],
@@ -60,7 +60,7 @@ fun dayPortion(times: DoubleArray): DoubleArray {
 }
 
 // adjust times in a prayer time array
-fun PrayerCalculatorIpml.adjustTimes(t: DoubleArray): DoubleArray {
+fun PrayerCalculator.adjustTimes(t: DoubleArray): DoubleArray {
     var times = t
     for (i in times.indices) {
         times[i] += timeZone - lng / 15
@@ -83,7 +83,7 @@ fun PrayerCalculatorIpml.adjustTimes(t: DoubleArray): DoubleArray {
 
 
 // adjust Fajr, Isha and Maghrib for locations in higher latitudes
-fun PrayerCalculatorIpml.adjustHighLatTimes(times: DoubleArray): DoubleArray {
+fun PrayerCalculator.adjustHighLatTimes(times: DoubleArray): DoubleArray {
     val nightTime = timeDiff(times[4], times[1]) // sunset to sunrise
 
     // Adjust Fajr
@@ -112,7 +112,7 @@ fun PrayerCalculatorIpml.adjustHighLatTimes(times: DoubleArray): DoubleArray {
 }
 
 // the night portion used for adjusting times in higher latitudes
-fun PrayerCalculatorIpml.nightPortion(angle: Double): Double {
+fun PrayerCalculator.nightPortion(angle: Double): Double {
     var calc = 0.0
     when (adjustHighLats) {
         ANGLE_BASED -> calc = angle / 60.0
@@ -123,7 +123,7 @@ fun PrayerCalculatorIpml.nightPortion(angle: Double): Double {
 }
 
 // convert times array to given time format
-fun PrayerCalculatorIpml.adjustTimesFormat(times: DoubleArray): ArrayList<String> {
+fun PrayerCalculator.adjustTimesFormat(times: DoubleArray): ArrayList<String> {
     val result = ArrayList<String>()
     if (timeFormat == FLOATING) {
         for (time in times) {
@@ -151,7 +151,7 @@ fun PrayerCalculatorIpml.adjustTimesFormat(times: DoubleArray): ArrayList<String
 
 // Tune timings for adjustments
 // Set time offsets
-fun PrayerCalculatorIpml.tune(offsetTimes: IntArray) {
+fun PrayerCalculator.tune(offsetTimes: IntArray) {
     for (i in offsetTimes.indices) { // offsetTimes length
         // should be 7 in order
         // of Fajr, Sunrise,
@@ -161,7 +161,7 @@ fun PrayerCalculatorIpml.tune(offsetTimes: IntArray) {
     }
 }
 
-fun PrayerCalculatorIpml.tuneTimes(times: DoubleArray): DoubleArray {
+fun PrayerCalculator.tuneTimes(times: DoubleArray): DoubleArray {
     for (i in times.indices) {
         times[i] = times[i] + offsets[i] / 60.0
     }

@@ -1,11 +1,11 @@
 package com.gallopdevs.athanhelper.di
 
+import com.gallopdevs.athanhelper.data.PrayerCalc
 import com.gallopdevs.athanhelper.data.PrayerCalculator
-import com.gallopdevs.athanhelper.data.PrayerCalculatorIpml
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.PrayerRepository
+import com.gallopdevs.athanhelper.data.PreferencesMgr
 import com.gallopdevs.athanhelper.data.PreferencesManager
-import com.gallopdevs.athanhelper.data.PreferencesManagerImpl
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepository
 import dagger.Binds
@@ -24,8 +24,8 @@ abstract class PrayerModule {
     abstract fun bindSettingsRepo(settingsRepository: SettingsRepository): SettingsRepo
 
     @Binds
-    abstract fun bindPrayerCalculator(prayerCalculatorImpl: PrayerCalculatorIpml): PrayerCalculator
+    abstract fun bindPrayerCalc(prayerCalculator: PrayerCalculator): PrayerCalc
 
     @Binds
-    abstract fun bindPreferencesManager(preferencesManagerImpl: PreferencesManagerImpl): PreferencesManager
+    abstract fun bindPreferencesMgr(preferencesManager: PreferencesManager): PreferencesMgr
 }
