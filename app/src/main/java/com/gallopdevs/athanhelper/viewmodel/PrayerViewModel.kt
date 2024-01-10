@@ -27,10 +27,12 @@ class PrayerViewModel @Inject constructor(
     fun setLocation(latitude: Double, longitude: Double) =
         prayerRepo.setLocation(latitude, longitude)
 
-    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
-        prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats)
-
-    fun setTimeFormat() = prayerRepo.setTimeFormat()
+    fun setCalculations(
+        calcMethod: Int,
+        asrJuristic: Int,
+        adjustHighLats: Int,
+        timeFormat: Int
+    ) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
 
     fun getDate(pageIndex: Int): String {
         val c = Calendar.getInstance()

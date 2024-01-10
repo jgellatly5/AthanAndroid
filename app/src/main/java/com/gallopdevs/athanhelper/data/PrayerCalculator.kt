@@ -45,11 +45,11 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
     var jDate = 0.0
 
     // Initialize vars
-    var calcMethod = 0
-    var asrJuristic = 0
+    var calcMethod = JAFARI
+    var asrJuristic = SHAFII
     var dhuhrMinutes = 0
-    var adjustHighLats = 1
-    var timeFormat = 0
+    var adjustHighLats = MIDNIGHT
+    var timeFormat = TIME_12
 
     // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}
     val offsets = IntArray(7)
@@ -125,14 +125,16 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
         lng = longitude
     }
 
-    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) {
+    override fun setCalculations(
+        calcMethod: Int,
+        asrJuristic: Int,
+        adjustHighLats: Int,
+        timeFormat: Int
+    ) {
         this.calcMethod = calcMethod
         this.asrJuristic = asrJuristic
         this.adjustHighLats = adjustHighLats
-    }
-
-    override fun setTimeFormat() {
-        timeFormat = TIME_12
+        this.timeFormat = timeFormat
     }
 
     companion object {
@@ -163,10 +165,11 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
         const val FLOATING = 3 // floating point number
 
         /*
-         * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after
-         * sunset) mv : maghrib parameter value (in angle or minutes) is : isha
-         * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter
-         * value (in angle or minutes)
+         * fa : fajr angle
+         * ms : maghrib selector (0 = angle; 1 = minutes after sunset)
+         * mv : maghrib parameter value (in angle or minutes)
+         * is : isha selector (0 = angle; 1 = minutes after maghrib)
+         * iv : isha parameter value (in angle or minutes)
          */
         val methodParams: HashMap<Int, DoubleArray> = hashMapOf(
             JAFARI to doubleArrayOf(16.0, 0.0, 4.0, 0.0, 14.0),
@@ -186,6 +189,10 @@ interface PrayerCalc {
     fun getNextTimeMillis(): Long
     fun getNextTimeIndex(): Int
     fun setLocation(latitude: Double, longitude: Double)
-    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
-    fun setTimeFormat()
+    fun setCalculations(
+        calcMethod: Int,
+        asrJuristic: Int,
+        adjustHighLats: Int,
+        timeFormat: Int
+    )
 }

@@ -17,10 +17,12 @@ class PrayerRepository @Inject constructor(
     override fun setLocation(latitude: Double, longitude: Double) =
         prayerCalc.setLocation(latitude, longitude)
 
-    override fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int) =
-        prayerCalc.setCalculations(calcMethod, asrJuristic, adjustHighLats)
-
-    override fun setTimeFormat() = prayerCalc.setTimeFormat()
+    override fun setCalculations(
+        calcMethod: Int,
+        asrJuristic: Int,
+        adjustHighLats: Int,
+        timeFormat: Int
+    ) = prayerCalc.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
 }
 
 interface PrayerRepo {
@@ -28,6 +30,10 @@ interface PrayerRepo {
     fun getNextTimeMillis(): Long
     fun getNextTimeIndex(): Int
     fun setLocation(latitude: Double, longitude: Double)
-    fun setCalculations(calcMethod: Int, asrJuristic: Int, adjustHighLats: Int)
-    fun setTimeFormat()
+    fun setCalculations(
+        calcMethod: Int,
+        asrJuristic: Int,
+        adjustHighLats: Int,
+        timeFormat: Int
+    )
 }

@@ -18,7 +18,6 @@ fun DayViewScreen(
     pageIndex: Int?,
     clockViewModel: PrayerViewModel = hiltViewModel()
 ) {
-    clockViewModel.setTimeFormat()
     Column(
         modifier = Modifier
             .fillMaxWidth()

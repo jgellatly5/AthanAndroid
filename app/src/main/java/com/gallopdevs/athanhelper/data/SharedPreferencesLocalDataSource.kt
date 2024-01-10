@@ -31,6 +31,7 @@ class SharedPreferencesLocalDataSource @Inject constructor(
         const val CALCULATION_METHOD = "CALCULATION_METHOD"
         const val ASR_METHOD = "ASR_METHOD"
         const val LATITUDES_METHOD = "LATITUDES_METHOD"
+        const val TIME_FORMAT = "TIME_FORMAT"
     }
 }
 
