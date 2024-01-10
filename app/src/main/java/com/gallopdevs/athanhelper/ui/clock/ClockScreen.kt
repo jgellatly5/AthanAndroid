@@ -6,13 +6,13 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.NUM_ITEMS
+import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.DAYS_IN_WEEK
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ClockScreen() {
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { DAYS_IN_WEEK })
     Column {
         NextPrayerHeader()
         HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
@@ -25,5 +25,5 @@ fun ClockScreen() {
 }
 
 object ClockScreenConstants {
-    const val NUM_ITEMS = 7
+    const val DAYS_IN_WEEK = 7
 }

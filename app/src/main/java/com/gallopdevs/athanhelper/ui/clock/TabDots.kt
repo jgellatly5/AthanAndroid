@@ -82,7 +82,7 @@ fun TabDots(state: PagerState) {
         }
     ) {
         // Create tabs
-        for (i in 0 until ClockScreenConstants.NUM_ITEMS) {
+        for (i in 0 until ClockScreenConstants.DAYS_IN_WEEK) {
             TabElement(index = i, selectedTabIndex = selectedTabIndex) {
                 selectedTabIndex = it
             }
@@ -96,7 +96,7 @@ fun TabDots(state: PagerState) {
 private fun TabDotsPreview() {
     AthanHelperTheme {
         val pagerState =
-            rememberPagerState(initialPage = 0, pageCount = { ClockScreenConstants.NUM_ITEMS })
+            rememberPagerState(initialPage = 0, pageCount = { ClockScreenConstants.DAYS_IN_WEEK })
         TabDots(state = pagerState)
     }
 }

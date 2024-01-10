@@ -15,7 +15,7 @@ class PrayerViewModel @Inject constructor(
 
 //    val nextTimeMillisUiState: StateFlow<NextTimeMillisUiState> = getNextTimeMillisUseCase()
 
-    fun getPrayerTimesInfo(pageIndex: Int): PrayerTimesInfo = prayerRepo.getPrayerTimesInfo(pageIndex)
+    fun getPrayerTimesInfo(): PrayerTimesInfo = prayerRepo.getPrayerTimesInfo()
 
     fun getNextTimeInfo(): NextTimeInfo = prayerRepo.getNextTimeInfo()
 

@@ -9,8 +9,8 @@ class PrayerRepository @Inject constructor(
     private val prayerCalc: PrayerCalc
 ) : PrayerRepo {
 
-    override fun getPrayerTimesInfo(pageIndex: Int): PrayerTimesInfo =
-        prayerCalc.getPrayerTimesInfo(offset = pageIndex)
+    override fun getPrayerTimesInfo(): PrayerTimesInfo =
+        prayerCalc.getPrayerTimesInfo()
 
     override fun getNextTimeInfo(): NextTimeInfo = prayerCalc.getNextTimeInfo()
 
@@ -26,7 +26,7 @@ class PrayerRepository @Inject constructor(
 }
 
 interface PrayerRepo {
-    fun getPrayerTimesInfo(pageIndex: Int): PrayerTimesInfo
+    fun getPrayerTimesInfo(): PrayerTimesInfo
     fun getNextTimeInfo(): NextTimeInfo
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(

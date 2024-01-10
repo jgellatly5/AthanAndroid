@@ -2,6 +2,7 @@ package com.gallopdevs.athanhelper.data
 
 import com.gallopdevs.athanhelper.data.utils.computeDayTimes
 import com.gallopdevs.athanhelper.data.utils.julianDate
+import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.DAYS_IN_WEEK
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -55,10 +56,10 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
     val offsets = IntArray(7)
     private val differences = LongArray(6)
 
-    override fun getPrayerTimesInfo(offset: Int): PrayerTimesInfo {
+    override fun getPrayerTimesInfo(): PrayerTimesInfo {
         return PrayerTimesInfo(
-            date = getDate(offset = offset),
-            prayerTimesForDate = getPrayerTimesForDate(offset = offset)
+            dates = getDatesForWeek(),
+            prayerTimesForDate = getPrayerTimesForWeek()
         )
     }
 
@@ -69,29 +70,37 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
         )
     }
 
-    private fun getDate(offset: Int): String{
-        val c = Calendar.getInstance()
-        c.add(Calendar.DAY_OF_MONTH, offset)
-
-        val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
-        return sdf.format(c.time)
+    private fun getDatesForWeek(): List<String> {
+        val dates = mutableListOf<String>()
+        for (i in 0 until DAYS_IN_WEEK) {
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_MONTH, i)
+            val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
+            dates.add(sdf.format(calendar.time))
+        }
+        return dates
     }
 
     // return prayer times for a given date
-    private fun getPrayerTimesForDate(offset: Int): List<Array<String>> {
-        val month = calendar.get(Calendar.MONTH) + 1
-        val year = calendar.get(Calendar.YEAR)
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        jDate = julianDate(year, month, dayOfMonth + offset)
-        val lonDiff = lng / (15.0 * 24.0)
-        jDate -= lonDiff
-        return computeDayTimes()
+    private fun getPrayerTimesForWeek(): List<List<Array<String>>> {
+        val prayerTimesForWeek = mutableListOf<List<Array<String>>>()
+        for (i in 0 until DAYS_IN_WEEK) {
+            val calendar = Calendar.getInstance()
+            val month = calendar.get(Calendar.MONTH) + 1
+            val year = calendar.get(Calendar.YEAR)
+            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+            jDate = julianDate(year, month, dayOfMonth + i)
+            val lonDiff = lng / (15.0 * 24.0)
+            jDate -= lonDiff
+            prayerTimesForWeek.add(computeDayTimes())
+        }
+        return prayerTimesForWeek
     }
 
     private fun getNextTimeMillis(): Long {
         val currentTimeMillis = getCurrentTimeMillis()
-        val newTimes = getPrayerTimesForDate(calendar.get(Calendar.DAY_OF_MONTH))
-        val nextMorningTime = getPrayerTimesForDate(calendar.get(Calendar.DAY_OF_MONTH) + 1)
+        val newTimes = getPrayerTimesForWeek().first()
+        val nextMorningTime = getPrayerTimesForWeek()[1]
 
         try {
             val times = arrayOf(
@@ -168,7 +177,7 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
         const val MAKKAH = 4 // Umm al-Qura, Makkah
         const val EGYPT = 5 // Egyptian General Authority of Survey
         const val TEHRAN = 6 // Institute of Geophysics, University of Tehran
-        var CUSTOM = 7 // Custom Setting
+        const val CUSTOM = 7 // Custom Setting
 
         // Asr Juristic Methods
         const val SHAFII = 0 // Shafii (standard)
@@ -207,7 +216,7 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
 }
 
 interface PrayerCalc {
-    fun getPrayerTimesInfo(offset: Int): PrayerTimesInfo
+    fun getPrayerTimesInfo(): PrayerTimesInfo
     fun getNextTimeInfo(): NextTimeInfo
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(
@@ -219,8 +228,8 @@ interface PrayerCalc {
 }
 
 data class PrayerTimesInfo(
-    val date: String,
-    val prayerTimesForDate: List<Array<String>>
+    val dates: List<String>,
+    val prayerTimesForDate: List<List<Array<String>>>
 )
 
 data class NextTimeInfo(
