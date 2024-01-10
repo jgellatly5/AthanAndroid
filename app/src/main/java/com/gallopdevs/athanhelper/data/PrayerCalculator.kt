@@ -120,6 +120,14 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
         return nextTimeIndex
     }
 
+    override fun getDate(offset: Int): String {
+        val c = Calendar.getInstance()
+        c.add(Calendar.DAY_OF_MONTH, offset)
+
+        val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
+        return sdf.format(c.time)
+    }
+
     override fun setLocation(latitude: Double, longitude: Double) {
         lat = latitude
         lng = longitude
@@ -188,6 +196,7 @@ interface PrayerCalc {
     fun getPrayerTimesForDate(offset: Int): List<Array<String>>
     fun getNextTimeMillis(): Long
     fun getNextTimeIndex(): Int
+    fun getDate(offset: Int): String
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(
         calcMethod: Int,
@@ -196,3 +205,10 @@ interface PrayerCalc {
         timeFormat: Int
     )
 }
+
+data class PrayerInfo(
+    val date: String,
+    val prayerTimesForDate: List<Array<String>>,
+    val nextTimeMillis: Long,
+    val nextTimeIndex: Int
+)

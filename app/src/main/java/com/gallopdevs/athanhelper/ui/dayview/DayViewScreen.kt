@@ -16,7 +16,7 @@ import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 @Composable
 fun DayViewScreen(
     pageIndex: Int?,
-    clockViewModel: PrayerViewModel = hiltViewModel()
+    prayerViewModel: PrayerViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier
@@ -28,10 +28,10 @@ fun DayViewScreen(
         val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
         pageIndex?.let {
             DayOfWeekPlusDateHeader(
-                dayOfWeekPlusDate = clockViewModel.getDate(it)
+                dayOfWeekPlusDate = prayerViewModel.getDate(it)
             )
-            val prayerTimes = clockViewModel.getPrayerTimesForDate(it)
-            val nextTimeIndex = clockViewModel.getNextTimeIndex()
+            val prayerTimes = prayerViewModel.getPrayerTimesForDate(it)
+            val nextTimeIndex = prayerViewModel.getNextTimeIndex()
             for (i in prayerTimes.indices) {
                 PrayerRow(
                     prayerTitle = prayerTitles[i],

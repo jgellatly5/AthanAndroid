@@ -3,9 +3,6 @@ package com.gallopdevs.athanhelper.viewmodel
 import androidx.lifecycle.ViewModel
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,13 +13,14 @@ class PrayerViewModel @Inject constructor(
 
 //    val nextTimeMillisUiState: StateFlow<NextTimeMillisUiState> = getNextTimeMillisUseCase()
 
-    fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>> {
-        return prayerRepo.getPrayerTimesForDate(pageIndex)
-    }
+    fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>> =
+        prayerRepo.getPrayerTimesForDate(pageIndex)
 
     fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
 
     fun getNextTimeIndex() = prayerRepo.getNextTimeIndex()
+
+    fun getDate(pageIndex: Int): String = prayerRepo.getDate(pageIndex)
 
     fun setLocation(latitude: Double, longitude: Double) =
         prayerRepo.setLocation(latitude, longitude)
@@ -33,12 +31,4 @@ class PrayerViewModel @Inject constructor(
         adjustHighLats: Int,
         timeFormat: Int
     ) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
-
-    fun getDate(pageIndex: Int): String {
-        val c = Calendar.getInstance()
-        c.add(Calendar.DAY_OF_MONTH, pageIndex)
-
-        val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
-        return sdf.format(c.time)
-    }
 }
