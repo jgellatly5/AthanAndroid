@@ -1,14 +1,11 @@
 package com.gallopdevs.athanhelper.data
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
+import android.content.SharedPreferences
 import javax.inject.Inject
 
-class PreferencesManager @Inject constructor(
-    @ApplicationContext context: Context
-) : PreferencesMgr {
-    private val sharedPreferences =
-        context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE)
+class SharedPreferencesLocalDataSource @Inject constructor(
+    private val sharedPreferences: SharedPreferences
+) : LocalDataSource {
 
     override fun saveBoolean(key: String, value: Boolean) {
         val editor = sharedPreferences.edit()
@@ -37,7 +34,7 @@ class PreferencesManager @Inject constructor(
     }
 }
 
-interface PreferencesMgr {
+interface LocalDataSource {
     fun saveBoolean(key: String, value: Boolean)
     fun getBoolean(key: String, defaultValue: Boolean): Boolean
     fun saveInt(key: String, value: Int)

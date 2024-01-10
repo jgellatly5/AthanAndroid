@@ -31,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.MainActivity
 import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import kotlinx.coroutines.delay

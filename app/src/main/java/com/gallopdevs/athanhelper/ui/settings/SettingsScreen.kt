@@ -14,10 +14,10 @@ import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.MIDNIGHT
 import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.SHAFII
-import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.ASR_METHOD
-import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.CALCULATION_METHOD
-import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.ENABLE_NOTIFICATIONS
-import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.LATITUDES_METHOD
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ASR_METHOD
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.CALCULATION_METHOD
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LATITUDES_METHOD
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 
 @Composable

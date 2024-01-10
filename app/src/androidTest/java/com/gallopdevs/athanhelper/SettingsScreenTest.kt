@@ -14,8 +14,8 @@ import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
 import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
-import com.gallopdevs.athanhelper.data.PreferencesMgr
-import com.gallopdevs.athanhelper.data.PreferencesManager.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.LocalDataSource
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +27,7 @@ class SettingsScreenTest {
     private val context: Context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
-    private val preferencesMgr: PreferencesMgr = mock()
+    private val localDataSource: LocalDataSource = mock()
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -53,7 +53,7 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchTogglesOnAndOff() {
-        whenever(preferencesMgr.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(false)
+        whenever(localDataSource.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(false)
         composeTestRule.apply {
             setContent {
                 SettingsScreen()
@@ -69,7 +69,7 @@ class SettingsScreenTest {
 
     @Test
     fun notificationsOptionSwitchIsOnIfSharedPrefsTrue() {
-        whenever(preferencesMgr.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(true)
+        whenever(localDataSource.getBoolean(ENABLE_NOTIFICATIONS, false)).thenReturn(true)
         composeTestRule.apply {
             setContent {
                 SettingsScreen()

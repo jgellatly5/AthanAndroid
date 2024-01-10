@@ -15,11 +15,11 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class PrayerModule {
+abstract class SettingsModule {
 
     @Binds
-    abstract fun bindPrayerRepo(prayerRepository: PrayerRepository): PrayerRepo
+    abstract fun bindSettingsRepo(settingsRepository: SettingsRepository): SettingsRepo
 
     @Binds
-    abstract fun bindPrayerCalc(prayerCalculator: PrayerCalculator): PrayerCalc
+    abstract fun bindLocalDataSource(sharedPreferencesLocalDataSource: SharedPreferencesLocalDataSource): LocalDataSource
 }
