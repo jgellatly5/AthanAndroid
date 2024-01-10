@@ -45,8 +45,8 @@ fun NextPrayerHeader(
     prayerViewModel: PrayerViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val nextTimeInfo = prayerViewModel.getNextTimeInfo()
-    var timerCountDown by remember { mutableLongStateOf(nextTimeInfo.nextTimeMillis) }
+    val prayerInfo = prayerViewModel.getPrayerInfo()
+    var timerCountDown by remember { mutableLongStateOf(prayerInfo.nextTimeMillis) }
     LaunchedEffect(timerCountDown) {
         while (timerCountDown != 0L) {
             delay(1.seconds)
@@ -83,7 +83,7 @@ fun NextPrayerHeader(
                 )
             } else {
                 val enableNotifications = settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
-                if (enableNotifications) createNotification(LocalContext.current, prayerViewModel)
+                if (enableNotifications) createNotification(LocalContext.current, prayerInfo.nextTimeIndex)
                 Text(
                     text = stringResource(id = R.string.end_time),
                     fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
@@ -93,13 +93,12 @@ fun NextPrayerHeader(
     }
 }
 
-private fun createNotification(context: Context, prayerViewModel: PrayerViewModel) {
+private fun createNotification(context: Context, nextTimeIndex: Int) {
     val intent = Intent(context, MainActivity::class.java)
     val pendingIntent =
         PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     val prayerNames = context.resources.getStringArray(R.array.prayer_titles)
-    val nextTimeInfo = prayerViewModel.getNextTimeInfo()
-    val nextPrayerName = prayerNames[nextTimeInfo.nextTimeIndex]
+    val nextPrayerName = prayerNames[nextTimeIndex]
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.moon)
         .setContentTitle("Athan")

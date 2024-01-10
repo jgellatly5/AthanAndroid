@@ -56,15 +56,10 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
     val offsets = IntArray(7)
     private val differences = LongArray(6)
 
-    override fun getPrayerTimesInfo(): PrayerTimesInfo {
-        return PrayerTimesInfo(
+    override fun getPrayerInfo(): PrayerInfo {
+        return PrayerInfo(
             dates = getDatesForWeek(),
-            prayerTimesForDate = getPrayerTimesForWeek()
-        )
-    }
-
-    override fun getNextTimeInfo(): NextTimeInfo {
-        return NextTimeInfo(
+            prayerTimesForDate = getPrayerTimesForWeek(),
             nextTimeMillis = getNextTimeMillis(),
             nextTimeIndex = getNextTimeIndex()
         )
@@ -216,8 +211,7 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
 }
 
 interface PrayerCalc {
-    fun getPrayerTimesInfo(): PrayerTimesInfo
-    fun getNextTimeInfo(): NextTimeInfo
+    fun getPrayerInfo(): PrayerInfo
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(
         calcMethod: Int,
@@ -227,12 +221,9 @@ interface PrayerCalc {
     )
 }
 
-data class PrayerTimesInfo(
+data class PrayerInfo(
     val dates: List<String>,
-    val prayerTimesForDate: List<List<Array<String>>>
-)
-
-data class NextTimeInfo(
+    val prayerTimesForDate: List<List<Array<String>>>,
     val nextTimeMillis: Long,
     val nextTimeIndex: Int
 )

@@ -27,12 +27,12 @@ fun DayViewScreen(
     ) {
         val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
         pageIndex?.let {
-            val prayerTimesInfo = prayerViewModel.getPrayerTimesInfo()
-            val prayerTimesForDate = prayerTimesInfo.prayerTimesForDate[pageIndex]
+            val prayerInfo = prayerViewModel.getPrayerInfo()
+            val prayerTimesForDate = prayerInfo.prayerTimesForDate[pageIndex]
             DayOfWeekPlusDateHeader(
-                dayOfWeekPlusDate = prayerTimesInfo.dates[it]
+                dayOfWeekPlusDate = prayerInfo.dates[it]
             )
-            val nextTimeIndex = prayerViewModel.getNextTimeInfo().nextTimeIndex
+            val nextTimeIndex = prayerInfo.nextTimeIndex
             for (i in prayerTimesForDate.indices) {
                 PrayerRow(
                     prayerTitle = prayerTitles[i],
