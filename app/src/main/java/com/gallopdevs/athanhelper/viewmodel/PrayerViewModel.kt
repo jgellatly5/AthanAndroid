@@ -1,6 +1,8 @@
 package com.gallopdevs.athanhelper.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.gallopdevs.athanhelper.data.NextTimeInfo
+import com.gallopdevs.athanhelper.data.PrayerTimesInfo
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,14 +15,9 @@ class PrayerViewModel @Inject constructor(
 
 //    val nextTimeMillisUiState: StateFlow<NextTimeMillisUiState> = getNextTimeMillisUseCase()
 
-    fun getPrayerTimesForDate(pageIndex: Int): List<Array<String>> =
-        prayerRepo.getPrayerTimesForDate(pageIndex)
+    fun getPrayerTimesInfo(pageIndex: Int): PrayerTimesInfo = prayerRepo.getPrayerTimesInfo(pageIndex)
 
-    fun getNextTimeMillis() = prayerRepo.getNextTimeMillis()
-
-    fun getNextTimeIndex() = prayerRepo.getNextTimeIndex()
-
-    fun getDate(pageIndex: Int): String = prayerRepo.getDate(pageIndex)
+    fun getNextTimeInfo(): NextTimeInfo = prayerRepo.getNextTimeInfo()
 
     fun setLocation(latitude: Double, longitude: Double) =
         prayerRepo.setLocation(latitude, longitude)

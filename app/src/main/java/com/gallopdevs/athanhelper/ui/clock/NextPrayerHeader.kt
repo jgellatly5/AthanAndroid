@@ -42,10 +42,11 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun NextPrayerHeader(
-    clockViewModel: PrayerViewModel = hiltViewModel(),
+    prayerViewModel: PrayerViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    var timerCountDown by remember { mutableLongStateOf(clockViewModel.getNextTimeMillis()) }
+    val nextTimeInfo = prayerViewModel.getNextTimeInfo()
+    var timerCountDown by remember { mutableLongStateOf(nextTimeInfo.nextTimeMillis) }
     LaunchedEffect(timerCountDown) {
         while (timerCountDown != 0L) {
             delay(1.seconds)
@@ -82,7 +83,7 @@ fun NextPrayerHeader(
                 )
             } else {
                 val enableNotifications = settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
-                if (enableNotifications) createNotification(LocalContext.current, clockViewModel)
+                if (enableNotifications) createNotification(LocalContext.current, prayerViewModel)
                 Text(
                     text = stringResource(id = R.string.end_time),
                     fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
@@ -97,7 +98,8 @@ private fun createNotification(context: Context, prayerViewModel: PrayerViewMode
     val pendingIntent =
         PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     val prayerNames = context.resources.getStringArray(R.array.prayer_titles)
-    val nextPrayerName = prayerNames[prayerViewModel.getNextTimeIndex()]
+    val nextTimeInfo = prayerViewModel.getNextTimeInfo()
+    val nextPrayerName = prayerNames[nextTimeInfo.nextTimeIndex]
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.moon)
         .setContentTitle("Athan")

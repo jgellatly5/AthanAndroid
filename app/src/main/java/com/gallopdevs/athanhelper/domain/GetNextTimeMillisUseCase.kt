@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetNextTimeMillisUseCase @Inject constructor(
     private val prayerRepo: PrayerRepo
 ) {
-    operator fun invoke(): Long = prayerRepo.getNextTimeMillis()
+//    operator fun invoke(): Long = prayerRepo.getNextTimeMillis()
 }

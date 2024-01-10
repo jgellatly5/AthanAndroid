@@ -55,8 +55,30 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
     val offsets = IntArray(7)
     private val differences = LongArray(6)
 
+    override fun getPrayerTimesInfo(offset: Int): PrayerTimesInfo {
+        return PrayerTimesInfo(
+            date = getDate(offset = offset),
+            prayerTimesForDate = getPrayerTimesForDate(offset = offset)
+        )
+    }
+
+    override fun getNextTimeInfo(): NextTimeInfo {
+        return NextTimeInfo(
+            nextTimeMillis = getNextTimeMillis(),
+            nextTimeIndex = getNextTimeIndex()
+        )
+    }
+
+    private fun getDate(offset: Int): String{
+        val c = Calendar.getInstance()
+        c.add(Calendar.DAY_OF_MONTH, offset)
+
+        val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
+        return sdf.format(c.time)
+    }
+
     // return prayer times for a given date
-    override fun getPrayerTimesForDate(offset: Int): List<Array<String>> {
+    private fun getPrayerTimesForDate(offset: Int): List<Array<String>> {
         val month = calendar.get(Calendar.MONTH) + 1
         val year = calendar.get(Calendar.YEAR)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
@@ -66,7 +88,7 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
         return computeDayTimes()
     }
 
-    override fun getNextTimeMillis(): Long {
+    private fun getNextTimeMillis(): Long {
         val currentTimeMillis = getCurrentTimeMillis()
         val newTimes = getPrayerTimesForDate(calendar.get(Calendar.DAY_OF_MONTH))
         val nextMorningTime = getPrayerTimesForDate(calendar.get(Calendar.DAY_OF_MONTH) + 1)
@@ -110,7 +132,7 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
         }
     }
 
-    override fun getNextTimeIndex(): Int {
+    private fun getNextTimeIndex(): Int {
         var nextTimeIndex = 0
         for (i in differences.indices) {
             if (differences[i] < 0) {
@@ -118,14 +140,6 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
             }
         }
         return nextTimeIndex
-    }
-
-    override fun getDate(offset: Int): String {
-        val c = Calendar.getInstance()
-        c.add(Calendar.DAY_OF_MONTH, offset)
-
-        val sdf = SimpleDateFormat("EEEE, MM/dd", Locale.getDefault())
-        return sdf.format(c.time)
     }
 
     override fun setLocation(latitude: Double, longitude: Double) {
@@ -193,10 +207,8 @@ class PrayerCalculator @Inject constructor() : PrayerCalc {
 }
 
 interface PrayerCalc {
-    fun getPrayerTimesForDate(offset: Int): List<Array<String>>
-    fun getNextTimeMillis(): Long
-    fun getNextTimeIndex(): Int
-    fun getDate(offset: Int): String
+    fun getPrayerTimesInfo(offset: Int): PrayerTimesInfo
+    fun getNextTimeInfo(): NextTimeInfo
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(
         calcMethod: Int,
@@ -206,9 +218,12 @@ interface PrayerCalc {
     )
 }
 
-data class PrayerInfo(
+data class PrayerTimesInfo(
     val date: String,
-    val prayerTimesForDate: List<Array<String>>,
+    val prayerTimesForDate: List<Array<String>>
+)
+
+data class NextTimeInfo(
     val nextTimeMillis: Long,
     val nextTimeIndex: Int
 )
