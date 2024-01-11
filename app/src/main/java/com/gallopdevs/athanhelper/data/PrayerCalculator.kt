@@ -226,4 +226,6 @@ data class PrayerInfo(
     val prayerTimesForDate: List<List<Array<String>>>,
     val nextTimeMillis: Long,
     val nextTimeIndex: Int
-)
+) {
+    companion object
+}
