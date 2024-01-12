@@ -2,20 +2,23 @@ package com.gallopdevs.athanhelper.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gallopdevs.athanhelper.data.AladhanResponse
 import com.gallopdevs.athanhelper.data.PrayerInfo
+import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PrayerViewModel @Inject constructor(
-//    getNextTimeMillisUseCase: GetNextTimeMillisUseCase,
     private val prayerRepo: PrayerRepo
 ) : ViewModel() {
 
-    //    val nextTimeMillisUiState: StateFlow<NextTimeMillisUiState> = getNextTimeMillisUseCase()
+    private val _uiState = MutableStateFlow<DayViewScreenUiState>(DayViewScreenUiState.Loading)
+    val uiState: StateFlow<DayViewScreenUiState> = _uiState.asStateFlow()
 
     init {
         getPrayerTimesForDate(
@@ -25,14 +28,22 @@ class PrayerViewModel @Inject constructor(
             method = 2
         )
     }
+
     private fun getPrayerTimesForDate(
         date: String,
         latitude: Double,
         longitude: Double,
         method: Int
     ) {
+        _uiState.value = DayViewScreenUiState.Loading
         viewModelScope.launch {
-            prayerRepo.getPrayerTimesForDate(date, latitude, longitude, method)
+            try {
+                prayerRepo.getPrayerTimesForDate(date, latitude, longitude, method)?.let {
+                    _uiState.value = DayViewScreenUiState.Success(it)
+                }
+            } catch (e: Exception) {
+                _uiState.value = DayViewScreenUiState.Error("An error has occurred.")
+            }
         }
     }
 
@@ -47,4 +58,10 @@ class PrayerViewModel @Inject constructor(
         adjustHighLats: Int,
         timeFormat: Int
     ) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
+}
+
+sealed class DayViewScreenUiState {
+    data class Success(val timings: Timings) : DayViewScreenUiState()
+    data class Error(val message: String) : DayViewScreenUiState()
+    data object Loading : DayViewScreenUiState()
 }

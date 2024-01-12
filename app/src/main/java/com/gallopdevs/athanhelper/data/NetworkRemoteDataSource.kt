@@ -1,6 +1,7 @@
 package com.gallopdevs.athanhelper.data
 
 import com.gallopdevs.athanhelper.api.AladhanApi
+import com.gallopdevs.athanhelper.data.models.AladhanResponse
 import retrofit2.HttpException
 import javax.inject.Inject
 

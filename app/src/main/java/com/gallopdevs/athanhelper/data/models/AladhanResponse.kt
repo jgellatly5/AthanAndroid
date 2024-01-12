@@ -1,4 +1,4 @@
-package com.gallopdevs.athanhelper.data
+package com.gallopdevs.athanhelper.data.models
 
 import com.squareup.moshi.Json
 
@@ -15,16 +15,45 @@ data class Data(
 )
 
 data class Timings(
-    @Json(name = "Fajr") var Fajr: String? = null,
-    @Json(name = "Sunrise") var Sunrise: String? = null,
-    @Json(name = "Dhuhr") var Dhuhr: String? = null,
-    @Json(name = "Asr") var Asr: String? = null,
-    @Json(name = "Sunset") var Sunset: String? = null,
-    @Json(name = "Maghrib") var Maghrib: String? = null,
-    @Json(name = "Isha") var Isha: String? = null,
-    @Json(name = "Imsak") var Imsak: String? = null,
-    @Json(name = "Midnight") var Midnight: String? = null
-)
+    @Json(name = "Fajr") var fajr: String? = null,
+    @Json(name = "Sunrise") var sunrise: String? = null,
+    @Json(name = "Dhuhr") var dhuhr: String? = null,
+    @Json(name = "Asr") var asr: String? = null,
+    @Json(name = "Sunset") var sunset: String? = null,
+    @Json(name = "Maghrib") var maghrib: String? = null,
+    @Json(name = "Isha") var isha: String? = null,
+    @Json(name = "Imsak") var imsak: String? = null,
+    @Json(name = "Midnight") var midnight: String? = null
+) {
+    operator fun iterator(): Iterator<Pair<String, String?>> {
+        return object : Iterator<Pair<String, String?>> {
+            private val properties = listOf(
+                "Fajr" to fajr,
+                "Sunrise" to sunrise,
+                "Dhuhr" to dhuhr,
+                "Asr" to asr,
+                "Sunset" to sunset,
+                "Maghrib" to maghrib,
+                "Isha" to isha,
+                "Imsak" to imsak,
+                "Midnight" to midnight
+            )
+
+            private var currentIndex = 0
+
+            override fun hasNext(): Boolean {
+                return currentIndex < properties.size
+            }
+
+            override fun next(): Pair<String, String?> {
+                if (!hasNext()) {
+                    throw NoSuchElementException()
+                }
+                return properties[currentIndex++]
+            }
+        }
+    }
+}
 
 data class Date(
     @Json(name = "readable") var readable: String? = null,

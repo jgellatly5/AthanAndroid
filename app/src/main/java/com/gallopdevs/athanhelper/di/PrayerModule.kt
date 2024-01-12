@@ -5,6 +5,8 @@ import com.gallopdevs.athanhelper.data.PrayerCalculator
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.PrayerRepository
 import com.gallopdevs.athanhelper.data.LocalDataSource
+import com.gallopdevs.athanhelper.data.NetworkRemoteDataSource
+import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepository
@@ -22,4 +24,7 @@ abstract class PrayerModule {
 
     @Binds
     abstract fun bindPrayerCalc(prayerCalculator: PrayerCalculator): PrayerCalc
+
+    @Binds
+    abstract fun bindRemoteDataSource(networkRemoteDataSource: NetworkRemoteDataSource): RemoteDataSource
 }

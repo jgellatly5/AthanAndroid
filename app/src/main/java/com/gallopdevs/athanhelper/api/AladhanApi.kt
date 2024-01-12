@@ -1,6 +1,6 @@
 package com.gallopdevs.athanhelper.api
 
-import com.gallopdevs.athanhelper.data.AladhanResponse
+import com.gallopdevs.athanhelper.data.models.AladhanResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

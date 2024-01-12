@@ -1,14 +1,14 @@
 package com.gallopdevs.athanhelper.repository
 
-import com.gallopdevs.athanhelper.data.AladhanResponse
-import com.gallopdevs.athanhelper.data.NetworkRemoteDataSource
 import com.gallopdevs.athanhelper.data.PrayerCalc
 import com.gallopdevs.athanhelper.data.PrayerInfo
+import com.gallopdevs.athanhelper.data.RemoteDataSource
+import com.gallopdevs.athanhelper.data.models.Timings
 import javax.inject.Inject
 
 class PrayerRepository @Inject constructor(
     private val prayerCalc: PrayerCalc,
-    private val networkRemoteDataSource: NetworkRemoteDataSource
+    private val remoteDataSource: RemoteDataSource
 ) : PrayerRepo {
 
     override suspend fun getPrayerTimesForDate(
@@ -16,8 +16,9 @@ class PrayerRepository @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): AladhanResponse? {
-        return networkRemoteDataSource.getPrayerTimesForDate(date, latitude, longitude, method)
+    ): Timings? {
+        val aladhanResponse = remoteDataSource.getPrayerTimesForDate(date, latitude, longitude, method)
+        return aladhanResponse?.data?.timings
     }
 
     override fun getPrayerInfo(): PrayerInfo = prayerCalc.getPrayerInfo()
@@ -39,7 +40,7 @@ interface PrayerRepo {
         latitude: Double,
         longitude: Double,
         method: Int
-    ): AladhanResponse?
+    ): Timings?
     fun getPrayerInfo(): PrayerInfo
     fun setLocation(latitude: Double, longitude: Double)
     fun setCalculations(
