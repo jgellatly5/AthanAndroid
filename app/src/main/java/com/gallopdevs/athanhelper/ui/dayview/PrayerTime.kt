@@ -14,7 +14,7 @@ import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 @Composable
 fun PrayerTime(
     prayerTime: String,
-    prayerTimePostFix: String
+    prayerTimePostFix: String? = null
 ) {
     Row {
         Text(
@@ -22,11 +22,13 @@ fun PrayerTime(
             fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
             color = colorResource(id = R.color.colorPrimaryDark)
         )
-        Text(
-            text = prayerTimePostFix,
-            fontSize = dimensionResource(id = R.dimen.postfix_text_size).value.sp,
-            color = colorResource(id = R.color.colorPrimaryDark)
-        )
+        prayerTimePostFix?.let {
+            Text(
+                text = it,
+                fontSize = dimensionResource(id = R.dimen.postfix_text_size).value.sp,
+                color = colorResource(id = R.color.colorPrimaryDark)
+            )
+        }
     }
 }
 

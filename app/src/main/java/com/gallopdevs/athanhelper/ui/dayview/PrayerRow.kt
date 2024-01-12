@@ -19,7 +19,7 @@ import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 fun PrayerRow(
     prayerTitle: String,
     prayerTime: String,
-    prayerTimePostFix: String,
+    prayerTimePostFix: String? = null,
     showHighlighted: Boolean
 ) {
     Column(

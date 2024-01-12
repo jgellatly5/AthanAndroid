@@ -50,9 +50,7 @@ fun DayViewScreen(
             is DayViewScreenUiState.Success -> {
                 val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
                 val timings = (uiState as DayViewScreenUiState.Success).timings
-                for ((name, time) in timings) {
-                    println("$name: $time")
-                }
+
                 pageIndex?.let {
                     val prayerInfo = prayerViewModel.getPrayerInfo()
                     val prayerTimesForDate = prayerInfo.prayerTimesForDate[pageIndex]
@@ -61,13 +59,14 @@ fun DayViewScreen(
                         dayOfWeekPlusDate = prayerInfo.dates[it]
                     )
                     val nextTimeIndex = prayerInfo.nextTimeIndex
-                    for (i in prayerTimesForDate.indices) {
-                        PrayerRow(
-                            prayerTitle = prayerTitles[i],
-                            prayerTime = prayerTimesForDate[i][0],
-                            prayerTimePostFix = prayerTimesForDate[i][1],
-                            showHighlighted = i == nextTimeIndex
-                        )
+                    for ((name, time) in timings) {
+                        time?.let {
+                            PrayerRow(
+                                prayerTitle = name,
+                                prayerTime = time,
+                                showHighlighted = false
+                            )
+                        }
                     }
                 }
             }

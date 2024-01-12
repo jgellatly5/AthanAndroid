@@ -20,6 +20,7 @@ import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companio
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LATITUDES_METHOD
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.TIME_FORMAT
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -63,7 +64,9 @@ class MainActivity : ComponentActivity() {
         getLocation()
 
         setContent {
-            MainPager()
+            AthanHelperTheme {
+                MainPager()
+            }
         }
     }
 
