@@ -14,6 +14,10 @@ class SettingsRepository @Inject constructor(
     override fun saveInt(key: String, value: Int) = localDataSource.saveInt(key, value)
 
     override fun getInt(key: String, defaultValue: Int): Int = localDataSource.getInt(key, defaultValue)
+
+    override fun saveString(key: String, value: String) = localDataSource.saveString(key, value)
+
+    override fun getString(key: String, defaultValue: String): String? = localDataSource.getString(key, defaultValue)
 }
 
 interface SettingsRepo {
@@ -21,4 +25,6 @@ interface SettingsRepo {
     fun getBoolean(key: String, defaultValue: Boolean): Boolean
     fun saveInt(key: String, value: Int)
     fun getInt(key: String, defaultValue: Int): Int
+    fun saveString(key: String, value: String)
+    fun getString(key: String, defaultValue: String): String?
 }

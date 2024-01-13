@@ -32,33 +32,29 @@ fun DayViewScreen(
     pageIndex: Int?,
     prayerViewModel: PrayerViewModel = hiltViewModel()
 ) {
-    val uiState by prayerViewModel.uiState.collectAsState()
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag(DAY_VIEW_SCREEN),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        when (uiState) {
-            is DayViewScreenUiState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(modifier = Modifier.align(Center))
+    pageIndex?.let {
+        val uiState by prayerViewModel.uiState.collectAsState()
+        prayerViewModel.getPrayerTimesForDate(it)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(DAY_VIEW_SCREEN),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when (uiState) {
+                is DayViewScreenUiState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(modifier = Modifier.align(Center))
+                    }
                 }
-            }
 
-            is DayViewScreenUiState.Success -> {
-                val prayerTitles = stringArrayResource(id = R.array.prayer_titles)
-                val timings = (uiState as DayViewScreenUiState.Success).timings
-
-                pageIndex?.let {
-                    val prayerInfo = prayerViewModel.getPrayerInfo()
-                    val prayerTimesForDate = prayerInfo.prayerTimesForDate[pageIndex]
-//                    val prayerTimesForDate = prayerInfo.prayerTimesForDate[pageIndex]
+                is DayViewScreenUiState.Success -> {
+                    val timings = (uiState as DayViewScreenUiState.Success).timings
+                    val dates = (uiState as DayViewScreenUiState.Success).dates
                     DayOfWeekPlusDateHeader(
-                        dayOfWeekPlusDate = prayerInfo.dates[it]
+                        dayOfWeekPlusDate = dates[it]
                     )
-                    val nextTimeIndex = prayerInfo.nextTimeIndex
                     for ((name, time) in timings) {
                         time?.let {
                             PrayerRow(
@@ -69,10 +65,10 @@ fun DayViewScreen(
                         }
                     }
                 }
-            }
 
-            is DayViewScreenUiState.Error -> {
-                ErrorMessage(message = (uiState as DayViewScreenUiState.Error).message)
+                is DayViewScreenUiState.Error -> {
+                    ErrorMessage(message = (uiState as DayViewScreenUiState.Error).message)
+                }
             }
         }
     }

@@ -25,6 +25,15 @@ class SharedPreferencesLocalDataSource @Inject constructor(
     override fun getInt(key: String, defaultValue: Int): Int =
         sharedPreferences.getInt(key, defaultValue)
 
+    override fun saveString(key: String, value: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString(key, value)
+        editor.apply()
+    }
+
+    override fun getString(key: String, defaultValue: String): String? =
+        sharedPreferences.getString(key, defaultValue)
+
     companion object {
         const val SETTINGS = "SETTINGS"
         const val ENABLE_NOTIFICATIONS = "ENABLE_NOTIFICATIONS"
@@ -32,6 +41,8 @@ class SharedPreferencesLocalDataSource @Inject constructor(
         const val ASR_METHOD = "ASR_METHOD"
         const val LATITUDES_METHOD = "LATITUDES_METHOD"
         const val TIME_FORMAT = "TIME_FORMAT"
+        const val LATITUDE = "LATITUDE"
+        const val LONGITUDE = "LONGITUDE"
     }
 }
 
@@ -40,4 +51,6 @@ interface LocalDataSource {
     fun getBoolean(key: String, defaultValue: Boolean): Boolean
     fun saveInt(key: String, value: Int)
     fun getInt(key: String, defaultValue: Int): Int
+    fun saveString(key: String, value: String)
+    fun getString(key: String, defaultValue: String): String?
 }
