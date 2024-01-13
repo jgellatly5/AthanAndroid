@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class SharedPreferencesLocalDataSource @Inject constructor(
     private val sharedPreferences: SharedPreferences
-) : LocalDataSource {
+) : SettingsLocalDataSource {
 
     override fun saveBoolean(key: String, value: Boolean) {
         val editor = sharedPreferences.edit()
@@ -46,7 +46,7 @@ class SharedPreferencesLocalDataSource @Inject constructor(
     }
 }
 
-interface LocalDataSource {
+interface SettingsLocalDataSource {
     fun saveBoolean(key: String, value: Boolean)
     fun getBoolean(key: String, defaultValue: Boolean): Boolean
     fun saveInt(key: String, value: Int)

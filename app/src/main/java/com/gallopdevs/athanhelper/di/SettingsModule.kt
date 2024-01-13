@@ -1,10 +1,6 @@
 package com.gallopdevs.athanhelper.di
 
-import com.gallopdevs.athanhelper.data.PrayerCalc
-import com.gallopdevs.athanhelper.data.PrayerCalculator
-import com.gallopdevs.athanhelper.repository.PrayerRepo
-import com.gallopdevs.athanhelper.repository.PrayerRepository
-import com.gallopdevs.athanhelper.data.LocalDataSource
+import com.gallopdevs.athanhelper.data.SettingsLocalDataSource
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepository
@@ -21,5 +17,5 @@ abstract class SettingsModule {
     abstract fun bindSettingsRepo(settingsRepository: SettingsRepository): SettingsRepo
 
     @Binds
-    abstract fun bindLocalDataSource(sharedPreferencesLocalDataSource: SharedPreferencesLocalDataSource): LocalDataSource
+    abstract fun bindLocalDataSource(sharedPreferencesLocalDataSource: SharedPreferencesLocalDataSource): SettingsLocalDataSource
 }

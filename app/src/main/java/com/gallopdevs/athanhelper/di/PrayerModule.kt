@@ -4,12 +4,8 @@ import com.gallopdevs.athanhelper.data.PrayerCalc
 import com.gallopdevs.athanhelper.data.PrayerCalculator
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.PrayerRepository
-import com.gallopdevs.athanhelper.data.LocalDataSource
 import com.gallopdevs.athanhelper.data.NetworkRemoteDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
-import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource
-import com.gallopdevs.athanhelper.repository.SettingsRepo
-import com.gallopdevs.athanhelper.repository.SettingsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
