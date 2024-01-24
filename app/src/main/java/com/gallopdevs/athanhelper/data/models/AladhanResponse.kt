@@ -1,19 +1,23 @@
 package com.gallopdevs.athanhelper.data.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
 data class AladhanResponse(
     @Json(name = "code") var code: Int? = null,
     @Json(name = "status") var status: String? = null,
-    @Json(name = "data") var data: Data? = Data()
+    @Json(name = "data") var timingsResponseList: List<TimingsResponse?>? = listOf()
 )
 
-data class Data(
+@Entity(tableName = "timingsResponses")
+data class TimingsResponse(
+    @PrimaryKey @Json(name = "date") var date: Date = Date(),
     @Json(name = "timings") var timings: Timings? = Timings(),
-    @Json(name = "date") var date: Date? = Date(),
     @Json(name = "meta") var meta: Meta? = Meta()
 )
 
+@Entity
 data class Timings(
     @Json(name = "Fajr") var fajr: String? = null,
     @Json(name = "Sunrise") var sunrise: String? = null,
@@ -55,6 +59,7 @@ data class Timings(
     }
 }
 
+@Entity
 data class Date(
     @Json(name = "readable") var readable: String? = null,
     @Json(name = "timestamp") var timestamp: String? = null,
@@ -62,6 +67,7 @@ data class Date(
     @Json(name = "hijri") var hijri: Hijri? = Hijri()
 )
 
+@Entity
 data class Gregorian(
     @Json(name = "date") var date: String? = null,
     @Json(name = "format") var format: String? = null,
@@ -72,22 +78,26 @@ data class Gregorian(
     @Json(name = "designation") var designation: Designation? = Designation()
 )
 
+@Entity
 data class Weekday(
     @Json(name = "en") var en: String? = null,
     @Json(name = "ar") var ar: String? = null
 )
 
+@Entity
 data class AladhanMonth(
     @Json(name = "number") var number: Int? = null,
     @Json(name = "en") var en: String? = null,
     @Json(name = "ar") var ar: String? = null
 )
 
+@Entity
 data class Designation(
     @Json(name = "abbreviated") var abbreviated: String? = null,
     @Json(name = "expanded") var expanded: String? = null
 )
 
+@Entity
 data class Meta(
     @Json(name = "latitude") var latitude: Double? = null,
     @Json(name = "longitude") var longitude: Double? = null,
@@ -99,12 +109,14 @@ data class Meta(
     @Json(name = "offset") var offset: AladhanOffset? = AladhanOffset()
 )
 
+@Entity
 data class Method(
     @Json(name = "id") var id: Int? = null,
     @Json(name = "name") var name: String? = null,
     @Json(name = "params") var params: Params? = Params()
 )
 
+@Entity
 data class AladhanOffset(
     @Json(name = "Imsak") var Imsak: Int? = null,
     @Json(name = "Fajr") var Fajr: Int? = null,
@@ -117,11 +129,13 @@ data class AladhanOffset(
     @Json(name = "Midnight") var Midnight: Int? = null
 )
 
+@Entity
 data class Params(
     @Json(name = "Fajr") var Fajr: Int? = null,
     @Json(name = "Isha") var Isha: Int? = null
 )
 
+@Entity
 data class Hijri(
     @Json(name = "date") var date: String? = null,
     @Json(name = "format") var format: String? = null,

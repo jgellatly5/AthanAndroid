@@ -15,4 +15,13 @@ interface AladhanApi {
         @Query("longitude") longitude: Double,
         @Query("method") method: Int
     ): Response<AladhanResponse>
+
+    @GET("calendar/{year}/{month}")
+    suspend fun getPrayerTimesForMonth(
+        @Path("year") year: String,
+        @Path("month") month: String,
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+        @Query("method") method: Int
+    ): Response<AladhanResponse>
 }
