@@ -1,10 +1,9 @@
 package com.gallopdevs.athanhelper.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gallopdevs.athanhelper.data.PrayerInfo
-import com.gallopdevs.athanhelper.data.models.Timings
+import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.GetDatesForWeekUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
 import com.gallopdevs.athanhelper.repository.PrayerRepo
@@ -12,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,14 +35,19 @@ class PrayerViewModel @Inject constructor(
     }*/
 
     fun getPrayerTimesForDate(pageIndex: Int) {
-        _uiState.value = DayViewScreenUiState.Loading
+        _uiState.update { DayViewScreenUiState.Loading }
         viewModelScope.launch {
             try {
-                val timings = getPrayerTimesForWeekUseCase()
+                val timingsResponses = getPrayerTimesForWeekUseCase()
                 val dates = getDatesForWeekUseCase()
-                _uiState.value = DayViewScreenUiState.Success(timings[pageIndex], dates)
+                val timingsResponse = timingsResponses[pageIndex]
+                if (timingsResponse != null) {
+                    _uiState.update { DayViewScreenUiState.Success(timingsResponse, dates) }
+                } else {
+                    _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+                }
             } catch (e: Exception) {
-                _uiState.value = DayViewScreenUiState.Error("An error has occurred.")
+                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
             }
         }
     }
@@ -61,7 +66,9 @@ class PrayerViewModel @Inject constructor(
 }
 
 sealed class DayViewScreenUiState {
-    data class Success(val timings: Timings, val dates: List<String>) : DayViewScreenUiState()
+    data class Success(val timingsResponse: TimingsResponse, val dates: List<String>) :
+        DayViewScreenUiState()
+
     data class Error(val message: String) : DayViewScreenUiState()
     data object Loading : DayViewScreenUiState()
 }

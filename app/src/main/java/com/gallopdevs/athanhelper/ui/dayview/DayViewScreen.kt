@@ -17,12 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
 import com.gallopdevs.athanhelper.viewmodel.DayViewScreenUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
@@ -50,18 +48,20 @@ fun DayViewScreen(
                 }
 
                 is DayViewScreenUiState.Success -> {
-                    val timings = (uiState as DayViewScreenUiState.Success).timings
+                    val timingsResponse = (uiState as DayViewScreenUiState.Success).timingsResponse
                     val dates = (uiState as DayViewScreenUiState.Success).dates
                     DayOfWeekPlusDateHeader(
                         dayOfWeekPlusDate = dates[it]
                     )
-                    for ((name, time) in timings) {
-                        time?.let {
-                            PrayerRow(
-                                prayerTitle = name,
-                                prayerTime = time,
-                                showHighlighted = false
-                            )
+                    timingsResponse.timings?.let { timings ->
+                        for ((name, time) in timings) {
+                            time?.let {
+                                PrayerRow(
+                                    prayerTitle = name,
+                                    prayerTime = time,
+                                    showHighlighted = false
+                                )
+                            }
                         }
                     }
                 }
