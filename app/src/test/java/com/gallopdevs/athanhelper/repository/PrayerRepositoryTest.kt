@@ -1,35 +1,54 @@
 package com.gallopdevs.athanhelper.repository
 
 import com.gallopdevs.athanhelper.data.PrayerCalc
+import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.PrayerLocalDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
+import com.gallopdevs.athanhelper.data.models.AladhanResponse
+import com.gallopdevs.athanhelper.data.models.Timings
+import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 
 class PrayerRepositoryTest {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val testDispatchers = UnconfinedTestDispatcher()
+
     private lateinit var testObject: PrayerRepo
 
-    private val mockPrayerCalc: PrayerCalc = mock()
+    private val remoteDataSource: RemoteDataSource = mock()
+    private val prayerLocalDataSource: PrayerLocalDataSource = mock()
+    private val prayerCalc: PrayerCalc = mock()
 
-    private val mockRemoteDataSource: RemoteDataSource = mock()
+    @Test
+    fun `getPrayerTimesForDate API success`() = runTest {
+        val date = "13-02-2024"
+        val latitude = 0.01
+        val longitude = 0.01
+        val method = JAFARI
+        val expectedResponse = Timings()
 
-//    @Test
-//    fun get_prayer_times_for_date_successful() {
-//        val date = "11-01-2024"
-//        val expectedList = listOf(
-//            arrayOf("5:00", "am"),
-//            arrayOf("10:00", "am"),
-//            arrayOf("12:00", "pm"),
-//            arrayOf("3:00", "pm"),
-//            arrayOf("6:00", "pm")
-//        )
-//
-//        whenever(mockRemoteDataSource.getPrayerTimesForDate(date = date, latitude = 33.860889, longitude = -118.392632, method = 2))
-//            .thenReturn(expectedList)
-//
-//        testObject = PrayerRepository(mockPrayerCalc, mockRemoteDataSource)
-//        assertEquals(expectedList, testObject.getPrayerTimesForDate(pageIndex))
-//    }
+        Mockito.lenient()
+            .`when`(
+                remoteDataSource.getPrayerTimesForDate(
+                    date,
+                    latitude,
+                    longitude,
+                    method
+                )
+            ) doReturn AladhanResponse(timingsResponseList = listOf(TimingsResponse(timings = expectedResponse)))
+
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        assertEquals(
+            expectedResponse,
+            testObject.getPrayerTimesForDate(date, latitude, longitude, method)
+        )
+    }
 }
