@@ -6,11 +6,14 @@ import com.gallopdevs.athanhelper.data.models.AladhanResponse
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import kotlinx.coroutines.test.runTest
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import retrofit2.HttpException
 import retrofit2.Response
 
 class NetworkRemoteDataSourceTest {
@@ -20,7 +23,7 @@ class NetworkRemoteDataSourceTest {
     private val aladhanApi: AladhanApi = mock()
 
     @Test
-    fun `getPrayerTimesForDate success`() = runTest {
+    fun `getPrayerTimesForDate API Response Success`() = runTest {
         val date = "13-02-2024"
         val latitude = 0.01
         val longitude = 0.01
@@ -32,7 +35,7 @@ class NetworkRemoteDataSourceTest {
                 )
             )
         )
-        val expectedResponse = Result.Success(aladhanResponse)
+        val expectedResult = Result.Success(aladhanResponse)
 
         Mockito.lenient()
             .`when`(
@@ -46,7 +49,35 @@ class NetworkRemoteDataSourceTest {
 
         testObject = NetworkRemoteDataSource(aladhanApi)
         assertEquals(
-            expectedResponse,
+            expectedResult,
+            testObject.getPrayerTimesForDate(date, latitude, longitude, method)
+        )
+    }
+
+    @Test
+    fun `getPrayerTimesForDate API Response Error`() = runTest {
+        val date = "13-02-2024"
+        val latitude = 0.01
+        val longitude = 0.01
+        val method = JAFARI
+
+        val responseBody = "API Error".toResponseBody("text/plain".toMediaTypeOrNull())
+        val failedResponse = HttpException(Response.error<String>(500, responseBody))
+        val expectedResult = Result.Error(failedResponse)
+
+        Mockito.lenient()
+            .`when`(
+                aladhanApi.getPrayerTimesForDate(
+                    date,
+                    latitude,
+                    longitude,
+                    method
+                )
+            ) doReturn Response.error(500, responseBody)
+
+        testObject = NetworkRemoteDataSource(aladhanApi)
+        assertEquals(
+            expectedResult,
             testObject.getPrayerTimesForDate(date, latitude, longitude, method)
         )
     }
