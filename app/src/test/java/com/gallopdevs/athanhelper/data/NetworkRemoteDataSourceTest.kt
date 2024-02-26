@@ -28,14 +28,15 @@ class NetworkRemoteDataSourceTest {
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
+        val timings = Timings()
         val aladhanResponse = AladhanResponse(
             timingsResponseList = listOf(
                 TimingsResponse(
-                    timings = Timings()
+                    timings = timings
                 )
             )
         )
-        val expectedResult = Result.Success(aladhanResponse)
+        val expectedResult = Result.Success(timings)
 
         Mockito.lenient()
             .`when`(
@@ -108,6 +109,36 @@ class NetworkRemoteDataSourceTest {
                     method
                 )
             ) doReturn Response.success(aladhanResponse)
+
+        testObject = NetworkRemoteDataSource(aladhanApi)
+        assertEquals(
+            expectedResult,
+            testObject.getPrayerTimesForMonth(year, month, latitude, longitude, method)
+        )
+    }
+
+    @Test
+    fun `getPrayerTimesForMonth API Response Error`() = runTest {
+        val year = "2024"
+        val month = "2"
+        val latitude = 0.01
+        val longitude = 0.01
+        val method = JAFARI
+
+        val responseBody = "API Error".toResponseBody("text/plain".toMediaTypeOrNull())
+        val failedResponse = HttpException(Response.error<String>(500, responseBody))
+        val expectedResult = Result.Error(failedResponse)
+
+        Mockito.lenient()
+            .`when`(
+                aladhanApi.getPrayerTimesForMonth(
+                    year,
+                    month,
+                    latitude,
+                    longitude,
+                    method
+                )
+            ) doReturn Response.error(500, responseBody)
 
         testObject = NetworkRemoteDataSource(aladhanApi)
         assertEquals(

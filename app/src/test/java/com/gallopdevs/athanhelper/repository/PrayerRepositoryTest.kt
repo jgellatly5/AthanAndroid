@@ -39,15 +39,7 @@ class PrayerRepositoryTest {
                     longitude,
                     method
                 )
-            ) doReturn Result.Success(
-            AladhanResponse(
-                timingsResponseList = listOf(
-                    TimingsResponse(
-                        timings = expectedResponse
-                    )
-                )
-            )
-        )
+            ) doReturn Result.Success(expectedResponse)
 
         testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
         assertEquals(

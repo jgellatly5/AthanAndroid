@@ -2,6 +2,7 @@ package com.gallopdevs.athanhelper.data
 
 import com.gallopdevs.athanhelper.api.AladhanApi
 import com.gallopdevs.athanhelper.data.models.AladhanResponse
+import com.gallopdevs.athanhelper.data.models.Timings
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -14,10 +15,15 @@ class NetworkRemoteDataSource @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Result<AladhanResponse?> =
+    ): Result<Timings> =
         aladhanApi.getPrayerTimesForDate(date, latitude, longitude, method).let {
             if (it.isSuccessful) {
-                Result.Success(it.body())
+                val timings = it.body()?.timingsResponseList?.first()?.timings
+                if (timings != null) {
+                    Result.Success(timings)
+                } else {
+                    Result.Error(Exception("Response is null"))
+                }
             } else {
                 Result.Error(HttpException(it))
             }
@@ -46,7 +52,7 @@ interface RemoteDataSource {
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Result<AladhanResponse?>
+    ): Result<Timings>
 
     suspend fun getPrayerTimesForMonth(
         year: String,
@@ -58,6 +64,7 @@ interface RemoteDataSource {
 }
 
 sealed class Result<out T> {
+    data object Loading : Result<Nothing>()
     data class Success<out T>(val data: T) : Result<T>()
     data class Error(val exception: Exception) : Result<Nothing>()
 }

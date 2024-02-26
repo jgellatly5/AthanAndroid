@@ -7,6 +7,10 @@ import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class PrayerRepository @Inject constructor(
@@ -20,18 +24,17 @@ class PrayerRepository @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Timings? {
-        val aladhanResponse = remoteDataSource.getPrayerTimesForDate(
-            date,
-            latitude,
-            longitude,
-            method
-        )
-        return if (aladhanResponse is Result.Success) {
-            aladhanResponse.data?.timingsResponseList?.first()?.timings
-        } else {
-            null
-        }
+    ): Flow<Result<Timings>> {
+        return flow {
+            emit(Result.Loading)
+            val result = remoteDataSource.getPrayerTimesForDate(
+                date,
+                latitude,
+                longitude,
+                method
+            )
+            emit(result)
+        }.flowOn(Dispatchers.IO)
     }
 
     override suspend fun getPrayerTimeResponsesForMonth(
@@ -75,7 +78,7 @@ interface PrayerRepo {
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Timings?
+    ): Flow<Result<Timings>>
 
     suspend fun getPrayerTimeResponsesForMonth(
         year: String,
