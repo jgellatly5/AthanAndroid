@@ -81,4 +81,38 @@ class NetworkRemoteDataSourceTest {
             testObject.getPrayerTimesForDate(date, latitude, longitude, method)
         )
     }
+
+    @Test
+    fun `getPrayerTimesForMonth API Response Success`() = runTest {
+        val year = "2024"
+        val month = "2"
+        val latitude = 0.01
+        val longitude = 0.01
+        val method = JAFARI
+        val aladhanResponse = AladhanResponse(
+            timingsResponseList = listOf(
+                TimingsResponse(
+                    timings = Timings()
+                )
+            )
+        )
+        val expectedResult = Result.Success(aladhanResponse)
+
+        Mockito.lenient()
+            .`when`(
+                aladhanApi.getPrayerTimesForMonth(
+                    year,
+                    month,
+                    latitude,
+                    longitude,
+                    method
+                )
+            ) doReturn Response.success(aladhanResponse)
+
+        testObject = NetworkRemoteDataSource(aladhanApi)
+        assertEquals(
+            expectedResult,
+            testObject.getPrayerTimesForMonth(year, month, latitude, longitude, method)
+        )
+    }
 }

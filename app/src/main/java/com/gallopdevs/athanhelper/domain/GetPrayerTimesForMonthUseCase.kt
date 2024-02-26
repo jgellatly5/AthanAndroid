@@ -15,7 +15,7 @@ class GetPrayerTimesForMonthUseCase @Inject constructor(
     private val prayerRepo: PrayerRepo,
     private val settingsRepo: SettingsRepo
 ) {
-    suspend operator fun invoke(): List<TimingsResponse?> {
+    suspend operator fun invoke(): List<TimingsResponse?>? {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR).toString()
         val month = (calendar.get(Calendar.MONTH) + 1).toString()

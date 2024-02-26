@@ -29,12 +29,12 @@ class NetworkRemoteDataSource @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): AladhanResponse? =
+    ): Result<AladhanResponse?> =
         aladhanApi.getPrayerTimesForMonth(year, month, latitude, longitude, method).let {
             if (it.isSuccessful) {
-                it.body()
+                Result.Success(it.body())
             } else {
-                throw HttpException(it)
+                Result.Error(HttpException(it))
             }
         }
 }
@@ -54,7 +54,7 @@ interface RemoteDataSource {
         latitude: Double,
         longitude: Double,
         method: Int
-    ): AladhanResponse?
+    ): Result<AladhanResponse?>
 }
 
 sealed class Result<out T> {

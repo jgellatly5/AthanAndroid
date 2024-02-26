@@ -40,7 +40,7 @@ class PrayerViewModel @Inject constructor(
             try {
                 val timingsResponses = getPrayerTimesForWeekUseCase()
                 val dates = getDatesForWeekUseCase()
-                val timingsResponse = timingsResponses[pageIndex]
+                val timingsResponse = timingsResponses?.get(pageIndex)
                 if (timingsResponse != null) {
                     _uiState.update { DayViewScreenUiState.Success(timingsResponse, dates) }
                 } else {
