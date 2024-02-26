@@ -4,6 +4,7 @@ import com.gallopdevs.athanhelper.data.PrayerCalc
 import com.gallopdevs.athanhelper.data.PrayerInfo
 import com.gallopdevs.athanhelper.data.PrayerLocalDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
+import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import javax.inject.Inject
@@ -20,8 +21,17 @@ class PrayerRepository @Inject constructor(
         longitude: Double,
         method: Int
     ): Timings? {
-        val aladhanResponse = remoteDataSource.getPrayerTimesForDate(date, latitude, longitude, method)
-        return aladhanResponse?.timingsResponseList?.first()?.timings
+        val aladhanResponse = remoteDataSource.getPrayerTimesForDate(
+            date,
+            latitude,
+            longitude,
+            method
+        )
+        return if (aladhanResponse is Result.Success) {
+            aladhanResponse.data?.timingsResponseList?.first()?.timings
+        } else {
+            null
+        }
     }
 
     override suspend fun getPrayerTimeResponsesForMonth(
@@ -31,7 +41,8 @@ class PrayerRepository @Inject constructor(
         longitude: Double,
         method: Int
     ): List<TimingsResponse?> {
-        val aladhanResponse = remoteDataSource.getPrayerTimesForMonth(year, month, latitude, longitude, method)
+        val aladhanResponse =
+            remoteDataSource.getPrayerTimesForMonth(year, month, latitude, longitude, method)
         return aladhanResponse?.timingsResponseList ?: listOf()
     }
 
