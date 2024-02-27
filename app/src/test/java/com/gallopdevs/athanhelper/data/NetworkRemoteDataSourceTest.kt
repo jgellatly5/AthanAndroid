@@ -90,14 +90,13 @@ class NetworkRemoteDataSourceTest {
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
-        val aladhanResponse = AladhanResponse(
-            timingsResponseList = listOf(
-                TimingsResponse(
-                    timings = Timings()
-                )
+        val timingsResponseList = listOf(
+            TimingsResponse(
+                timings = Timings()
             )
         )
-        val expectedResult = Result.Success(aladhanResponse)
+        val aladhanResponse = AladhanResponse(timingsResponseList = timingsResponseList)
+        val expectedResult = Result.Success(timingsResponseList)
 
         Mockito.lenient()
             .`when`(

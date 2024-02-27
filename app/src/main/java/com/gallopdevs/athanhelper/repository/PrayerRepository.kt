@@ -43,19 +43,18 @@ class PrayerRepository @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): List<TimingsResponse?>? {
-        val aladhanResponse = remoteDataSource.getPrayerTimesForMonth(
-            year,
-            month,
-            latitude,
-            longitude,
-            method
-        )
-        return if (aladhanResponse is Result.Success) {
-            aladhanResponse.data?.timingsResponseList
-        } else {
-            null
-        }
+    ): Flow<Result<List<TimingsResponse?>>> {
+        return flow {
+            emit(Result.Loading)
+            val result = remoteDataSource.getPrayerTimesForMonth(
+                year,
+                month,
+                latitude,
+                longitude,
+                method
+            )
+            emit(result)
+        }.flowOn(Dispatchers.IO)
     }
 
     override fun getPrayerInfo(): PrayerInfo = prayerCalc.getPrayerInfo()
@@ -86,7 +85,7 @@ interface PrayerRepo {
         latitude: Double,
         longitude: Double,
         method: Int
-    ): List<TimingsResponse?>?
+    ): Flow<Result<List<TimingsResponse?>>>
 
     fun getPrayerInfo(): PrayerInfo
 

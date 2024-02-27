@@ -3,9 +3,11 @@ package com.gallopdevs.athanhelper.viewmodel
 import com.gallopdevs.athanhelper.MainDispatcherRule
 import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.domain.GetDatesForWeekUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
 import com.gallopdevs.athanhelper.repository.PrayerRepo
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -52,7 +54,7 @@ class PrayerViewModelTest {
                 longitude = 0.01,
                 method = JAFARI
             )
-        ) doReturn expectedPrayerTimesForWeekUseCase
+        ) doReturn flowOf(Result.Success(expectedPrayerTimesForWeekUseCase))
 
         testObject =
             PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesForWeekUseCase, prayerRepo)
@@ -63,7 +65,8 @@ class PrayerViewModelTest {
             DayViewScreenUiState.Success(
                 expectedPrayerTimesForWeekUseCase.first(),
                 expectedDatesForWeekUseCase
-            ), testObject.uiState.value
+            ),
+            testObject.uiState.value
         )
     }
 

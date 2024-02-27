@@ -1,8 +1,8 @@
 package com.gallopdevs.athanhelper.data
 
 import com.gallopdevs.athanhelper.api.AladhanApi
-import com.gallopdevs.athanhelper.data.models.AladhanResponse
 import com.gallopdevs.athanhelper.data.models.Timings
+import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -35,10 +35,15 @@ class NetworkRemoteDataSource @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Result<AladhanResponse?> =
+    ): Result<List<TimingsResponse?>> =
         aladhanApi.getPrayerTimesForMonth(year, month, latitude, longitude, method).let {
             if (it.isSuccessful) {
-                Result.Success(it.body())
+                val timingsResponseList = it.body()?.timingsResponseList
+                if (timingsResponseList != null) {
+                    Result.Success(timingsResponseList)
+                } else {
+                    Result.Error(Exception("Response is null"))
+                }
             } else {
                 Result.Error(HttpException(it))
             }
@@ -60,7 +65,7 @@ interface RemoteDataSource {
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Result<AladhanResponse?>
+    ): Result<List<TimingsResponse?>>
 }
 
 sealed class Result<out T> {

@@ -5,9 +5,8 @@ import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.PrayerLocalDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.Result
-import com.gallopdevs.athanhelper.data.models.AladhanResponse
 import com.gallopdevs.athanhelper.data.models.Timings
-import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -42,8 +41,9 @@ class PrayerRepositoryTest {
             ) doReturn Result.Success(expectedResponse)
 
         testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        val actualResponse = testObject.getPrayerTimesForDate(date, latitude, longitude, method)
         assertEquals(
-            expectedResponse,
+            flowOf(Result.Success(expectedResponse)),
             testObject.getPrayerTimesForDate(date, latitude, longitude, method)
         )
     }
