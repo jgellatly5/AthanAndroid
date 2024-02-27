@@ -7,6 +7,7 @@ import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -28,7 +29,9 @@ class PrayerRepositoryTest {
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
-        val expectedResponse = Timings()
+        val timings = Timings()
+
+        val expectedResult = flowOf(Result.Success(timings))
 
         Mockito.lenient()
             .`when`(
@@ -38,13 +41,12 @@ class PrayerRepositoryTest {
                     longitude,
                     method
                 )
-            ) doReturn Result.Success(expectedResponse)
+            ) doReturn Result.Success(timings)
 
         testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
-        val actualResponse = testObject.getPrayerTimesForDate(date, latitude, longitude, method)
         assertEquals(
-            flowOf(Result.Success(expectedResponse)),
-            testObject.getPrayerTimesForDate(date, latitude, longitude, method)
+            expectedResult,
+            testObject.getPrayerTimesForDate(date, latitude, longitude, method).last()
         )
     }
 

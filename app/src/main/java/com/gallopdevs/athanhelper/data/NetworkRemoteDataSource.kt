@@ -15,19 +15,21 @@ class NetworkRemoteDataSource @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Result<Timings> =
-        aladhanApi.getPrayerTimesForDate(date, latitude, longitude, method).let {
-            if (it.isSuccessful) {
-                val timings = it.body()?.timingsResponseList?.first()?.timings
-                if (timings != null) {
-                    Result.Success(timings)
-                } else {
-                    Result.Error(Exception("Response is null"))
-                }
+    ): Result<Timings> = try {
+        val response = aladhanApi.getPrayerTimesForDate(date, latitude, longitude, method)
+        if (response.isSuccessful) {
+            val timings = response.body()?.timingsResponseList?.first()?.timings
+            if (timings != null) {
+                Result.Success(timings)
             } else {
-                Result.Error(HttpException(it))
+                Result.Error(RuntimeException("Response is null"))
             }
+        } else {
+            Result.Error(RuntimeException("API dddddddddd Error"))
         }
+    } catch (e: Exception) {
+        Result.Error(e)
+    }
 
     override suspend fun getPrayerTimesForMonth(
         year: String,
