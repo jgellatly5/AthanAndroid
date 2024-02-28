@@ -3,6 +3,7 @@ package com.gallopdevs.athanhelper.data
 import com.gallopdevs.athanhelper.api.AladhanApi
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -22,13 +23,13 @@ class NetworkRemoteDataSource @Inject constructor(
             if (timings != null) {
                 Result.Success(timings)
             } else {
-                Result.Error(RuntimeException("Response is null"))
+                Result.Error("Null Response")
             }
         } else {
-            Result.Error(RuntimeException("API dddddddddd Error"))
+            Result.Error("API Error")
         }
     } catch (e: Exception) {
-        Result.Error(e)
+        Result.Error("Unknown")
     }
 
     override suspend fun getPrayerTimesForMonth(
@@ -44,10 +45,10 @@ class NetworkRemoteDataSource @Inject constructor(
                 if (timingsResponseList != null) {
                     Result.Success(timingsResponseList)
                 } else {
-                    Result.Error(Exception("Response is null"))
+                    Result.Error("Null Response")
                 }
             } else {
-                Result.Error(HttpException(it))
+                Result.Error("API Error")
             }
         }
 }
@@ -73,5 +74,5 @@ interface RemoteDataSource {
 sealed class Result<out T> {
     data object Loading : Result<Nothing>()
     data class Success<out T>(val data: T) : Result<T>()
-    data class Error(val exception: Exception) : Result<Nothing>()
+    data class Error(val message: String) : Result<Nothing>()
 }

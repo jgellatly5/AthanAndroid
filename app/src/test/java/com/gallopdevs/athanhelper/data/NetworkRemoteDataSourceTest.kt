@@ -5,17 +5,14 @@ import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.models.AladhanResponse
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
-
-import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.mock
-import retrofit2.HttpException
 import retrofit2.Response
 
 class NetworkRemoteDataSourceTest {
@@ -64,12 +61,9 @@ class NetworkRemoteDataSourceTest {
         val longitude = 0.01
         val method = JAFARI
 
-        val responseBody = "API Error".toResponseBody("text/plain".toMediaTypeOrNull())
-
-
-        val response = Response.error<String>(500, responseBody)
-        val failedResponse = HttpException(response)
-        val expected = Result.Error(RuntimeException("API Error"))
+        val errorMessage = "API Error"
+        val responseBody = errorMessage.toResponseBody("text/plain".toMediaTypeOrNull())
+        val expectedResult = Result.Error(errorMessage)
 
         Mockito.lenient()
             .`when`(
@@ -83,7 +77,7 @@ class NetworkRemoteDataSourceTest {
 
         testObject = NetworkRemoteDataSource(aladhanApi)
         assertEquals(
-            expected,
+            expectedResult,
             testObject.getPrayerTimesForDate(date, latitude, longitude, method)
         )
     }
@@ -129,9 +123,9 @@ class NetworkRemoteDataSourceTest {
         val longitude = 0.01
         val method = JAFARI
 
-        val responseBody = "API Error".toResponseBody("text/plain".toMediaTypeOrNull())
-        val failedResponse = HttpException(Response.error<String>(500, responseBody))
-        val expectedResult = Result.Error(failedResponse)
+        val errorMessage = "API Error"
+        val responseBody = errorMessage.toResponseBody("text/plain".toMediaTypeOrNull())
+        val expectedResult = Result.Error(errorMessage)
 
         Mockito.lenient()
             .`when`(

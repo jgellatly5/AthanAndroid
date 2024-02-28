@@ -67,7 +67,7 @@ class PrayerRepositoryTest {
                     longitude,
                     method
                 )
-            ) doReturn Result.Error(exception)
+            ) doReturn Result.Error("API Error")
 
         testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
         assertEquals(
