@@ -53,4 +53,31 @@ class GetPrayerTimesForMonthUseCaseTest {
         assertEquals(Result.Loading, actualResult.first())
         assertEquals(Result.Success(timingsResponseList), actualResult.last())
     }
+
+    @Test
+    fun `getPrayerTimesForMonth Result Error`() = runTest {
+        val year = "2024"
+        val month = "2"
+        val latitude = 0.01
+        val longitude = 0.01
+        val method = PrayerCalculator.JAFARI
+        val errorMessage = "API Error"
+
+        Mockito.lenient()
+            .`when`(
+                prayerRepo.getPrayerTimeResponsesForMonth(
+                    year,
+                    month,
+                    latitude,
+                    longitude,
+                    method
+                )
+            ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
+
+        testObject = GetPrayerTimesForMonthUseCase(prayerRepo, settingsRepo)
+        val actualResult = testObject.invoke()
+
+        assertEquals(Result.Loading, actualResult.first())
+        assertEquals(Result.Error(errorMessage), actualResult.last())
+    }
 }
