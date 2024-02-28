@@ -6,8 +6,7 @@ import com.gallopdevs.athanhelper.data.PrayerLocalDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -31,8 +30,6 @@ class PrayerRepositoryTest {
         val method = JAFARI
         val timings = Timings()
 
-        val expectedResult = flowOf(Result.Success(timings))
-
         Mockito.lenient()
             .`when`(
                 remoteDataSource.getPrayerTimesForDate(
@@ -44,10 +41,11 @@ class PrayerRepositoryTest {
             ) doReturn Result.Success(timings)
 
         testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
-        assertEquals(
-            expectedResult,
-            testObject.getPrayerTimesForDate(date, latitude, longitude, method).last()
-        )
+        val actualResult =
+            testObject.getPrayerTimesForDate(date, latitude, longitude, method).toList()
+
+        assertEquals(Result.Loading, actualResult.first())
+        assertEquals(Result.Success(timings), actualResult.last())
     }
 
     @Test
@@ -56,8 +54,7 @@ class PrayerRepositoryTest {
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
-        val expectedResponse = null
-        val exception = RuntimeException("API Error")
+        val errorMessage = "API Error"
 
         Mockito.lenient()
             .`when`(
@@ -67,12 +64,13 @@ class PrayerRepositoryTest {
                     longitude,
                     method
                 )
-            ) doReturn Result.Error("API Error")
+            ) doReturn Result.Error(errorMessage)
 
         testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
-        assertEquals(
-            expectedResponse,
-            testObject.getPrayerTimesForDate(date, latitude, longitude, method)
-        )
+        val actualResult =
+            testObject.getPrayerTimesForDate(date, latitude, longitude, method).toList()
+
+        assertEquals(Result.Loading, actualResult.first())
+        assertEquals(Result.Error(errorMessage), actualResult.last())
     }
 }
