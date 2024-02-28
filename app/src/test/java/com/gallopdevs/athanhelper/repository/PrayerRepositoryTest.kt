@@ -6,6 +6,7 @@ import com.gallopdevs.athanhelper.data.PrayerLocalDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
+import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -72,5 +73,38 @@ class PrayerRepositoryTest {
 
         assertEquals(Result.Loading, actualResult.first())
         assertEquals(Result.Error(errorMessage), actualResult.last())
+    }
+
+    @Test
+    fun `getPrayerTimesForMonth Result Success`() = runTest {
+        val year = "2024"
+        val month = "2"
+        val latitude = 0.01
+        val longitude = 0.01
+        val method = JAFARI
+        val timingsResponseList = listOf(
+            TimingsResponse(
+                timings = Timings()
+            )
+        )
+
+        Mockito.lenient()
+            .`when`(
+                remoteDataSource.getPrayerTimesForMonth(
+                    year,
+                    month,
+                    latitude,
+                    longitude,
+                    method
+                )
+            ) doReturn Result.Success(timingsResponseList)
+
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        val actualResult =
+            testObject.getPrayerTimeResponsesForMonth(year, month, latitude, longitude, method)
+                .toList()
+
+        assertEquals(Result.Loading, actualResult.first())
+        assertEquals(Result.Success(timingsResponseList), actualResult.last())
     }
 }
