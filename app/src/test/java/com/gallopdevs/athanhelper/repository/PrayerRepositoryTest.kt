@@ -107,4 +107,33 @@ class PrayerRepositoryTest {
         assertEquals(Result.Loading, actualResult.first())
         assertEquals(Result.Success(timingsResponseList), actualResult.last())
     }
+
+    @Test
+    fun `getPrayerTimesForMonth Result Error`() = runTest {
+        val year = "2024"
+        val month = "2"
+        val latitude = 0.01
+        val longitude = 0.01
+        val method = JAFARI
+        val errorMessage = "API Error"
+
+        Mockito.lenient()
+            .`when`(
+                remoteDataSource.getPrayerTimesForMonth(
+                    year,
+                    month,
+                    latitude,
+                    longitude,
+                    method
+                )
+            ) doReturn Result.Error(errorMessage)
+
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        val actualResult =
+            testObject.getPrayerTimeResponsesForMonth(year, month, latitude, longitude, method)
+                .toList()
+
+        assertEquals(Result.Loading, actualResult.first())
+        assertEquals(Result.Error(errorMessage), actualResult.last())
+    }
 }
