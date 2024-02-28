@@ -3,8 +3,6 @@ package com.gallopdevs.athanhelper.data
 import com.gallopdevs.athanhelper.api.AladhanApi
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
-import okio.IOException
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class NetworkRemoteDataSource @Inject constructor(
@@ -38,19 +36,21 @@ class NetworkRemoteDataSource @Inject constructor(
         latitude: Double,
         longitude: Double,
         method: Int
-    ): Result<List<TimingsResponse?>> =
-        aladhanApi.getPrayerTimesForMonth(year, month, latitude, longitude, method).let {
-            if (it.isSuccessful) {
-                val timingsResponseList = it.body()?.timingsResponseList
-                if (timingsResponseList != null) {
-                    Result.Success(timingsResponseList)
-                } else {
-                    Result.Error("Null Response")
-                }
+    ): Result<List<TimingsResponse?>> = try {
+        val response = aladhanApi.getPrayerTimesForMonth(year, month, latitude, longitude, method)
+        if (response.isSuccessful) {
+            val timingsResponseList = response.body()?.timingsResponseList
+            if (timingsResponseList != null) {
+                Result.Success(timingsResponseList)
             } else {
-                Result.Error("API Error")
+                Result.Error("Null Response")
             }
+        } else {
+            Result.Error("API Error")
         }
+    } catch (e: Exception) {
+        Result.Error("Unknown")
+    }
 }
 
 interface RemoteDataSource {
