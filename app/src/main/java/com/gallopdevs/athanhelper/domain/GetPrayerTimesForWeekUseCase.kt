@@ -20,7 +20,7 @@ class GetPrayerTimesForWeekUseCase @Inject constructor(
                 is Result.Success -> {
                     val timingsResponses = result.data.filter { timingsResponse ->
                         timingsResponse?.date.let {
-                            dates.contains(it?.timestamp)
+                            dates.contains(it?.readable)
                         }
                     }
                     Result.Success(timingsResponses)

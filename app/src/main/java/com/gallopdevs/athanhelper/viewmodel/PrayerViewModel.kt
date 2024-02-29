@@ -54,15 +54,15 @@ class PrayerViewModel @Inject constructor(
                                     )
                                 }
                             } else {
-                                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+                                _uiState.update { DayViewScreenUiState.Error("Null Response") }
                             }
                         }
 
-                        is Result.Error -> _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+                        is Result.Error -> _uiState.update { DayViewScreenUiState.Error("Result Error") }
                     }
                 }
             } catch (e: Exception) {
-                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+                _uiState.update { DayViewScreenUiState.Error("Coroutine Error") }
             }
         }
     }
