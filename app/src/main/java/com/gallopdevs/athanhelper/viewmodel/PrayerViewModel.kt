@@ -35,21 +35,22 @@ class PrayerViewModel @Inject constructor(
     }*/
 
     fun getPrayerTimesForDate(pageIndex: Int) {
-        _uiState.update { DayViewScreenUiState.Loading }
-        viewModelScope.launch {
-            try {
-                val timingsResponses = getPrayerTimesForWeekUseCase()
-                val dates = getDatesForWeekUseCase()
-                val timingsResponse = timingsResponses?.get(pageIndex)
-                if (timingsResponse != null) {
-                    _uiState.update { DayViewScreenUiState.Success(timingsResponse, dates) }
-                } else {
-                    _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
-                }
-            } catch (e: Exception) {
-                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
-            }
-        }
+//        _uiState.update { DayViewScreenUiState.Loading }
+//        viewModelScope.launch {
+//            try {
+//                val timingsResponses = getPrayerTimesForWeekUseCase()
+//                val dates = getDatesForWeekUseCase()
+////                val timingsResponse = timingsResponses?.get(pageIndex)
+//                val timingsResponse = timingsResponses
+//                if (timingsResponse != null) {
+//                    _uiState.update { DayViewScreenUiState.Success(timingsResponse, dates) }
+//                } else {
+//                    _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+//                }
+//            } catch (e: Exception) {
+//                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+//            }
+//        }
     }
 
     fun getPrayerInfo(): PrayerInfo = prayerRepo.getPrayerInfo()
