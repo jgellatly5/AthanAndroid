@@ -4,7 +4,7 @@ import com.gallopdevs.athanhelper.MainDispatcherRule
 import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
-import com.gallopdevs.athanhelper.domain.GetDatesForWeekUseCase
+import com.gallopdevs.athanhelper.domain.GetDatesUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import kotlinx.coroutines.flow.flowOf
@@ -25,7 +25,7 @@ class PrayerViewModelTest {
     private lateinit var testObject: PrayerViewModel
 
     private val getPrayerTimesForWeekUseCase: GetPrayerTimesForWeekUseCase = mock()
-    private val getDatesForWeekUseCase: GetDatesForWeekUseCase = mock()
+    private val getDatesUseCase: GetDatesUseCase = mock()
     private val prayerRepo: PrayerRepo = mock()
 
     @Test
@@ -48,7 +48,7 @@ class PrayerViewModelTest {
             )
         )
         Mockito.lenient()
-            .`when`(getDatesForWeekUseCase.invoke()) doReturn expectedDatesForWeekUseCase
+            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doReturn expectedDatesForWeekUseCase
         Mockito.lenient().`when`(
             prayerRepo.getPrayerTimeResponsesForMonth(
                 year = "2024",
@@ -60,7 +60,7 @@ class PrayerViewModelTest {
         ) doReturn flowOf(Result.Success(expectedPrayerTimesForWeekUseCase))
 
         testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesForWeekUseCase, prayerRepo)
+            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
 
         testObject.getPrayerTimesForWeek()
         assertEquals(
@@ -76,7 +76,7 @@ class PrayerViewModelTest {
         Mockito.lenient()
             .`when`(getPrayerTimesForWeekUseCase.invoke()) doThrow exception
         Mockito.lenient()
-            .`when`(getDatesForWeekUseCase.invoke()) doThrow exception
+            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doThrow exception
         Mockito.lenient().`when`(
             prayerRepo.getPrayerTimeResponsesForMonth(
                 year = "2024",
@@ -88,7 +88,7 @@ class PrayerViewModelTest {
         ) doThrow exception
 
         testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesForWeekUseCase, prayerRepo)
+            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
 
         testObject.getPrayerTimesForWeek()
         assertEquals(DatesUiState.Error("Coroutine Error"), testObject.datesUiState.value)
@@ -115,7 +115,7 @@ class PrayerViewModelTest {
             )
         )
         Mockito.lenient()
-            .`when`(getDatesForWeekUseCase.invoke()) doReturn expectedDatesForWeekUseCase
+            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doReturn expectedDatesForWeekUseCase
         Mockito.lenient().`when`(
             prayerRepo.getPrayerTimeResponsesForMonth(
                 year = "2024",
@@ -127,7 +127,7 @@ class PrayerViewModelTest {
         ) doReturn flowOf(Result.Success(expectedPrayerTimesForWeekUseCase))
 
         testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesForWeekUseCase, prayerRepo)
+            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
 
         assertEquals(TimingsResponseUiState.Loading, testObject.timingsResponseUiState.value)
         testObject.fetchTimingsResponseForIndex(pageIndex)
@@ -154,7 +154,7 @@ class PrayerViewModelTest {
         Mockito.lenient()
             .`when`(getPrayerTimesForWeekUseCase.invoke()) doReturn flowOf(Result.Error(errorMessage))
         Mockito.lenient()
-            .`when`(getDatesForWeekUseCase.invoke()) doReturn expectedDatesForWeekUseCase
+            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doReturn expectedDatesForWeekUseCase
         Mockito.lenient().`when`(
             prayerRepo.getPrayerTimeResponsesForMonth(
                 year = "2024",
@@ -166,7 +166,7 @@ class PrayerViewModelTest {
         ) doReturn flowOf(Result.Error(errorMessage))
 
         testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesForWeekUseCase, prayerRepo)
+            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
 
         assertEquals(TimingsResponseUiState.Loading, testObject.timingsResponseUiState.value)
         testObject.fetchTimingsResponseForIndex(pageIndex)

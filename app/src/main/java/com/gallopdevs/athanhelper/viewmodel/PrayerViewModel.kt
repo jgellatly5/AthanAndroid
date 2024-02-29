@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gallopdevs.athanhelper.data.PrayerInfo
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
-import com.gallopdevs.athanhelper.domain.GetDatesForWeekUseCase
+import com.gallopdevs.athanhelper.domain.GetDatesUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PrayerViewModel @Inject constructor(
     private val getPrayerTimesForWeekUseCase: GetPrayerTimesForWeekUseCase,
-    private val getDatesForWeekUseCase: GetDatesForWeekUseCase,
+    private val getDatesUseCase: GetDatesUseCase,
     private val prayerRepo: PrayerRepo
 ) : ViewModel() {
 
@@ -53,7 +53,7 @@ class PrayerViewModel @Inject constructor(
     fun getPrayerTimesForWeek() {
         viewModelScope.launch {
             try {
-                val dates = getDatesForWeekUseCase()
+                val dates = getDatesUseCase(pattern = "EEEE, MM/dd")
                 val timingsResponsesFlow = getPrayerTimesForWeekUseCase()
                 timingsResponsesFlow.collect { result ->
                     when (result) {

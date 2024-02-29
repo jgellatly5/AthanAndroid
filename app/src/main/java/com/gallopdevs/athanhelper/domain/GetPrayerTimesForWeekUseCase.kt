@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetPrayerTimesForWeekUseCase @Inject constructor(
-    private val getDatesForApiUseCase: GetDatesForApiUseCase,
+    private val getDatesUseCase: GetDatesUseCase,
     private val getPrayerTimeResponsesForMonthUseCase: GetPrayerTimesForMonthUseCase
 ) {
     suspend operator fun invoke(): Flow<Result<List<TimingsResponse?>>> {
-        val dates = getDatesForApiUseCase()
+        val dates = getDatesUseCase(pattern = "dd MMM yyyy")
         val prayerTimeResponsesForMonth = getPrayerTimeResponsesForMonthUseCase()
         return prayerTimeResponsesForMonth.map { result ->
             when (result) {
