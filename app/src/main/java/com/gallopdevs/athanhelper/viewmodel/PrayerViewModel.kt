@@ -26,16 +26,11 @@ class PrayerViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<DayViewScreenUiState>(DayViewScreenUiState.Loading)
     val uiState: StateFlow<DayViewScreenUiState> = _uiState.asStateFlow()
 
-    /*init {
-        getPrayerTimesForDate(
-            date = "11-01-2024",
-            latitude = 33.860889,
-            longitude = -118.392632,
-            method = 2
-        )
-    }*/
+    init {
+        getPrayerTimesForDate(0)
+    }
 
-    fun getPrayerTimesForDate(pageIndex: Int) {
+    private fun getPrayerTimesForDate(pageIndex: Int) {
         viewModelScope.launch {
             try {
                 val dates = getDatesForWeekUseCase()

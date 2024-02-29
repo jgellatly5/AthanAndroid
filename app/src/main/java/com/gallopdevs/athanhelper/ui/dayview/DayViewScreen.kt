@@ -32,7 +32,6 @@ fun DayViewScreen(
 ) {
     pageIndex?.let {
         val uiState by prayerViewModel.uiState.collectAsState()
-        prayerViewModel.getPrayerTimesForDate(it)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
