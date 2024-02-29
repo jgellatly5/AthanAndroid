@@ -23,41 +23,52 @@ class PrayerViewModel @Inject constructor(
     private val prayerRepo: PrayerRepo
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<DayViewScreenUiState>(DayViewScreenUiState.Loading)
-    val uiState: StateFlow<DayViewScreenUiState> = _uiState.asStateFlow()
+    private lateinit var timingsResponses: List<TimingsResponse?>
+
+    private val _datesUiState = MutableStateFlow<DatesUiState>(DatesUiState.Loading)
+    val datesUiState: StateFlow<DatesUiState> = _datesUiState.asStateFlow()
+
+    private val _timingsResponseUiState =
+        MutableStateFlow<TimingsResponseUiState>(TimingsResponseUiState.Loading)
+    val timingsResponseUiState: StateFlow<TimingsResponseUiState> = _timingsResponseUiState.asStateFlow()
 
     init {
-        getPrayerTimesForDate(0)
+        getPrayerTimesForWeek()
     }
 
-    private fun getPrayerTimesForDate(pageIndex: Int) {
+    fun fetchTimingsResponseForIndex(pageIndex: Int) {
+        _timingsResponseUiState.update { TimingsResponseUiState.Loading }
+        if (pageIndex < timingsResponses.size) {
+            val timingsResponse = timingsResponses[pageIndex]
+            if (timingsResponse != null) {
+                _timingsResponseUiState.update { TimingsResponseUiState.Success(timingsResponse) }
+            } else {
+                _timingsResponseUiState.update { TimingsResponseUiState.Error("Null Response") }
+            }
+        } else {
+            _timingsResponseUiState.update { TimingsResponseUiState.Error("Index Out Of Bounds") }
+        }
+    }
+
+    fun getPrayerTimesForWeek() {
         viewModelScope.launch {
             try {
                 val dates = getDatesForWeekUseCase()
                 val timingsResponsesFlow = getPrayerTimesForWeekUseCase()
                 timingsResponsesFlow.collect { result ->
                     when (result) {
-                        Result.Loading -> _uiState.update { DayViewScreenUiState.Loading }
+                        Result.Loading -> _datesUiState.update { DatesUiState.Loading }
 
                         is Result.Success -> {
-                            val timingsResponse = result.data[pageIndex]
-                            if (timingsResponse != null) {
-                                _uiState.update {
-                                    DayViewScreenUiState.Success(
-                                        timingsResponse,
-                                        dates
-                                    )
-                                }
-                            } else {
-                                _uiState.update { DayViewScreenUiState.Error("Null Response") }
-                            }
+                            timingsResponses = result.data
+                            _datesUiState.update { DatesUiState.Success(dates) }
                         }
 
-                        is Result.Error -> _uiState.update { DayViewScreenUiState.Error("Result Error") }
+                        is Result.Error -> _datesUiState.update { DatesUiState.Error("Result Error") }
                     }
                 }
             } catch (e: Exception) {
-                _uiState.update { DayViewScreenUiState.Error("Coroutine Error") }
+                _datesUiState.update { DatesUiState.Error("Coroutine Error") }
             }
         }
     }
@@ -75,10 +86,14 @@ class PrayerViewModel @Inject constructor(
     ) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
 }
 
-sealed class DayViewScreenUiState {
-    data class Success(val timingsResponse: TimingsResponse, val dates: List<String>) :
-        DayViewScreenUiState()
+sealed class DatesUiState {
+    data class Success(val dates: List<String>) : DatesUiState()
+    data class Error(val message: String) : DatesUiState()
+    data object Loading : DatesUiState()
+}
 
-    data class Error(val message: String) : DayViewScreenUiState()
-    data object Loading : DayViewScreenUiState()
+sealed class TimingsResponseUiState {
+    data class Success(val timingsResponse: TimingsResponse) : TimingsResponseUiState()
+    data class Error(val message: String) : TimingsResponseUiState()
+    data object Loading : TimingsResponseUiState()
 }
