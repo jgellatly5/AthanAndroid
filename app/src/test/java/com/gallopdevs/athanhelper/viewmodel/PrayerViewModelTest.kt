@@ -42,8 +42,8 @@ class PrayerViewModelTest {
             "2024-02-17"
         )
 
-//        Mockito.lenient()
-//            .`when`(getPrayerTimesForWeekUseCase.invoke()) doReturn expectedPrayerTimesForWeekUseCase
+        Mockito.lenient()
+            .`when`(getPrayerTimesForWeekUseCase.invoke()) doReturn flowOf(Result.Success(expectedPrayerTimesForWeekUseCase))
         Mockito.lenient()
             .`when`(getDatesForWeekUseCase.invoke()) doReturn expectedDatesForWeekUseCase
         Mockito.lenient().`when`(

@@ -3,6 +3,7 @@ package com.gallopdevs.athanhelper.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gallopdevs.athanhelper.data.PrayerInfo
+import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.GetDatesForWeekUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
@@ -35,22 +36,35 @@ class PrayerViewModel @Inject constructor(
     }*/
 
     fun getPrayerTimesForDate(pageIndex: Int) {
-//        _uiState.update { DayViewScreenUiState.Loading }
-//        viewModelScope.launch {
-//            try {
-//                val timingsResponses = getPrayerTimesForWeekUseCase()
-//                val dates = getDatesForWeekUseCase()
-////                val timingsResponse = timingsResponses?.get(pageIndex)
-//                val timingsResponse = timingsResponses
-//                if (timingsResponse != null) {
-//                    _uiState.update { DayViewScreenUiState.Success(timingsResponse, dates) }
-//                } else {
-//                    _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
-//                }
-//            } catch (e: Exception) {
-//                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
-//            }
-//        }
+        viewModelScope.launch {
+            try {
+                val dates = getDatesForWeekUseCase()
+                val timingsResponsesFlow = getPrayerTimesForWeekUseCase()
+                timingsResponsesFlow.collect { result ->
+                    when (result) {
+                        Result.Loading -> _uiState.update { DayViewScreenUiState.Loading }
+
+                        is Result.Success -> {
+                            val timingsResponse = result.data[pageIndex]
+                            if (timingsResponse != null) {
+                                _uiState.update {
+                                    DayViewScreenUiState.Success(
+                                        timingsResponse,
+                                        dates
+                                    )
+                                }
+                            } else {
+                                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+                            }
+                        }
+
+                        is Result.Error -> _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+                    }
+                }
+            } catch (e: Exception) {
+                _uiState.update { DayViewScreenUiState.Error("An error has occurred.") }
+            }
+        }
     }
 
     fun getPrayerInfo(): PrayerInfo = prayerRepo.getPrayerInfo()
