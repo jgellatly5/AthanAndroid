@@ -140,12 +140,21 @@ class PrayerViewModelTest {
     @Test
     fun `timingsResponseUiState error`() = runTest {
         val pageIndex = 0
-        val exception = RuntimeException("API Error")
+        val expectedDatesForWeekUseCase = listOf(
+            "2024-02-11",
+            "2024-02-12",
+            "2024-02-13",
+            "2024-02-14",
+            "2024-02-15",
+            "2024-02-16",
+            "2024-02-17"
+        )
+        val errorMessage = "Coroutine Error"
 
         Mockito.lenient()
-            .`when`(getPrayerTimesForWeekUseCase.invoke()) doThrow exception
+            .`when`(getPrayerTimesForWeekUseCase.invoke()) doReturn flowOf(Result.Error(errorMessage))
         Mockito.lenient()
-            .`when`(getDatesForWeekUseCase.invoke()) doThrow exception
+            .`when`(getDatesForWeekUseCase.invoke()) doReturn expectedDatesForWeekUseCase
         Mockito.lenient().`when`(
             prayerRepo.getPrayerTimeResponsesForMonth(
                 year = "2024",
@@ -154,7 +163,7 @@ class PrayerViewModelTest {
                 longitude = 0.01,
                 method = JAFARI
             )
-        ) doThrow exception
+        ) doReturn flowOf(Result.Error(errorMessage))
 
         testObject =
             PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesForWeekUseCase, prayerRepo)

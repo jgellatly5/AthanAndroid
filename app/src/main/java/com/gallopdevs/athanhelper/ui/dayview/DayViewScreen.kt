@@ -1,6 +1,5 @@
 package com.gallopdevs.athanhelper.ui.dayview
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,9 +35,6 @@ fun DayViewScreen(
     pageIndex?.let {
         val datesUiState by prayerViewModel.datesUiState.collectAsState()
         val timingsResponseUiState by prayerViewModel.timingsResponseUiState.collectAsState()
-        LaunchedEffect(pageIndex) {
-            prayerViewModel.fetchTimingsResponseForIndex(pageIndex)
-        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,6 +52,9 @@ fun DayViewScreen(
                 is DatesUiState.Success -> {
                     val dates = (datesUiState as DatesUiState.Success).dates
                     DayOfWeekPlusDateHeader(dayOfWeekPlusDate = dates[it])
+                    LaunchedEffect(pageIndex) {
+                        prayerViewModel.fetchTimingsResponseForIndex(pageIndex)
+                    }
                 }
 
                 is DatesUiState.Error -> {
@@ -70,7 +69,8 @@ fun DayViewScreen(
                 }
 
                 is TimingsResponseUiState.Success -> {
-                    val timingsResponse = (timingsResponseUiState as TimingsResponseUiState.Success).timingsResponse
+                    val timingsResponse =
+                        (timingsResponseUiState as TimingsResponseUiState.Success).timingsResponse
                     timingsResponse.timings?.let { timings ->
                         for ((name, time) in timings) {
                             time?.let {
