@@ -18,7 +18,7 @@ class GetPrayerTimesForWeekUseCaseTest {
 
     private lateinit var testObject: GetPrayerTimesForWeekUseCase
 
-    private val getDatesForApiUseCase: GetDatesForApiUseCase = mock()
+    private val getDatesUseCase: GetDatesUseCase = mock()
     private val getPrayerTimeResponsesForMonthUseCase: GetPrayerTimesForMonthUseCase = mock()
 
     @Test
@@ -32,7 +32,7 @@ class GetPrayerTimesForWeekUseCaseTest {
 
         Mockito.lenient()
             .`when`(
-                getDatesForApiUseCase.invoke()
+                getDatesUseCase("yyyy-MM-dd")
             ) doReturn listOf(
             "2024-02-25",
             "2024-02-26",
@@ -45,11 +45,11 @@ class GetPrayerTimesForWeekUseCaseTest {
 
         Mockito.lenient()
             .`when`(
-                getPrayerTimeResponsesForMonthUseCase.invoke()
+                getPrayerTimeResponsesForMonthUseCase()
             ) doReturn flowOf(Result.Loading, Result.Success(timingsResponseList))
 
         testObject = GetPrayerTimesForWeekUseCase(
-            getDatesForApiUseCase,
+            getDatesUseCase,
             getPrayerTimeResponsesForMonthUseCase
         )
         val actualResult = testObject.invoke()
@@ -64,7 +64,7 @@ class GetPrayerTimesForWeekUseCaseTest {
 
         Mockito.lenient()
             .`when`(
-                getDatesForApiUseCase.invoke()
+                getDatesUseCase("yyyy-MM-dd")
             ) doReturn listOf(
             "2024-02-25",
             "2024-02-26",
@@ -77,11 +77,11 @@ class GetPrayerTimesForWeekUseCaseTest {
 
         Mockito.lenient()
             .`when`(
-                getPrayerTimeResponsesForMonthUseCase.invoke()
+                getPrayerTimeResponsesForMonthUseCase()
             ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
 
         testObject = GetPrayerTimesForWeekUseCase(
-            getDatesForApiUseCase,
+            getDatesUseCase,
             getPrayerTimeResponsesForMonthUseCase
         )
         val actualResult = testObject.invoke()

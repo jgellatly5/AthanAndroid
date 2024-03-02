@@ -4,8 +4,8 @@ import com.gallopdevs.athanhelper.MainDispatcherRule
 import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
-import com.gallopdevs.athanhelper.domain.GetDatesUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
+import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -25,30 +25,20 @@ class PrayerViewModelTest {
     private lateinit var testObject: PrayerViewModel
 
     private val getPrayerTimesForWeekUseCase: GetPrayerTimesForWeekUseCase = mock()
-    private val getDatesUseCase: GetDatesUseCase = mock()
     private val prayerRepo: PrayerRepo = mock()
 
     @Test
-    fun `datesUiState success`() = runTest {
-        val expectedPrayerTimesForWeekUseCase = listOf(TimingsResponse())
-        val expectedDatesForWeekUseCase = listOf(
-            "2024-02-11",
-            "2024-02-12",
-            "2024-02-13",
-            "2024-02-14",
-            "2024-02-15",
-            "2024-02-16",
-            "2024-02-17"
-        )
+    fun `prayerTimesUiState success`() = runTest {
+        val expectedPrayerTimesForWeekUseCase =
+            listOf(PrayerTimes(date = "2024-02-11", timingsResponse = TimingsResponse()))
+        val expectedPrayerRepoResponse = listOf(TimingsResponse())
 
         Mockito.lenient()
-            .`when`(getPrayerTimesForWeekUseCase.invoke()) doReturn flowOf(
+            .`when`(getPrayerTimesForWeekUseCase()) doReturn flowOf(
             Result.Success(
                 expectedPrayerTimesForWeekUseCase
             )
         )
-        Mockito.lenient()
-            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doReturn expectedDatesForWeekUseCase
         Mockito.lenient().`when`(
             prayerRepo.getPrayerTimeResponsesForMonth(
                 year = "2024",
@@ -57,26 +47,24 @@ class PrayerViewModelTest {
                 longitude = 0.01,
                 method = JAFARI
             )
-        ) doReturn flowOf(Result.Success(expectedPrayerTimesForWeekUseCase))
+        ) doReturn flowOf(Result.Success(expectedPrayerRepoResponse))
 
         testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
+            PrayerViewModel(getPrayerTimesForWeekUseCase, prayerRepo)
 
         testObject.getPrayerTimesForWeek()
         assertEquals(
-            DatesUiState.Success(expectedDatesForWeekUseCase),
-            testObject.datesUiState.value
+            PrayerTimesUiState.Success(expectedPrayerTimesForWeekUseCase),
+            testObject.prayerTimesUiState.value
         )
     }
 
     @Test
-    fun `datesUiState error`() = runTest {
+    fun `prayerTimesUiState error`() = runTest {
         val exception = RuntimeException("API Error")
 
         Mockito.lenient()
-            .`when`(getPrayerTimesForWeekUseCase.invoke()) doThrow exception
-        Mockito.lenient()
-            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doThrow exception
+            .`when`(getPrayerTimesForWeekUseCase()) doThrow exception
         Mockito.lenient().`when`(
             prayerRepo.getPrayerTimeResponsesForMonth(
                 year = "2024",
@@ -88,88 +76,12 @@ class PrayerViewModelTest {
         ) doThrow exception
 
         testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
+            PrayerViewModel(getPrayerTimesForWeekUseCase, prayerRepo)
 
         testObject.getPrayerTimesForWeek()
-        assertEquals(DatesUiState.Error("Coroutine Error"), testObject.datesUiState.value)
-    }
-
-    @Test
-    fun `timingsResponseUiState success`() = runTest {
-        val pageIndex = 0
-        val expectedPrayerTimesForWeekUseCase = listOf(TimingsResponse())
-        val expectedDatesForWeekUseCase = listOf(
-            "2024-02-11",
-            "2024-02-12",
-            "2024-02-13",
-            "2024-02-14",
-            "2024-02-15",
-            "2024-02-16",
-            "2024-02-17"
-        )
-
-        Mockito.lenient()
-            .`when`(getPrayerTimesForWeekUseCase.invoke()) doReturn flowOf(
-            Result.Success(
-                expectedPrayerTimesForWeekUseCase
-            )
-        )
-        Mockito.lenient()
-            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doReturn expectedDatesForWeekUseCase
-        Mockito.lenient().`when`(
-            prayerRepo.getPrayerTimeResponsesForMonth(
-                year = "2024",
-                month = "2",
-                latitude = 0.01,
-                longitude = 0.01,
-                method = JAFARI
-            )
-        ) doReturn flowOf(Result.Success(expectedPrayerTimesForWeekUseCase))
-
-        testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
-
-        assertEquals(TimingsResponseUiState.Loading, testObject.timingsResponseUiState.value)
-        testObject.fetchTimingsResponseForIndex(pageIndex)
         assertEquals(
-            TimingsResponseUiState.Success(expectedPrayerTimesForWeekUseCase.first()),
-            testObject.timingsResponseUiState.value
+            PrayerTimesUiState.Error("Coroutine Error"),
+            testObject.prayerTimesUiState.value
         )
-    }
-
-    @Test
-    fun `timingsResponseUiState error`() = runTest {
-        val pageIndex = 0
-        val expectedDatesForWeekUseCase = listOf(
-            "2024-02-11",
-            "2024-02-12",
-            "2024-02-13",
-            "2024-02-14",
-            "2024-02-15",
-            "2024-02-16",
-            "2024-02-17"
-        )
-        val errorMessage = "Coroutine Error"
-
-        Mockito.lenient()
-            .`when`(getPrayerTimesForWeekUseCase.invoke()) doReturn flowOf(Result.Error(errorMessage))
-        Mockito.lenient()
-            .`when`(getDatesUseCase.invoke(pattern = "EEEE, MM/dd")) doReturn expectedDatesForWeekUseCase
-        Mockito.lenient().`when`(
-            prayerRepo.getPrayerTimeResponsesForMonth(
-                year = "2024",
-                month = "2",
-                latitude = 0.01,
-                longitude = 0.01,
-                method = JAFARI
-            )
-        ) doReturn flowOf(Result.Error(errorMessage))
-
-        testObject =
-            PrayerViewModel(getPrayerTimesForWeekUseCase, getDatesUseCase, prayerRepo)
-
-        assertEquals(TimingsResponseUiState.Loading, testObject.timingsResponseUiState.value)
-        testObject.fetchTimingsResponseForIndex(pageIndex)
-        assertEquals(DatesUiState.Error("Coroutine Error"), testObject.datesUiState.value)
     }
 }

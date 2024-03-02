@@ -10,24 +10,37 @@ class GetPrayerTimesForWeekUseCase @Inject constructor(
     private val getDatesUseCase: GetDatesUseCase,
     private val getPrayerTimeResponsesForMonthUseCase: GetPrayerTimesForMonthUseCase
 ) {
-    suspend operator fun invoke(): Flow<Result<List<TimingsResponse?>>> {
-        val dates = getDatesUseCase(pattern = "dd MMM yyyy")
+    suspend operator fun invoke(): Flow<Result<List<PrayerTimes>>> {
+        val datesForPrayerTimesList = getDatesUseCase(pattern = "EEEE, MM/dd")
+        val datesToBeFiltered = getDatesUseCase(pattern = "dd MMM yyyy")
         val prayerTimeResponsesForMonth = getPrayerTimeResponsesForMonthUseCase()
         return prayerTimeResponsesForMonth.map { result ->
             when (result) {
-                Result.Loading -> result
+                Result.Loading -> Result.Loading
 
                 is Result.Success -> {
-                    val timingsResponses = result.data.filter { timingsResponse ->
-                        timingsResponse?.date.let {
-                            dates.contains(it?.readable)
+                    val prayerTimesList = result.data
+                        .filter { timingsResponse ->
+                            timingsResponse?.date.let {
+                                datesToBeFiltered.contains(it?.readable)
+                            }
                         }
-                    }
-                    Result.Success(timingsResponses)
+                        .map { timingsResponse ->
+                            PrayerTimes(
+                                date = timingsResponse?.date?.readable ?: "",
+                                timingsResponse = timingsResponse ?: TimingsResponse() // You may need to handle null case appropriately
+                            )
+                        }
+                    Result.Success(prayerTimesList)
                 }
 
-                is Result.Error -> result
+                is Result.Error -> Result.Error("Error")
             }
         }
     }
 }
+
+data class PrayerTimes(
+    val date: String,
+    val timingsResponse: TimingsResponse
+)

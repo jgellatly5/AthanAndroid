@@ -11,7 +11,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -23,9 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
-import com.gallopdevs.athanhelper.viewmodel.DatesUiState
+import com.gallopdevs.athanhelper.viewmodel.PrayerTimesUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
-import com.gallopdevs.athanhelper.viewmodel.TimingsResponseUiState
 
 @Composable
 fun DayViewScreen(
@@ -33,8 +31,7 @@ fun DayViewScreen(
     prayerViewModel: PrayerViewModel = hiltViewModel()
 ) {
     pageIndex?.let {
-        val datesUiState by prayerViewModel.datesUiState.collectAsState()
-        val timingsResponseUiState by prayerViewModel.timingsResponseUiState.collectAsState()
+        val prayerTimesUiState by prayerViewModel.prayerTimesUiState.collectAsState()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -42,36 +39,18 @@ fun DayViewScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            when (datesUiState) {
-                is DatesUiState.Loading -> {
+            when (prayerTimesUiState) {
+                is PrayerTimesUiState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator(modifier = Modifier.align(Center))
                     }
                 }
 
-                is DatesUiState.Success -> {
-                    val dates = (datesUiState as DatesUiState.Success).dates
-                    DayOfWeekPlusDateHeader(dayOfWeekPlusDate = dates[it])
-                    LaunchedEffect(pageIndex) {
-                        prayerViewModel.fetchTimingsResponseForIndex(pageIndex)
-                    }
-                }
-
-                is DatesUiState.Error -> {
-                    ErrorMessage(message = (datesUiState as DatesUiState.Error).message)
-                }
-            }
-            when (timingsResponseUiState) {
-                TimingsResponseUiState.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(modifier = Modifier.align(Center))
-                    }
-                }
-
-                is TimingsResponseUiState.Success -> {
-                    val timingsResponse =
-                        (timingsResponseUiState as TimingsResponseUiState.Success).timingsResponse
-                    timingsResponse.timings?.let { timings ->
+                is PrayerTimesUiState.Success -> {
+                    val prayerTimesList =
+                        (prayerTimesUiState as PrayerTimesUiState.Success).prayerTimesList
+                    DayOfWeekPlusDateHeader(dayOfWeekPlusDate = prayerTimesList[it].date)
+                    prayerTimesList[it].timingsResponse.timings?.let { timings ->
                         for ((name, time) in timings) {
                             time?.let {
                                 PrayerRow(
@@ -84,8 +63,8 @@ fun DayViewScreen(
                     }
                 }
 
-                is TimingsResponseUiState.Error -> {
-                    ErrorMessage(message = (timingsResponseUiState as TimingsResponseUiState.Error).message)
+                is PrayerTimesUiState.Error -> {
+                    ErrorMessage(message = (prayerTimesUiState as PrayerTimesUiState.Error).message)
                 }
             }
         }
