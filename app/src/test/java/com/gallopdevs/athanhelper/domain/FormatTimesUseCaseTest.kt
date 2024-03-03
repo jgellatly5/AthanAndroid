@@ -12,19 +12,20 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.mock
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class GetNextPrayerTimeUseCaseTest {
+class FormatTimesUseCaseTest {
 
-    private lateinit var testObject: GetNextPrayerTimeUseCase
+    private lateinit var testObject: FormatTimesUseCase
 
     private val parseTimeToMillisUseCase: ParseTimeToMillisUseCase = mock()
-    private val formatTimesUseCase: FormatTimesUseCase = mock()
+    private val getPrayerTimesForWeekUseCase: GetPrayerTimesForWeekUseCase = mock()
 
     @Test
-    fun `getNextPrayerTime Result Success`() = runTest {
+    fun `formatTimes Result Success`() = runTest {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val prayerTimesList = listOf(
             PrayerTimes(
@@ -62,32 +63,48 @@ class GetNextPrayerTimeUseCaseTest {
                 )
             )
         )
-        val expectedTime = 1954000L
+        val expectedTime1 = 1954000L
+        val expectedTime2 = 1964000L
 
         Mockito.lenient()
             .`when`(
-                formatTimesUseCase(simpleDateFormat)
-            ) doReturn flowOf(Result.Loading, Result.Success(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9)))
+                parseTimeToMillisUseCase(simpleDateFormat, "5:00")
+            ) doReturn expectedTime1
 
-        testObject = GetNextPrayerTimeUseCase(parseTimeToMillisUseCase, formatTimesUseCase)
-        val actualResult = testObject.invoke()
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, "6:00")
+            ) doReturn expectedTime2
+
+        Mockito.lenient()
+            .`when`(
+                getPrayerTimesForWeekUseCase()
+            ) doReturn flowOf(Result.Loading, Result.Success(prayerTimesList))
+
+        testObject = FormatTimesUseCase(parseTimeToMillisUseCase, getPrayerTimesForWeekUseCase)
+        val actualResult = testObject.invoke(simpleDateFormat)
 
         assertEquals(Result.Loading, actualResult.first())
-        assertEquals(Result.Success(expectedTime), actualResult.last())
+        assertEquals(Result.Success(listOf(expectedTime1, expectedTime2)), actualResult.last())
     }
 
     @Test
-    fun `getNextPrayerTime Result Error`() = runTest {
+    fun `formatTimes Result Error`() = runTest {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val errorMessage = "Error"
 
         Mockito.lenient()
             .`when`(
-                formatTimesUseCase(simpleDateFormat)
+                parseTimeToMillisUseCase(simpleDateFormat, "5:00")
+            ) doThrow RuntimeException(errorMessage)
+
+        Mockito.lenient()
+            .`when`(
+                getPrayerTimesForWeekUseCase()
             ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
 
-        testObject = GetNextPrayerTimeUseCase(parseTimeToMillisUseCase, formatTimesUseCase)
-        val actualResult = testObject.invoke()
+        testObject = FormatTimesUseCase(parseTimeToMillisUseCase, getPrayerTimesForWeekUseCase)
+        val actualResult = testObject.invoke(simpleDateFormat)
 
         assertEquals(Result.Loading, actualResult.first())
         assertEquals(Result.Error(errorMessage), actualResult.last())
