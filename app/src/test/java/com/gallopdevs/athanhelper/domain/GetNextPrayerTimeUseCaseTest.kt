@@ -1,9 +1,6 @@
 package com.gallopdevs.athanhelper.domain
 
 import com.gallopdevs.athanhelper.data.Result
-import com.gallopdevs.athanhelper.data.models.Date
-import com.gallopdevs.athanhelper.data.models.Timings
-import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
@@ -26,48 +23,23 @@ class GetNextPrayerTimeUseCaseTest {
     @Test
     fun `getNextPrayerTime Result Success`() = runTest {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
-        val prayerTimesList = listOf(
-            PrayerTimes(
-                date = "2024-02-25",
-                timingsResponse = TimingsResponse(
-                    date = Date(timestamp = "2024-02-25"),
-                    timings = Timings(
-                        fajr = "5:00",
-                        sunrise = "6:00",
-                        dhuhr = "12:00",
-                        asr = "15:00",
-                        sunset = "18:00",
-                        maghrib = "18:30",
-                        isha = "19:00",
-                        imsak = "4:00",
-                        midnight = "23:59"
-                    )
-                )
-            ),
-            PrayerTimes(
-                date = "2024-02-26",
-                timingsResponse = TimingsResponse(
-                    date = Date(timestamp = "2024-02-26"),
-                    timings = Timings(
-                        fajr = "5:00",
-                        sunrise = "6:00",
-                        dhuhr = "12:00",
-                        asr = "15:00",
-                        sunset = "18:00",
-                        maghrib = "18:30",
-                        isha = "19:00",
-                        imsak = "4:00",
-                        midnight = "23:59"
-                    )
-                )
-            )
+        val expectedTimes = listOf(
+            1954000L,
+            1964000L,
+            1974000L,
+            1984000L,
+            1994000L,
+            2004000L,
+            2014000L,
+            2024000L,
+            2034000L
         )
         val expectedTime = 1954000L
 
         Mockito.lenient()
             .`when`(
                 formatTimesUseCase(simpleDateFormat)
-            ) doReturn flowOf(Result.Loading, Result.Success(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9)))
+            ) doReturn flowOf(Result.Loading, Result.Success(expectedTimes))
 
         testObject = GetNextPrayerTimeUseCase(parseTimeToMillisUseCase, formatTimesUseCase)
         val actualResult = testObject.invoke()
