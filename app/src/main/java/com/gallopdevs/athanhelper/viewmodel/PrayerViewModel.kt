@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gallopdevs.athanhelper.data.PrayerInfo
 import com.gallopdevs.athanhelper.data.Result
+import com.gallopdevs.athanhelper.domain.GetNextPrayerTimeUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
 import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.repository.PrayerRepo
@@ -17,16 +18,40 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PrayerViewModel @Inject constructor(
+    private val getNextPrayerTimeUseCase: GetNextPrayerTimeUseCase,
     private val getPrayerTimesForWeekUseCase: GetPrayerTimesForWeekUseCase,
     private val prayerRepo: PrayerRepo
 ) : ViewModel() {
+
+    private val _nextPrayerTimeUiState =
+        MutableStateFlow<NextPrayerTimeUiState>(NextPrayerTimeUiState.Loading)
+    val nextPrayerTimeUiState: StateFlow<NextPrayerTimeUiState> = _nextPrayerTimeUiState.asStateFlow()
 
     private val _prayerTimesUiState =
         MutableStateFlow<PrayerTimesUiState>(PrayerTimesUiState.Loading)
     val prayerTimesUiState: StateFlow<PrayerTimesUiState> = _prayerTimesUiState.asStateFlow()
 
     init {
+        getNextPrayerTime()
         getPrayerTimesForWeek()
+    }
+
+    fun getNextPrayerTime() {
+        viewModelScope.launch {
+            try {
+                getNextPrayerTimeUseCase().collect { result ->
+                    when (result) {
+                        Result.Loading -> _nextPrayerTimeUiState.update { NextPrayerTimeUiState.Loading }
+
+                        is Result.Success -> _nextPrayerTimeUiState.update { NextPrayerTimeUiState.Success(result.data) }
+
+                        is Result.Error -> _nextPrayerTimeUiState.update { NextPrayerTimeUiState.Error("Result Error") }
+                    }
+                }
+            } catch (e: Exception) {
+                _nextPrayerTimeUiState.update { NextPrayerTimeUiState.Error("Coroutine Error") }
+            }
+        }
     }
 
     fun getPrayerTimesForWeek() {
@@ -62,6 +87,12 @@ class PrayerViewModel @Inject constructor(
         adjustHighLats: Int,
         timeFormat: Int
     ) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
+}
+
+sealed class NextPrayerTimeUiState {
+    data class Success(val nextPrayerTime: Long) : NextPrayerTimeUiState()
+    data class Error(val message: String) : NextPrayerTimeUiState()
+    data object Loading : NextPrayerTimeUiState()
 }
 
 sealed class PrayerTimesUiState {
