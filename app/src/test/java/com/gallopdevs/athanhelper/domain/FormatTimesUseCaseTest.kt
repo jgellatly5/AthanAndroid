@@ -63,18 +63,64 @@ class FormatTimesUseCaseTest {
                 )
             )
         )
-        val expectedTime1 = 1954000L
-        val expectedTime2 = 1964000L
+        val firstTimings = prayerTimesList.first().timingsResponse.timings
+        val secondTimings = prayerTimesList[1].timingsResponse.timings
+        val expectedTimes = listOf(
+            1954000L,
+            1964000L,
+            1974000L,
+            1984000L,
+            1994000L,
+            2004000L,
+            2014000L,
+            2024000L,
+            2034000L
+        )
 
         Mockito.lenient()
             .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, "5:00")
-            ) doReturn expectedTime1
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.fajr)
+            ) doReturn expectedTimes[0]
 
         Mockito.lenient()
             .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, "6:00")
-            ) doReturn expectedTime2
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.sunrise)
+            ) doReturn expectedTimes[1]
+
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.dhuhr)
+            ) doReturn expectedTimes[2]
+
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.asr)
+            ) doReturn expectedTimes[3]
+
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.sunset)
+            ) doReturn expectedTimes[4]
+
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.maghrib)
+            ) doReturn expectedTimes[5]
+
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.isha)
+            ) doReturn expectedTimes[6]
+
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.imsak)
+            ) doReturn expectedTimes[7]
+
+        Mockito.lenient()
+            .`when`(
+                parseTimeToMillisUseCase(simpleDateFormat, secondTimings?.asr)
+            ) doReturn expectedTimes[8]
 
         Mockito.lenient()
             .`when`(
@@ -85,7 +131,7 @@ class FormatTimesUseCaseTest {
         val actualResult = testObject.invoke(simpleDateFormat)
 
         assertEquals(Result.Loading, actualResult.first())
-        assertEquals(Result.Success(listOf(expectedTime1, expectedTime2)), actualResult.last())
+        assertEquals(Result.Success(expectedTimes), actualResult.last())
     }
 
     @Test
