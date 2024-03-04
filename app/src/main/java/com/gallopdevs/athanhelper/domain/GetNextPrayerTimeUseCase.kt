@@ -13,10 +13,11 @@ class GetNextPrayerTimeUseCase @Inject constructor(
     private val formatTimesUseCase: FormatTimesUseCase
 ) {
     suspend operator fun invoke(): Flow<Result<Long>> {
-        val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
-        val currentTime = simpleDateFormat.format(Calendar.getInstance().time)
-        val currentTimeMillis = parseTimeToMillisUseCase(simpleDateFormat, currentTime)
-        val parsedTimes = formatTimesUseCase(simpleDateFormat)
+        val currentTimeMillisSdf = SimpleDateFormat("HH:mm:ss", Locale.US)
+        val currentTime = currentTimeMillisSdf.format(Calendar.getInstance().time)
+        val currentTimeMillis = parseTimeToMillisUseCase(currentTimeMillisSdf, currentTime)
+        val parsedTimesSdf = SimpleDateFormat("HH:mm", Locale.US)
+        val parsedTimes = formatTimesUseCase(parsedTimesSdf)
         return parsedTimes.map { result ->
             when (result) {
                 Result.Loading -> Result.Loading

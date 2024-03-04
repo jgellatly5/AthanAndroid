@@ -19,19 +19,19 @@ class FormatTimesUseCase @Inject constructor(
 
                 is Result.Success -> {
                     val prayerTimesList = result.data
-                    val newTimes = prayerTimesList.first().timingsResponse.timings
-                    val nextMorningTimes = prayerTimesList[1].timingsResponse.timings
+                    val todayTimings = prayerTimesList.first().timingsResponse.timings
+                    val nextMorningTimings = prayerTimesList[1].timingsResponse.timings
                     try {
                         val times = arrayOf(
-                            newTimes?.fajr,
-                            newTimes?.sunrise,
-                            newTimes?.dhuhr,
-                            newTimes?.asr,
-                            newTimes?.sunset,
-                            newTimes?.maghrib,
-                            newTimes?.isha,
-                            newTimes?.imsak,
-                            nextMorningTimes?.fajr
+                            todayTimings?.fajr,
+                            todayTimings?.sunrise,
+                            todayTimings?.dhuhr,
+                            todayTimings?.asr,
+                            todayTimings?.sunset,
+                            todayTimings?.maghrib,
+                            todayTimings?.isha,
+                            todayTimings?.imsak,
+                            nextMorningTimings?.fajr
                         )
                         val millisList = times.map { parseTimeToMillisUseCase(simpleDateFormat, it) }
                         Result.Success(millisList)

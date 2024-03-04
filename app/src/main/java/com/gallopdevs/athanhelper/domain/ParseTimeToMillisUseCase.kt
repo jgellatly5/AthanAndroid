@@ -7,7 +7,7 @@ import javax.inject.Inject
 class ParseTimeToMillisUseCase @Inject constructor() {
     operator fun invoke(simpleDateFormat: SimpleDateFormat, time: String?): Long {
         return try {
-            simpleDateFormat.parse("$time:00")?.time ?: 0
+            simpleDateFormat.parse("${time?.replace("(GMT)", "")}")?.time ?: 0
         } catch (e: ParseException) {
             e.printStackTrace()
             0

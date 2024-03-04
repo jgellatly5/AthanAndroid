@@ -5,21 +5,25 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +36,8 @@ import com.gallopdevs.athanhelper.MainActivity
 import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.ui.dayview.ErrorMessage
+import com.gallopdevs.athanhelper.viewmodel.NextPrayerTimeUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import kotlinx.coroutines.delay
@@ -45,51 +51,64 @@ fun NextPrayerHeader(
     prayerViewModel: PrayerViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val prayerInfo = prayerViewModel.getPrayerInfo()
-    var timerCountDown by remember { mutableLongStateOf(prayerInfo.nextTimeMillis) }
-    LaunchedEffect(timerCountDown) {
-        while (timerCountDown != 0L) {
-            delay(1.seconds)
-            timerCountDown -= 1000
-        }
-    }
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.moon),
-            contentDescription = "Moon",
-            modifier = Modifier
-                .width(150.dp)
-                .height(150.dp)
-        )
-        Column {
-            Text(
-                text = stringResource(id = R.string.next_prayer),
-                fontSize = dimensionResource(id = R.dimen.next_prayer_text_size).value.sp
-            )
-            if (timerCountDown != 0L) {
-                val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
-                offset.timeZone = TimeZone.getTimeZone("GMT")
-                Text(
-                    text = stringResource(
-                        id = R.string.count_down_time,
-                        offset.format(timerCountDown)
-                    ),
-                    fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
-                )
-            } else {
-                val enableNotifications = settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
-                if (enableNotifications) createNotification(LocalContext.current, prayerInfo.nextTimeIndex)
-                Text(
-                    text = stringResource(id = R.string.end_time),
-                    fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
-                )
+    val nextPrayerTimeUiState by prayerViewModel.nextPrayerTimeUiState.collectAsState()
+    when (nextPrayerTimeUiState) {
+        NextPrayerTimeUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
+
+        is NextPrayerTimeUiState.Success -> {
+            var timerCountDown by remember { mutableLongStateOf((nextPrayerTimeUiState as NextPrayerTimeUiState.Success).nextPrayerTime) }
+            LaunchedEffect(timerCountDown) {
+                while (timerCountDown != 0L) {
+                    delay(1.seconds)
+                    timerCountDown -= 1000
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.moon),
+                    contentDescription = "Moon",
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(150.dp)
+                )
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.next_prayer),
+                        fontSize = dimensionResource(id = R.dimen.next_prayer_text_size).value.sp
+                    )
+                    if (timerCountDown != 0L) {
+                        val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
+                        offset.timeZone = TimeZone.getTimeZone("GMT")
+                        Text(
+                            text = stringResource(
+                                id = R.string.count_down_time,
+                                offset.format(timerCountDown)
+                            ),
+                            fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
+                        )
+                    } else {
+                        val enableNotifications =
+                            settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
+//                        if (enableNotifications) createNotification(LocalContext.current, nextPrayerTimeUiState.nextTimeIndex)
+                        Text(
+                            text = stringResource(id = R.string.end_time),
+                            fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
+                        )
+                    }
+                }
+            }
+        }
+
+        is NextPrayerTimeUiState.Error -> ErrorMessage(message = (nextPrayerTimeUiState as NextPrayerTimeUiState.Error).message)
     }
 }
 
