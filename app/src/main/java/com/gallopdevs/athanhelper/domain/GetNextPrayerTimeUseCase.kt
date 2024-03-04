@@ -10,9 +10,10 @@ import javax.inject.Inject
 
 class GetNextPrayerTimeUseCase @Inject constructor(
     private val parseTimeToMillisUseCase: ParseTimeToMillisUseCase,
-    private val formatTimesUseCase: FormatTimesUseCase
+    private val formatTimesUseCase: FormatTimesUseCase,
+    private val getNextPrayerUseCase: GetNextPrayerUseCase
 ) {
-    suspend operator fun invoke(): Flow<Result<Long>> {
+    suspend operator fun invoke(): Flow<Result<NextPrayerTime>> {
         val currentTimeMillisSdf = SimpleDateFormat("HH:mm:ss", Locale.US)
         val currentTime = currentTimeMillisSdf.format(Calendar.getInstance().time)
         val currentTimeMillis = parseTimeToMillisUseCase(currentTimeMillisSdf, currentTime)
@@ -31,13 +32,12 @@ class GetNextPrayerTimeUseCase @Inject constructor(
                             differences[i] = differences[i] + 86400000
                         }
                     }
-                    var nextTimeIndex = 0
-                    for (i in differences.indices) {
-                        if (differences[i] < 0) {
-                            nextTimeIndex = (i + 1) % 5
-                        }
-                    }
-                    Result.Success(differences[nextTimeIndex])
+                    val nextPrayer = getNextPrayerUseCase(differences)
+                    val nextPrayerTime = NextPrayerTime(
+                        nextPrayerTimeMillis = differences[nextPrayer.index],
+                        nextPrayer = nextPrayer
+                    )
+                    Result.Success(nextPrayerTime)
                 }
 
                 is Result.Error -> Result.Error("Error")
@@ -45,3 +45,8 @@ class GetNextPrayerTimeUseCase @Inject constructor(
         }
     }
 }
+
+data class NextPrayerTime(
+    val nextPrayerTimeMillis: Long,
+    val nextPrayer: NextPrayer
+)

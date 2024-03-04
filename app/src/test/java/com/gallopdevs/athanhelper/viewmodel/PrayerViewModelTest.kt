@@ -54,10 +54,10 @@ class PrayerViewModelTest {
         testObject =
             PrayerViewModel(getNextPrayerTimeUseCase, getPrayerTimesForWeekUseCase, prayerRepo)
 
-        testObject.getPrayerTimesForWeek()
+        testObject.getPrayerInfo()
         assertEquals(
-            PrayerTimesUiState.Success(expectedPrayerTimesForWeekUseCase),
-            testObject.prayerTimesUiState.value
+            PrayerInfoUiState.Success(expectedPrayerTimesForWeekUseCase),
+            testObject.prayerInfoUiState.value
         )
     }
 
@@ -80,10 +80,10 @@ class PrayerViewModelTest {
         testObject =
             PrayerViewModel(getNextPrayerTimeUseCase, getPrayerTimesForWeekUseCase, prayerRepo)
 
-        testObject.getPrayerTimesForWeek()
+        testObject.getPrayerInfo()
         assertEquals(
-            PrayerTimesUiState.Error("Coroutine Error"),
-            testObject.prayerTimesUiState.value
+            PrayerInfoUiState.Error("Coroutine Error"),
+            testObject.prayerInfoUiState.value
         )
     }
 

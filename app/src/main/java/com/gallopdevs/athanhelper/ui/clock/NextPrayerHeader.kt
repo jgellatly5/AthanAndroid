@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +38,7 @@ import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.ui.dayview.ErrorMessage
-import com.gallopdevs.athanhelper.viewmodel.NextPrayerTimeUiState
+import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import kotlinx.coroutines.delay
@@ -51,16 +52,17 @@ fun NextPrayerHeader(
     prayerViewModel: PrayerViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val nextPrayerTimeUiState by prayerViewModel.nextPrayerTimeUiState.collectAsState()
-    when (nextPrayerTimeUiState) {
-        NextPrayerTimeUiState.Loading -> {
+    val prayerInfoUiState by prayerViewModel.prayerInfoUiState.collectAsState()
+    when (prayerInfoUiState) {
+        PrayerInfoUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
 
-        is NextPrayerTimeUiState.Success -> {
-            var timerCountDown by remember { mutableLongStateOf((nextPrayerTimeUiState as NextPrayerTimeUiState.Success).nextPrayerTime) }
+        is PrayerInfoUiState.Success -> {
+            val nextPrayerTime = (prayerInfoUiState as PrayerInfoUiState.Success).prayerInfo.nextPrayerTime
+            var timerCountDown by remember { mutableLongStateOf(nextPrayerTime.nextPrayerTimeMillis) }
             LaunchedEffect(timerCountDown) {
                 while (timerCountDown != 0L) {
                     delay(1.seconds)
@@ -98,7 +100,7 @@ fun NextPrayerHeader(
                     } else {
                         val enableNotifications =
                             settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
-//                        if (enableNotifications) createNotification(LocalContext.current, nextPrayerTimeUiState.nextTimeIndex)
+                        if (enableNotifications) createNotification(LocalContext.current, nextPrayerTime.nextPrayer.index)
                         Text(
                             text = stringResource(id = R.string.end_time),
                             fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
@@ -108,7 +110,7 @@ fun NextPrayerHeader(
             }
         }
 
-        is NextPrayerTimeUiState.Error -> ErrorMessage(message = (nextPrayerTimeUiState as NextPrayerTimeUiState.Error).message)
+        is PrayerInfoUiState.Error -> ErrorMessage(message = (prayerInfoUiState as PrayerInfoUiState.Error).message)
     }
 }
 

@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
-import com.gallopdevs.athanhelper.viewmodel.PrayerTimesUiState
+import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 
 @Composable
@@ -31,7 +31,7 @@ fun DayViewScreen(
     prayerViewModel: PrayerViewModel = hiltViewModel()
 ) {
     pageIndex?.let {
-        val prayerTimesUiState by prayerViewModel.prayerTimesUiState.collectAsState()
+        val prayerInfoUiState by prayerViewModel.prayerInfoUiState.collectAsState()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -39,16 +39,17 @@ fun DayViewScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            when (prayerTimesUiState) {
-                is PrayerTimesUiState.Loading -> {
+            when (prayerInfoUiState) {
+                is PrayerInfoUiState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator(modifier = Modifier.align(Center))
                     }
                 }
 
-                is PrayerTimesUiState.Success -> {
-                    val prayerTimesList =
-                        (prayerTimesUiState as PrayerTimesUiState.Success).prayerTimesList
+                is PrayerInfoUiState.Success -> {
+                    val prayerInfo = (prayerInfoUiState as PrayerInfoUiState.Success).prayerInfo
+                    val nextPrayer = prayerInfo.nextPrayerTime.nextPrayer
+                    val prayerTimesList = prayerInfo.prayerTimesList
                     DayOfWeekPlusDateHeader(dayOfWeekPlusDate = prayerTimesList[it].date)
                     prayerTimesList[it].timingsResponse.timings?.let { timings ->
                         for ((name, time) in timings) {
@@ -56,15 +57,15 @@ fun DayViewScreen(
                                 PrayerRow(
                                     prayerTitle = name,
                                     prayerTime = time,
-                                    showHighlighted = false
+                                    showHighlighted = nextPrayer.name == name
                                 )
                             }
                         }
                     }
                 }
 
-                is PrayerTimesUiState.Error -> {
-                    ErrorMessage(message = (prayerTimesUiState as PrayerTimesUiState.Error).message)
+                is PrayerInfoUiState.Error -> {
+                    ErrorMessage(message = (prayerInfoUiState as PrayerInfoUiState.Error).message)
                 }
             }
         }
