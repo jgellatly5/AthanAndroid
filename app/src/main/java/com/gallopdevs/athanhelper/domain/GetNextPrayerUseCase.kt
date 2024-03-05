@@ -12,13 +12,13 @@ class GetNextPrayerUseCase @Inject constructor() {
             "Sunset",
             "Maghrib",
             "Isha",
-            "Imsak",
             "Fajr"
         )
         var nextTimeIndex = 0
         for (i in differences.indices) {
-            if (differences[i] < 0) {
-                nextTimeIndex = (i + 1) % 5
+            if (differences[i] > 0) {
+                nextTimeIndex = i
+                break
             }
         }
         return NextPrayer(

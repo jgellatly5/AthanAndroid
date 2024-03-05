@@ -30,7 +30,6 @@ class FormatTimesUseCase @Inject constructor(
                             todayTimings?.sunset,
                             todayTimings?.maghrib,
                             todayTimings?.isha,
-                            todayTimings?.imsak,
                             nextMorningTimings?.fajr
                         )
                         val millisList = times.map { parseTimeToMillisUseCase(simpleDateFormat, it) }

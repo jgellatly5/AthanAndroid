@@ -25,7 +25,7 @@ class GetNextPrayerTimeUseCase @Inject constructor(
 
                 is Result.Success -> {
                     val millisList = result.data
-                    val differences = LongArray(9)
+                    val differences = LongArray(8)
                     for (i in differences.indices) {
                         differences[i] = millisList[i] - currentTimeMillis
                         if (i == differences.lastIndex) {
