@@ -1,10 +1,10 @@
 package com.gallopdevs.athanhelper.data
 
 import com.gallopdevs.athanhelper.api.AladhanApi
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.models.AladhanResponse
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import com.gallopdevs.athanhelper.utilities.JAFARI
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

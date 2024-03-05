@@ -1,16 +1,16 @@
 package com.gallopdevs.athanhelper.viewmodel
 
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.HANAFI
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.ISNA
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.MIDNIGHT
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.ONE_SEVENTH
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.SHAFII
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ASR_METHOD
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LATITUDES_METHOD
 import com.gallopdevs.athanhelper.repository.SettingsRepo
+import com.gallopdevs.athanhelper.utilities.HANAFI
+import com.gallopdevs.athanhelper.utilities.ISNA
+import com.gallopdevs.athanhelper.utilities.JAFARI
+import com.gallopdevs.athanhelper.utilities.MIDNIGHT
+import com.gallopdevs.athanhelper.utilities.ONE_SEVENTH
+import com.gallopdevs.athanhelper.utilities.SHAFII
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito.mock

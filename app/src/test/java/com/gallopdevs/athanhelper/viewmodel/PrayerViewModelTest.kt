@@ -1,13 +1,13 @@
 package com.gallopdevs.athanhelper.viewmodel
 
 import com.gallopdevs.athanhelper.MainDispatcherRule
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
-import com.gallopdevs.athanhelper.domain.GetNextPrayerTimeUseCase
-import com.gallopdevs.athanhelper.domain.GetPrayerTimesForWeekUseCase
+import com.gallopdevs.athanhelper.domain.GetPrayerInfoUseCase
+import com.gallopdevs.athanhelper.domain.NextPrayer
+import com.gallopdevs.athanhelper.domain.NextPrayerTime
+import com.gallopdevs.athanhelper.domain.PrayerInfo
 import com.gallopdevs.athanhelper.domain.PrayerTimes
-import com.gallopdevs.athanhelper.repository.PrayerRepo
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -25,118 +25,52 @@ class PrayerViewModelTest {
 
     private lateinit var testObject: PrayerViewModel
 
-    private val getNextPrayerTimeUseCase: GetNextPrayerTimeUseCase = mock()
-    private val getPrayerTimesForWeekUseCase: GetPrayerTimesForWeekUseCase = mock()
-    private val prayerRepo: PrayerRepo = mock()
+    private val getPrayerInfoUseCase: GetPrayerInfoUseCase = mock()
 
     @Test
-    fun `prayerTimesUiState success`() = runTest {
-        val expectedPrayerTimesForWeekUseCase =
-            listOf(PrayerTimes(date = "2024-02-11", timingsResponse = TimingsResponse()))
-        val expectedPrayerRepoResponse = listOf(TimingsResponse())
-
-        Mockito.lenient()
-            .`when`(getPrayerTimesForWeekUseCase()) doReturn flowOf(
-            Result.Success(
-                expectedPrayerTimesForWeekUseCase
+    fun `prayerInfoUiState success`() = runTest {
+        val expectedPrayerInfoUseCase = PrayerInfo(
+            nextPrayerTime = NextPrayerTime(
+                nextPrayerTimeMillis = 1000,
+                nextPrayer = NextPrayer(
+                    name = "Fajr",
+                    index = 0
+                )
+            ),
+            prayerTimesList = listOf(
+                PrayerTimes(
+                    date = "2024-02-11",
+                    timingsResponse = TimingsResponse()
+                )
             )
         )
-        Mockito.lenient().`when`(
-            prayerRepo.getPrayerTimeResponsesForMonth(
-                year = "2024",
-                month = "2",
-                latitude = 0.01,
-                longitude = 0.01,
-                method = JAFARI
-            )
-        ) doReturn flowOf(Result.Success(expectedPrayerRepoResponse))
 
-        testObject =
-            PrayerViewModel(getNextPrayerTimeUseCase, getPrayerTimesForWeekUseCase, prayerRepo)
+
+        Mockito.lenient()
+            .`when`(getPrayerInfoUseCase()) doReturn flowOf(Result.Success(expectedPrayerInfoUseCase))
+
+        testObject = PrayerViewModel(getPrayerInfoUseCase)
 
         testObject.getPrayerInfo()
         assertEquals(
-            PrayerInfoUiState.Success(expectedPrayerTimesForWeekUseCase),
+            PrayerInfoUiState.Success(expectedPrayerInfoUseCase),
             testObject.prayerInfoUiState.value
         )
     }
 
     @Test
-    fun `prayerTimesUiState error`() = runTest {
+    fun `prayerInfoUiState error`() = runTest {
         val exception = RuntimeException("API Error")
 
         Mockito.lenient()
-            .`when`(getPrayerTimesForWeekUseCase()) doThrow exception
-        Mockito.lenient().`when`(
-            prayerRepo.getPrayerTimeResponsesForMonth(
-                year = "2024",
-                month = "2",
-                latitude = 0.01,
-                longitude = 0.01,
-                method = JAFARI
-            )
-        ) doThrow exception
+            .`when`(getPrayerInfoUseCase()) doThrow exception
 
-        testObject =
-            PrayerViewModel(getNextPrayerTimeUseCase, getPrayerTimesForWeekUseCase, prayerRepo)
+        testObject = PrayerViewModel(getPrayerInfoUseCase)
 
         testObject.getPrayerInfo()
         assertEquals(
             PrayerInfoUiState.Error("Coroutine Error"),
             testObject.prayerInfoUiState.value
-        )
-    }
-
-    @Test
-    fun `nextPrayerTimeUiState success`() = runTest {
-        val expectedNextPrayerTime = 1954000L
-        val expectedPrayerRepoResponse = listOf(TimingsResponse())
-
-        Mockito.lenient()
-            .`when`(getNextPrayerTimeUseCase()) doReturn flowOf(Result.Success(expectedNextPrayerTime))
-        Mockito.lenient().`when`(
-            prayerRepo.getPrayerTimeResponsesForMonth(
-                year = "2024",
-                month = "2",
-                latitude = 0.01,
-                longitude = 0.01,
-                method = JAFARI
-            )
-        ) doReturn flowOf(Result.Success(expectedPrayerRepoResponse))
-
-        testObject =
-            PrayerViewModel(getNextPrayerTimeUseCase, getPrayerTimesForWeekUseCase, prayerRepo)
-
-        testObject.getNextPrayerTime()
-        assertEquals(
-            NextPrayerTimeUiState.Success(expectedNextPrayerTime),
-            testObject.nextPrayerTimeUiState.value
-        )
-    }
-
-    @Test
-    fun `nextPrayerTimeUiState error`() = runTest {
-        val exception = RuntimeException("API Error")
-
-        Mockito.lenient()
-            .`when`(getNextPrayerTimeUseCase()) doThrow exception
-        Mockito.lenient().`when`(
-            prayerRepo.getPrayerTimeResponsesForMonth(
-                year = "2024",
-                month = "2",
-                latitude = 0.01,
-                longitude = 0.01,
-                method = JAFARI
-            )
-        ) doThrow exception
-
-        testObject =
-            PrayerViewModel(getNextPrayerTimeUseCase, getPrayerTimesForWeekUseCase, prayerRepo)
-
-        testObject.getNextPrayerTime()
-        assertEquals(
-            NextPrayerTimeUiState.Error("Coroutine Error"),
-            testObject.nextPrayerTimeUiState.value
         )
     }
 }

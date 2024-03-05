@@ -19,6 +19,7 @@ class GetNextPrayerTimeUseCaseTest {
 
     private val parseTimeToMillisUseCase: ParseTimeToMillisUseCase = mock()
     private val formatTimesUseCase: FormatTimesUseCase = mock()
+    private val getNextPrayerUseCase: GetNextPrayerUseCase = mock()
 
     @Test
     fun `getNextPrayerTime Result Success`() = runTest {
@@ -41,7 +42,7 @@ class GetNextPrayerTimeUseCaseTest {
                 formatTimesUseCase(simpleDateFormat)
             ) doReturn flowOf(Result.Loading, Result.Success(expectedTimes))
 
-        testObject = GetNextPrayerTimeUseCase(parseTimeToMillisUseCase, formatTimesUseCase)
+        testObject = GetNextPrayerTimeUseCase(parseTimeToMillisUseCase, formatTimesUseCase, getNextPrayerUseCase)
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())
@@ -58,7 +59,7 @@ class GetNextPrayerTimeUseCaseTest {
                 formatTimesUseCase(simpleDateFormat)
             ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
 
-        testObject = GetNextPrayerTimeUseCase(parseTimeToMillisUseCase, formatTimesUseCase)
+        testObject = GetNextPrayerTimeUseCase(parseTimeToMillisUseCase, formatTimesUseCase, getNextPrayerUseCase)
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())

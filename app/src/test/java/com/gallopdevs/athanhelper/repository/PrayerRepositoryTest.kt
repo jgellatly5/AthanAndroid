@@ -1,12 +1,11 @@
 package com.gallopdevs.athanhelper.repository
 
-import com.gallopdevs.athanhelper.data.PrayerCalc
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
 import com.gallopdevs.athanhelper.data.PrayerLocalDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import com.gallopdevs.athanhelper.utilities.JAFARI
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -21,7 +20,6 @@ class PrayerRepositoryTest {
 
     private val remoteDataSource: RemoteDataSource = mock()
     private val prayerLocalDataSource: PrayerLocalDataSource = mock()
-    private val prayerCalc: PrayerCalc = mock()
 
     @Test
     fun `getPrayerTimesForDate Result Success`() = runTest {
@@ -41,7 +39,7 @@ class PrayerRepositoryTest {
                 )
             ) doReturn Result.Success(timings)
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimesForDate(date, latitude, longitude, method).toList()
 
@@ -67,7 +65,7 @@ class PrayerRepositoryTest {
                 )
             ) doReturn Result.Error(errorMessage)
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimesForDate(date, latitude, longitude, method).toList()
 
@@ -99,7 +97,7 @@ class PrayerRepositoryTest {
                 )
             ) doReturn Result.Success(timingsResponseList)
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimeResponsesForMonth(year, month, latitude, longitude, method)
                 .toList()
@@ -128,7 +126,7 @@ class PrayerRepositoryTest {
                 )
             ) doReturn Result.Error(errorMessage)
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource, prayerCalc)
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimeResponsesForMonth(year, month, latitude, longitude, method)
                 .toList()

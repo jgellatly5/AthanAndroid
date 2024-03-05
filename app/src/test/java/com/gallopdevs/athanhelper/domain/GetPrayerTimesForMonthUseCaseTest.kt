@@ -1,11 +1,11 @@
 package com.gallopdevs.athanhelper.domain
 
-import com.gallopdevs.athanhelper.data.PrayerCalculator
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.repository.PrayerRepo
 import com.gallopdevs.athanhelper.repository.SettingsRepo
+import com.gallopdevs.athanhelper.utilities.JAFARI
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
@@ -29,7 +29,7 @@ class GetPrayerTimesForMonthUseCaseTest {
         val month = "2"
         val latitude = 0.01
         val longitude = 0.01
-        val method = PrayerCalculator.JAFARI
+        val method = JAFARI
         val timingsResponseList = listOf(
             TimingsResponse(
                 timings = Timings()
@@ -60,7 +60,7 @@ class GetPrayerTimesForMonthUseCaseTest {
         val month = "2"
         val latitude = 0.01
         val longitude = 0.01
-        val method = PrayerCalculator.JAFARI
+        val method = JAFARI
         val errorMessage = "API Error"
 
         Mockito.lenient()
