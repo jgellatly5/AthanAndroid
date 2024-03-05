@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.domain.GetPrayerInfoUseCase
 import com.gallopdevs.athanhelper.domain.PrayerInfo
-import com.gallopdevs.athanhelper.repository.PrayerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PrayerViewModel @Inject constructor(
-    private val getPrayerInfoUseCase: GetPrayerInfoUseCase,
-    private val prayerRepo: PrayerRepo
+    private val getPrayerInfoUseCase: GetPrayerInfoUseCase
 ) : ViewModel() {
 
     private val _prayerInfoUiState =
@@ -49,16 +47,6 @@ class PrayerViewModel @Inject constructor(
             }
         }
     }
-
-    fun setLocation(latitude: Double, longitude: Double) =
-        prayerRepo.setLocation(latitude, longitude)
-
-    fun setCalculations(
-        calcMethod: Int,
-        asrJuristic: Int,
-        adjustHighLats: Int,
-        timeFormat: Int
-    ) = prayerRepo.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
 }
 
 sealed class PrayerInfoUiState {

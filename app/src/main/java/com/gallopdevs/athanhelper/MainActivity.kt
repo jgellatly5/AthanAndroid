@@ -12,16 +12,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.MIDNIGHT
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.SHAFII
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.TIME_12
-import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ASR_METHOD
-import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.CALCULATION_METHOD
-import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LATITUDES_METHOD
-import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.TIME_FORMAT
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LATITUDE
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LONGITUDE
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
-import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -31,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private val prayerViewModel: PrayerViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     private val requestPermissionLauncher =
@@ -60,7 +52,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         createNotificationChannel()
-        loadSettings()
         getLocation()
 
         setContent {
@@ -79,17 +70,6 @@ class MainActivity : ComponentActivity() {
             channel.description = description
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
-        }
-    }
-
-    private fun loadSettings() {
-        settingsViewModel.apply {
-            prayerViewModel.setCalculations(
-                calcMethod = getInt(CALCULATION_METHOD, JAFARI),
-                asrJuristic = getInt(ASR_METHOD, SHAFII),
-                adjustHighLats = getInt(LATITUDES_METHOD, MIDNIGHT),
-                timeFormat = getInt(TIME_FORMAT, TIME_12)
-            )
         }
     }
 
@@ -112,8 +92,9 @@ class MainActivity : ComponentActivity() {
                 LocationServices.getFusedLocationProviderClient(this@MainActivity)
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                 if (location != null) {
-                    prayerViewModel.apply {
-                        setLocation(location.latitude, location.longitude)
+                    settingsViewModel.apply {
+                        saveString(LATITUDE, location.latitude.toString())
+                        saveString(LONGITUDE, location.longitude.toString())
                     }
                 } else {
                     Toast.makeText(

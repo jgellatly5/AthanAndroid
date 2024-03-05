@@ -18,4 +18,9 @@ class SettingsViewModel @Inject constructor(
     fun saveInt(key: String, value: Int) = settingsRepo.saveInt(key, value)
 
     fun getInt(key: String, defaultValue: Int = 0): Int = settingsRepo.getInt(key, defaultValue)
+
+    fun saveString(key: String, value: String) = settingsRepo.saveString(key, value)
+
+    fun getString(key: String, defaultValue: String = ""): String? =
+        settingsRepo.getString(key, defaultValue)
 }

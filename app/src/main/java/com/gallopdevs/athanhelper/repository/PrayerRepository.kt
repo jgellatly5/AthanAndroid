@@ -1,7 +1,5 @@
 package com.gallopdevs.athanhelper.repository
 
-import com.gallopdevs.athanhelper.data.PrayerCalc
-import com.gallopdevs.athanhelper.data.PrayerInfo
 import com.gallopdevs.athanhelper.data.PrayerLocalDataSource
 import com.gallopdevs.athanhelper.data.RemoteDataSource
 import com.gallopdevs.athanhelper.data.Result
@@ -15,8 +13,7 @@ import javax.inject.Inject
 
 class PrayerRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: PrayerLocalDataSource,
-    private val prayerCalc: PrayerCalc
+    private val localDataSource: PrayerLocalDataSource
 ) : PrayerRepo {
 
     override suspend fun getPrayerTimesForDate(
@@ -56,18 +53,6 @@ class PrayerRepository @Inject constructor(
             emit(result)
         }.flowOn(Dispatchers.IO)
     }
-
-    override fun getPrayerInfo(): PrayerInfo = prayerCalc.getPrayerInfo()
-
-    override fun setLocation(latitude: Double, longitude: Double) =
-        prayerCalc.setLocation(latitude, longitude)
-
-    override fun setCalculations(
-        calcMethod: Int,
-        asrJuristic: Int,
-        adjustHighLats: Int,
-        timeFormat: Int
-    ) = prayerCalc.setCalculations(calcMethod, asrJuristic, adjustHighLats, timeFormat)
 }
 
 interface PrayerRepo {
@@ -86,15 +71,4 @@ interface PrayerRepo {
         longitude: Double,
         method: Int
     ): Flow<Result<List<TimingsResponse?>>>
-
-    fun getPrayerInfo(): PrayerInfo
-
-    fun setLocation(latitude: Double, longitude: Double)
-
-    fun setCalculations(
-        calcMethod: Int,
-        asrJuristic: Int,
-        adjustHighLats: Int,
-        timeFormat: Int
-    )
 }
