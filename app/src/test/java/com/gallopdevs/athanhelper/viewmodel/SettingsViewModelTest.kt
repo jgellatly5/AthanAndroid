@@ -4,6 +4,9 @@ import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companio
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.CALCULATION_METHOD
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LATITUDES_METHOD
+import com.gallopdevs.athanhelper.domain.GetSharedPrefsUseCase
+import com.gallopdevs.athanhelper.domain.SaveSharedPrefsUseCase
+import com.gallopdevs.athanhelper.domain.SharedPrefType
 import com.gallopdevs.athanhelper.repository.SettingsRepo
 import com.gallopdevs.athanhelper.utilities.HANAFI
 import com.gallopdevs.athanhelper.utilities.ISNA
@@ -20,45 +23,46 @@ class SettingsViewModelTest {
 
     private lateinit var testObject: SettingsViewModel
 
-    private val mockSettingsRepo: SettingsRepo = mock()
+    private val getSharedPrefsUseCase: GetSharedPrefsUseCase = mock()
+    private val saveSharedPrefsUseCase: SaveSharedPrefsUseCase = mock()
 
     @Test
     fun get_boolean_enable_notifications_true_successful() {
         val expectedBoolean = true
-        whenever(mockSettingsRepo.getBoolean(ENABLE_NOTIFICATIONS, false))
+        whenever(getSharedPrefsUseCase(SharedPrefType.BOOLEAN, ENABLE_NOTIFICATIONS, false))
             .thenReturn(expectedBoolean)
 
-        testObject = SettingsViewModel(mockSettingsRepo)
+        testObject = SettingsViewModel(getSharedPrefsUseCase, saveSharedPrefsUseCase)
         assertEquals(expectedBoolean, testObject.getBoolean(ENABLE_NOTIFICATIONS, false))
     }
 
     @Test
     fun get_int_calculation_method_isna_successful() {
         val expectedInt = ISNA
-        whenever(mockSettingsRepo.getInt(CALCULATION_METHOD, JAFARI))
+        whenever(getSharedPrefsUseCase(SharedPrefType.INT, CALCULATION_METHOD, JAFARI))
             .thenReturn(expectedInt)
 
-        testObject = SettingsViewModel(mockSettingsRepo)
+        testObject = SettingsViewModel(getSharedPrefsUseCase, saveSharedPrefsUseCase)
         assertEquals(expectedInt, testObject.getInt(CALCULATION_METHOD, JAFARI))
     }
 
     @Test
     fun get_int_asr_method_hanafi_successful() {
         val expectedInt = HANAFI
-        whenever(mockSettingsRepo.getInt(ASR_METHOD, SHAFII))
+        whenever(getSharedPrefsUseCase(SharedPrefType.INT, ASR_METHOD, SHAFII))
             .thenReturn(expectedInt)
 
-        testObject = SettingsViewModel(mockSettingsRepo)
+        testObject = SettingsViewModel(getSharedPrefsUseCase, saveSharedPrefsUseCase)
         assertEquals(expectedInt, testObject.getInt(ASR_METHOD, SHAFII))
     }
 
     @Test
     fun get_int_latitudes_method_one_seventh_successful() {
         val expectedInt = ONE_SEVENTH
-        whenever(mockSettingsRepo.getInt(LATITUDES_METHOD, MIDNIGHT))
+        whenever(getSharedPrefsUseCase(SharedPrefType.INT, LATITUDES_METHOD, MIDNIGHT))
             .thenReturn(expectedInt)
 
-        testObject = SettingsViewModel(mockSettingsRepo)
+        testObject = SettingsViewModel(getSharedPrefsUseCase, saveSharedPrefsUseCase)
         assertEquals(expectedInt, testObject.getInt(LATITUDES_METHOD, MIDNIGHT))
     }
 }
