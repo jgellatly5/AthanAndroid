@@ -73,8 +73,7 @@ class FormatTimesUseCaseTest {
             1994000L,
             2004000L,
             2014000L,
-            2024000L,
-            2034000L
+            1954000L
         )
 
         Mockito.lenient()
@@ -114,13 +113,8 @@ class FormatTimesUseCaseTest {
 
         Mockito.lenient()
             .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.imsak)
-            ) doReturn expectedTimes[7]
-
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, secondTimings?.asr)
-            ) doReturn expectedTimes[8]
+                parseTimeToMillisUseCase(simpleDateFormat, secondTimings?.fajr)
+            ) doReturn expectedTimes[0]
 
         Mockito.lenient()
             .`when`(
