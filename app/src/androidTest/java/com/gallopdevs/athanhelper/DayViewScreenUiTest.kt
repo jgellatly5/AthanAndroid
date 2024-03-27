@@ -9,7 +9,7 @@ import com.gallopdevs.athanhelper.ui.dayview.HighlightedPrayer
 import org.junit.Rule
 import org.junit.Test
 
-class DayViewScreenTest {
+class DayViewScreenUiTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()

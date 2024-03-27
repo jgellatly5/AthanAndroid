@@ -10,19 +10,19 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
-import com.gallopdevs.athanhelper.data.PrayerCalculator.Companion.JAFARI
+import com.gallopdevs.athanhelper.data.SettingsLocalDataSource
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.ui.settings.ExpandableItem
 import com.gallopdevs.athanhelper.ui.settings.ExpandableListItem
 import com.gallopdevs.athanhelper.ui.settings.NotificationsOption
-import com.gallopdevs.athanhelper.data.SettingsLocalDataSource
-import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
 import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
+import com.gallopdevs.athanhelper.utilities.JAFARI
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
 
-class SettingsScreenTest {
+class SettingsScreenUiTest {
 
     private val context: Context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
