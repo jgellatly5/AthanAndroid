@@ -4,19 +4,20 @@ import com.gallopdevs.athanhelper.data.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
 class GetNextPrayerTimeUseCase @Inject constructor(
+    private val formatCurrentTimeUseCase: FormatCurrentTimeUseCase,
     private val parseTimeToMillisUseCase: ParseTimeToMillisUseCase,
     private val formatTimesUseCase: FormatTimesUseCase,
     private val getNextPrayerUseCase: GetNextPrayerUseCase
 ) {
     suspend operator fun invoke(): Flow<Result<NextPrayerTime>> {
+        val formatCurrentTime = formatCurrentTimeUseCase()
         val currentTimeMillisSdf = SimpleDateFormat("HH:mm:ss", Locale.US)
-        val currentTime = currentTimeMillisSdf.format(Calendar.getInstance().time)
-        val currentTimeMillis = parseTimeToMillisUseCase(currentTimeMillisSdf, currentTime)
+        val currentTimeMillis = parseTimeToMillisUseCase(currentTimeMillisSdf, formatCurrentTime)
         val parsedTimesSdf = SimpleDateFormat("HH:mm", Locale.US)
         val parsedTimes = formatTimesUseCase(parsedTimesSdf)
         return parsedTimes.map { result ->
