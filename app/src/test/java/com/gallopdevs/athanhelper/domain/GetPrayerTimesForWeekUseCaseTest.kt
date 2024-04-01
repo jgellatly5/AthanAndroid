@@ -16,6 +16,7 @@ import org.mockito.kotlin.mock
 
 class GetPrayerTimesForWeekUseCaseTest {
 
+    // TODO fix
     private lateinit var testObject: GetPrayerTimesForWeekUseCase
 
     private val getDatesUseCase: GetDatesUseCase = mock()
