@@ -32,7 +32,7 @@ class GetPrayerTimesForMonthUseCaseTest {
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
-        val timingsResponseList = listOf(
+        val expectedTimingsResponseList = listOf(
             TimingsResponse(
                 timings = Timings()
             )
@@ -47,13 +47,13 @@ class GetPrayerTimesForMonthUseCaseTest {
                     longitude,
                     method
                 )
-            ) doReturn flowOf(Result.Loading, Result.Success(timingsResponseList))
+            ) doReturn flowOf(Result.Loading, Result.Success(expectedTimingsResponseList))
 
         testObject = GetPrayerTimesForMonthUseCase(prayerRepo, settingsRepo)
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())
-        assertEquals(Result.Success(timingsResponseList), actualResult.last())
+        assertEquals(Result.Success(expectedTimingsResponseList), actualResult.last())
     }
 
     @Test
@@ -64,7 +64,7 @@ class GetPrayerTimesForMonthUseCaseTest {
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
-        val errorMessage = "API Error"
+        val expectedErrorMessage = "API Error"
 
         Mockito.lenient()
             .`when`(
@@ -75,12 +75,12 @@ class GetPrayerTimesForMonthUseCaseTest {
                     longitude,
                     method
                 )
-            ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
+            ) doReturn flowOf(Result.Loading, Result.Error(expectedErrorMessage))
 
         testObject = GetPrayerTimesForMonthUseCase(prayerRepo, settingsRepo)
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())
-        assertEquals(Result.Error(errorMessage), actualResult.last())
+        assertEquals(Result.Error(expectedErrorMessage), actualResult.last())
     }
 }

@@ -16,7 +16,6 @@ import org.mockito.kotlin.mock
 
 class GetPrayerTimesForWeekUseCaseTest {
 
-    // TODO fix
     private lateinit var testObject: GetPrayerTimesForWeekUseCase
 
     private val getDatesUseCase: GetDatesUseCase = mock()
@@ -24,30 +23,37 @@ class GetPrayerTimesForWeekUseCaseTest {
 
     @Test
     fun `getPrayerTimesForWeek Result Success`() = runTest {
-        val timingsResponseList = listOf(
+        val expectedDates = listOf(
+            "23 Apr 2024",
+            "24 Apr 2024",
+            "25 Apr 2024",
+            "26 Apr 2024",
+            "27 Apr 2024",
+            "28 Apr 2024",
+            "29 Apr 2024"
+        )
+        val expectedTimingsResponseList = listOf(
             TimingsResponse(
-                date = Date(timestamp = "2024-02-25"),
+                date = Date(readable = "23 Apr 2024"),
                 timings = Timings()
+            )
+        )
+        val expectedPrayerTimeResponses = listOf(
+            PrayerTimes(
+                date = "23 Apr 2024",
+                timingsResponse = expectedTimingsResponseList.first()
             )
         )
 
         Mockito.lenient()
             .`when`(
-                getDatesUseCase("yyyy-MM-dd")
-            ) doReturn listOf(
-            "2024-02-25",
-            "2024-02-26",
-            "2024-02-27",
-            "2024-02-28",
-            "2024-02-29",
-            "2024-03-01",
-            "2024-03-02"
-        )
+                getDatesUseCase("dd MMM yyyy")
+            ) doReturn expectedDates
 
         Mockito.lenient()
             .`when`(
                 getPrayerTimeResponsesForMonthUseCase()
-            ) doReturn flowOf(Result.Loading, Result.Success(timingsResponseList))
+            ) doReturn flowOf(Result.Loading, Result.Success(expectedTimingsResponseList))
 
         testObject = GetPrayerTimesForWeekUseCase(
             getDatesUseCase,
@@ -56,30 +62,31 @@ class GetPrayerTimesForWeekUseCaseTest {
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())
-        assertEquals(Result.Success(timingsResponseList), actualResult.last())
+        assertEquals(Result.Success(expectedPrayerTimeResponses), actualResult.last())
     }
 
     @Test
     fun `getPrayerTimesForWeek Result Error`() = runTest {
-        val errorMessage = "API Error"
+        val expectedDates = listOf(
+            "23 Apr 2024",
+            "24 Apr 2024",
+            "25 Apr 2024",
+            "26 Apr 2024",
+            "27 Apr 2024",
+            "28 Apr 2024",
+            "29 Apr 2024"
+        )
+        val expectedErrorMessage = "Error"
 
         Mockito.lenient()
             .`when`(
-                getDatesUseCase("yyyy-MM-dd")
-            ) doReturn listOf(
-            "2024-02-25",
-            "2024-02-26",
-            "2024-02-27",
-            "2024-02-28",
-            "2024-02-29",
-            "2024-03-01",
-            "2024-03-02"
-        )
+                getDatesUseCase("dd MMM yyyy")
+            ) doReturn expectedDates
 
         Mockito.lenient()
             .`when`(
                 getPrayerTimeResponsesForMonthUseCase()
-            ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
+            ) doReturn flowOf(Result.Loading, Result.Error(expectedErrorMessage))
 
         testObject = GetPrayerTimesForWeekUseCase(
             getDatesUseCase,
@@ -88,6 +95,6 @@ class GetPrayerTimesForWeekUseCaseTest {
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())
-        assertEquals(Result.Error(errorMessage), actualResult.last())
+        assertEquals(Result.Error(expectedErrorMessage), actualResult.last())
     }
 }

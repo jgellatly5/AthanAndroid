@@ -11,7 +11,6 @@ class GetPrayerTimesForWeekUseCase @Inject constructor(
     private val getPrayerTimeResponsesForMonthUseCase: GetPrayerTimesForMonthUseCase
 ) {
     suspend operator fun invoke(): Flow<Result<List<PrayerTimes>>> {
-        val datesForPrayerTimesList = getDatesUseCase(pattern = "EEEE, MM/dd")
         val datesToBeFiltered = getDatesUseCase(pattern = "dd MMM yyyy")
         val prayerTimeResponsesForMonth = getPrayerTimeResponsesForMonthUseCase()
         return prayerTimeResponsesForMonth.map { result ->
