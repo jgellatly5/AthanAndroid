@@ -15,10 +15,10 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import java.util.Calendar
 
 class GetPrayerTimesForMonthUseCaseTest {
 
-    // TODO fix
     private lateinit var testObject: GetPrayerTimesForMonthUseCase
 
     private val prayerRepo: PrayerRepo = mock()
@@ -26,8 +26,9 @@ class GetPrayerTimesForMonthUseCaseTest {
 
     @Test
     fun `getPrayerTimesForMonth Result Success`() = runTest {
-        val year = "2024"
-        val month = "2"
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR).toString()
+        val month = (calendar.get(Calendar.MONTH) + 1).toString()
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
@@ -57,8 +58,9 @@ class GetPrayerTimesForMonthUseCaseTest {
 
     @Test
     fun `getPrayerTimesForMonth Result Error`() = runTest {
-        val year = "2024"
-        val month = "2"
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR).toString()
+        val month = (calendar.get(Calendar.MONTH) + 1).toString()
         val latitude = 0.01
         val longitude = 0.01
         val method = JAFARI
