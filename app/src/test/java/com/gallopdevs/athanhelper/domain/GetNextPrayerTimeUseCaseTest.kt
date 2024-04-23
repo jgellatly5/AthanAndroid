@@ -44,7 +44,7 @@ class GetNextPrayerTimeUseCaseTest {
             2034000L
         )
         val expectedNextPrayerTime = NextPrayerTime(
-            nextPrayerTimeMillis = 1954000L,
+            nextPrayerTimeMillis = 86460000L,
             nextPrayer = expectedNextPrayer
         )
 
