@@ -2,8 +2,11 @@ package com.gallopdevs.athanhelper.ui
 
 import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import com.gallopdevs.athanhelper.domain.NextPrayer
 import com.gallopdevs.athanhelper.domain.NextPrayerTime
 import com.gallopdevs.athanhelper.domain.PrayerInfo
 import com.gallopdevs.athanhelper.domain.PrayerTimes
@@ -37,14 +40,25 @@ class DayViewScreenTest {
 
     @Test
     fun `Success state shows prayer info`() {
+        val pageIndex = 0
         val prayerInfo = PrayerInfo.test(
-            nextPrayerTime = NextPrayerTime.test(),
+            nextPrayerTime = NextPrayerTime.test(
+                nextPrayerTimeMillis = 10000,
+                nextPrayer = NextPrayer.test(
+                    name = "Fajr",
+                    index = 0
+                )
+            ),
             prayerTimesList = listOf(
-                PrayerTimes.test()
+                PrayerTimes.test(
+                    date = "24 Apr 2024",
+                    timingsResponse = TimingsResponse.test()
+                )
             )
         )
 
         createDayViewScreen(
+            pageIndex = pageIndex,
             prayerInfo = prayerInfo,
             prayerInfoUiState = PrayerInfoUiState.Success(prayerInfo)
         )
@@ -52,6 +66,7 @@ class DayViewScreenTest {
         with(composeTestRule) {
             onNodeWithTag(LOADING_STATE).assertDoesNotExist()
             onNodeWithTag(DAY_OF_WEEK_PLUS_DATE_HEADER).assertIsDisplayed()
+            onNodeWithTag(DAY_OF_WEEK_PLUS_DATE_HEADER).assertTextContains(prayerInfo.prayerTimesList[pageIndex].date)
         }
     }
 
