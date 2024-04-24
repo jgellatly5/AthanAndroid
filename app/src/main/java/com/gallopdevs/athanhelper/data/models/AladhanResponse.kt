@@ -15,7 +15,9 @@ data class TimingsResponse(
     @PrimaryKey @Json(name = "date") var date: Date = Date(),
     @Json(name = "timings") var timings: Timings? = Timings(),
     @Json(name = "meta") var meta: Meta? = Meta()
-)
+) {
+    companion object
+}
 
 @Entity
 data class Timings(

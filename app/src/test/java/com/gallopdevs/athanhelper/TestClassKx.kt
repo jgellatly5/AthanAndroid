@@ -1,5 +1,6 @@
 package com.gallopdevs.athanhelper
 
+import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.NextPrayer
 import com.gallopdevs.athanhelper.domain.NextPrayerTime
 import com.gallopdevs.athanhelper.domain.PrayerInfo
@@ -28,3 +29,13 @@ fun NextPrayer.Companion.test(
     name,
     index
 )
+
+fun PrayerTimes.Companion.test(
+    date: String = "24 Apr 2024",
+    timingsResponse: TimingsResponse = TimingsResponse.test()
+): PrayerTimes = PrayerTimes(
+    date,
+    timingsResponse
+)
+
+fun TimingsResponse.Companion.test(): TimingsResponse = TimingsResponse()

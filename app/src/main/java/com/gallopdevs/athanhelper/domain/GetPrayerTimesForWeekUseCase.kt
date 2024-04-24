@@ -42,4 +42,6 @@ class GetPrayerTimesForWeekUseCase @Inject constructor(
 data class PrayerTimes(
     val date: String,
     val timingsResponse: TimingsResponse
-)
+) {
+    companion object
+}

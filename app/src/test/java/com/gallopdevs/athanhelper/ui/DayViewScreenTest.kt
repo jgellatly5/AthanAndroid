@@ -4,10 +4,13 @@ import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import com.gallopdevs.athanhelper.domain.NextPrayerTime
 import com.gallopdevs.athanhelper.domain.PrayerInfo
+import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.test
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.LOADING_STATE
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
@@ -29,7 +32,27 @@ class DayViewScreenTest {
     fun `Loading state shows progress indicator`() {
         createDayViewScreen(prayerInfoUiState = PrayerInfoUiState.Loading)
 
-        composeTestRule.onNodeWithTag(DayViewScreenConstants.LOADING_STATE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(LOADING_STATE).assertIsDisplayed()
+    }
+
+    @Test
+    fun `Success state shows prayer info`() {
+        val prayerInfo = PrayerInfo.test(
+            nextPrayerTime = NextPrayerTime.test(),
+            prayerTimesList = listOf(
+                PrayerTimes.test()
+            )
+        )
+
+        createDayViewScreen(
+            prayerInfo = prayerInfo,
+            prayerInfoUiState = PrayerInfoUiState.Success(prayerInfo)
+        )
+
+        with(composeTestRule) {
+            onNodeWithTag(LOADING_STATE).assertDoesNotExist()
+            onNodeWithTag(DAY_OF_WEEK_PLUS_DATE_HEADER).assertIsDisplayed()
+        }
     }
 
     private fun createDayViewScreen(

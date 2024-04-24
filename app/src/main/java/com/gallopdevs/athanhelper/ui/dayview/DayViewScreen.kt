@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.LOADING_STATE
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
@@ -49,7 +50,10 @@ fun DayViewScreen(
                     val prayerInfo = (prayerInfoUiState as PrayerInfoUiState.Success).prayerInfo
                     val nextPrayer = prayerInfo.nextPrayerTime.nextPrayer
                     val prayerTimesList = prayerInfo.prayerTimesList
-                    DayOfWeekPlusDateHeader(dayOfWeekPlusDate = prayerTimesList[it].date)
+                    DayOfWeekPlusDateHeader(
+                        dayOfWeekPlusDate = prayerTimesList[it].date,
+                        testTag = DAY_OF_WEEK_PLUS_DATE_HEADER
+                    )
                     prayerTimesList[it].timingsResponse.timings?.let { timings ->
                         for ((name, time) in timings) {
                             time?.let {
@@ -105,4 +109,5 @@ object DayViewScreenConstants {
     const val DAY_VIEW_SCREEN = "DAY_VIEW_SCREEN"
     const val NEXT_PRAYER = "NEXT_PRAYER"
     const val LOADING_STATE = "LOADING_STATE"
+    const val DAY_OF_WEEK_PLUS_DATE_HEADER = "DAY_OF_WEEK_PLUS_DATE_HEADER"
 }
