@@ -47,6 +47,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -60,7 +66,13 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.android.material:material:1.11.0")
 
+    // JUnit
     testImplementation("junit:junit:4.13.2")
+
+    // Robolectric
+    testImplementation("org.robolectric:robolectric:4.12.1")
+
+    // Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // Compose BOM
@@ -76,6 +88,7 @@ dependencies {
 
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    testImplementation("androidx.compose.ui:ui-test-junit4-android")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // ViewModel Compose

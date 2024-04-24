@@ -49,4 +49,6 @@ class GetNextPrayerTimeUseCase @Inject constructor(
 data class NextPrayerTime(
     val nextPrayerTimeMillis: Long,
     val nextPrayer: NextPrayer
-)
+) {
+    companion object
+}

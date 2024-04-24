@@ -31,4 +31,6 @@ class GetNextPrayerUseCase @Inject constructor() {
 data class NextPrayer(
     val name: String,
     val index: Int
-)
+) {
+    companion object
+}

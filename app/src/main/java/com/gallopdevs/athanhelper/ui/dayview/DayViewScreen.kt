@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.LOADING_STATE
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 
@@ -41,9 +42,7 @@ fun DayViewScreen(
         ) {
             when (prayerInfoUiState) {
                 is PrayerInfoUiState.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(modifier = Modifier.align(Center))
-                    }
+                    LoadingIndicator(testTag = LOADING_STATE)
                 }
 
                 is PrayerInfoUiState.Success -> {
@@ -73,6 +72,17 @@ fun DayViewScreen(
 }
 
 @Composable
+fun LoadingIndicator(testTag: String) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .align(Center)
+                .testTag(testTag)
+        )
+    }
+}
+
+@Composable
 fun ErrorMessage(message: String) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -94,4 +104,5 @@ fun ErrorMessage(message: String) {
 object DayViewScreenConstants {
     const val DAY_VIEW_SCREEN = "DAY_VIEW_SCREEN"
     const val NEXT_PRAYER = "NEXT_PRAYER"
+    const val LOADING_STATE = "LOADING_STATE"
 }

@@ -31,4 +31,6 @@ class GetPrayerInfoUseCase @Inject constructor(
 data class PrayerInfo(
     val nextPrayerTime: NextPrayerTime,
     val prayerTimesList: List<PrayerTimes>
-)
+) {
+    companion object
+}
