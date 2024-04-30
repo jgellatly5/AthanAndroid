@@ -1,5 +1,10 @@
 package com.gallopdevs.athanhelper
 
+import com.gallopdevs.athanhelper.data.models.Date
+import com.gallopdevs.athanhelper.data.models.Gregorian
+import com.gallopdevs.athanhelper.data.models.Hijri
+import com.gallopdevs.athanhelper.data.models.Meta
+import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.NextPrayer
 import com.gallopdevs.athanhelper.domain.NextPrayerTime
@@ -38,4 +43,30 @@ fun PrayerTimes.Companion.test(
     timingsResponse
 )
 
-fun TimingsResponse.Companion.test(): TimingsResponse = TimingsResponse()
+fun TimingsResponse.Companion.test(
+    date: Date = Date.test(),
+    timings: Timings = Timings.test(),
+    meta: Meta = Meta()
+): TimingsResponse = TimingsResponse(
+    date,
+    timings,
+    meta
+)
+
+fun Date.Companion.test(
+    readable: String = "24 Apr 2024",
+    timestamp: String = "",
+    gregorian: Gregorian = Gregorian(),
+    hijri: Hijri = Hijri()
+): Date = Date(
+    readable,
+    timestamp,
+    gregorian,
+    hijri
+)
+
+fun Timings.Companion.test(
+    fajr: String = "5:00"
+): Timings = Timings(
+    fajr
+)

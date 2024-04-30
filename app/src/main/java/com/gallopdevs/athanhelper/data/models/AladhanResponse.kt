@@ -59,6 +59,8 @@ data class Timings(
             }
         }
     }
+
+    companion object
 }
 
 @Entity
@@ -67,7 +69,9 @@ data class Date(
     @Json(name = "timestamp") var timestamp: String? = null,
     @Json(name = "gregorian") var gregorian: Gregorian? = Gregorian(),
     @Json(name = "hijri") var hijri: Hijri? = Hijri()
-)
+) {
+    companion object
+}
 
 @Entity
 data class Gregorian(
@@ -78,26 +82,34 @@ data class Gregorian(
     @Json(name = "month") var month: AladhanMonth? = AladhanMonth(),
     @Json(name = "year") var year: String? = null,
     @Json(name = "designation") var designation: Designation? = Designation()
-)
+) {
+    companion object
+}
 
 @Entity
 data class Weekday(
     @Json(name = "en") var en: String? = null,
     @Json(name = "ar") var ar: String? = null
-)
+) {
+    companion object
+}
 
 @Entity
 data class AladhanMonth(
     @Json(name = "number") var number: Int? = null,
     @Json(name = "en") var en: String? = null,
     @Json(name = "ar") var ar: String? = null
-)
+) {
+    companion object
+}
 
 @Entity
 data class Designation(
     @Json(name = "abbreviated") var abbreviated: String? = null,
     @Json(name = "expanded") var expanded: String? = null
-)
+) {
+    companion object
+}
 
 @Entity
 data class Meta(
@@ -109,14 +121,18 @@ data class Meta(
     @Json(name = "midnightMode") var midnightMode: String? = null,
     @Json(name = "school") var school: String? = null,
     @Json(name = "offset") var offset: AladhanOffset? = AladhanOffset()
-)
+) {
+    companion object
+}
 
 @Entity
 data class Method(
     @Json(name = "id") var id: Int? = null,
     @Json(name = "name") var name: String? = null,
     @Json(name = "params") var params: Params? = Params()
-)
+) {
+    companion object
+}
 
 @Entity
 data class AladhanOffset(
@@ -129,13 +145,17 @@ data class AladhanOffset(
     @Json(name = "Sunset") var Sunset: Int? = null,
     @Json(name = "Isha") var Isha: Int? = null,
     @Json(name = "Midnight") var Midnight: Int? = null
-)
+) {
+    companion object
+}
 
 @Entity
 data class Params(
     @Json(name = "Fajr") var Fajr: Int? = null,
     @Json(name = "Isha") var Isha: Int? = null
-)
+) {
+    companion object
+}
 
 @Entity
 data class Hijri(
@@ -147,4 +167,6 @@ data class Hijri(
     @Json(name = "year") var year: String? = null,
     @Json(name = "designation") var designation: Designation? = Designation(),
     @Json(name = "holidays") var holidays: List<String> = listOf()
-)
+) {
+    companion object
+}

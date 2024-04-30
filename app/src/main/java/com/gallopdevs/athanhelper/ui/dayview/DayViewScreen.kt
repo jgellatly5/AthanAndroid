@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.LOADING_STATE
+import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.PRAYER_ROW
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 
@@ -60,7 +61,8 @@ fun DayViewScreen(
                                 PrayerRow(
                                     prayerTitle = name,
                                     prayerTime = time,
-                                    showHighlighted = nextPrayer.name == name
+                                    showHighlighted = nextPrayer.name == name,
+                                    testTag = PRAYER_ROW
                                 )
                             }
                         }
@@ -110,4 +112,5 @@ object DayViewScreenConstants {
     const val NEXT_PRAYER = "NEXT_PRAYER"
     const val LOADING_STATE = "LOADING_STATE"
     const val DAY_OF_WEEK_PLUS_DATE_HEADER = "DAY_OF_WEEK_PLUS_DATE_HEADER"
+    const val PRAYER_ROW = "PRAYER_ROW"
 }
