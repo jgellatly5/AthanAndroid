@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
@@ -23,6 +24,11 @@ class FormatTimesUseCaseTest {
 
     private val parseTimeToMillisUseCase: ParseTimeToMillisUseCase = mock()
     private val getPrayerTimesForWeekUseCase: GetPrayerTimesForWeekUseCase = mock()
+
+    @Before
+    fun setup() {
+        testObject = FormatTimesUseCase(parseTimeToMillisUseCase, getPrayerTimesForWeekUseCase)
+    }
 
     @Test
     fun `formatTimes Result Success`() = runTest {
@@ -130,7 +136,6 @@ class FormatTimesUseCaseTest {
             } doReturn flowOf(Result.Loading, Result.Success(prayerTimesList))
         }
 
-        testObject = FormatTimesUseCase(parseTimeToMillisUseCase, getPrayerTimesForWeekUseCase)
         val actualResult = testObject.invoke(simpleDateFormat)
 
         assertEquals(Result.Loading, actualResult.first())
@@ -154,7 +159,6 @@ class FormatTimesUseCaseTest {
             } doReturn flowOf(Result.Loading, Result.Error(errorMessage))
         }
 
-        testObject = FormatTimesUseCase(parseTimeToMillisUseCase, getPrayerTimesForWeekUseCase)
         val actualResult = testObject.invoke(simpleDateFormat)
 
         assertEquals(Result.Loading, actualResult.first())

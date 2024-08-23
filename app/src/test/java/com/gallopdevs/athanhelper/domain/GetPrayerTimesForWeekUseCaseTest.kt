@@ -9,10 +9,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 
 class GetPrayerTimesForWeekUseCaseTest {
 
@@ -20,6 +21,14 @@ class GetPrayerTimesForWeekUseCaseTest {
 
     private val getDatesUseCase: GetDatesUseCase = mock()
     private val getPrayerTimeResponsesForMonthUseCase: GetPrayerTimesForMonthUseCase = mock()
+
+    @Before
+    fun setup() {
+        testObject = GetPrayerTimesForWeekUseCase(
+            getDatesUseCase,
+            getPrayerTimeResponsesForMonthUseCase
+        )
+    }
 
     @Test
     fun `getPrayerTimesForWeek Result Success`() = runTest {
@@ -45,20 +54,18 @@ class GetPrayerTimesForWeekUseCaseTest {
             )
         )
 
-        Mockito.lenient()
-            .`when`(
-                getDatesUseCase("dd MMM yyyy")
-            ) doReturn expectedDates
+        getDatesUseCase.stub {
+            on {
+                invoke("dd MMM yyyy")
+            } doReturn expectedDates
+        }
 
-        Mockito.lenient()
-            .`when`(
-                getPrayerTimeResponsesForMonthUseCase()
-            ) doReturn flowOf(Result.Loading, Result.Success(expectedTimingsResponseList))
+        getPrayerTimeResponsesForMonthUseCase.stub {
+            onBlocking {
+                invoke()
+            } doReturn flowOf(Result.Loading, Result.Success(expectedTimingsResponseList))
+        }
 
-        testObject = GetPrayerTimesForWeekUseCase(
-            getDatesUseCase,
-            getPrayerTimeResponsesForMonthUseCase
-        )
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())
@@ -78,20 +85,18 @@ class GetPrayerTimesForWeekUseCaseTest {
         )
         val expectedErrorMessage = "Error"
 
-        Mockito.lenient()
-            .`when`(
-                getDatesUseCase("dd MMM yyyy")
-            ) doReturn expectedDates
+        getDatesUseCase.stub {
+            on {
+                invoke("dd MMM yyyy")
+            } doReturn expectedDates
+        }
 
-        Mockito.lenient()
-            .`when`(
-                getPrayerTimeResponsesForMonthUseCase()
-            ) doReturn flowOf(Result.Loading, Result.Error(expectedErrorMessage))
+        getPrayerTimeResponsesForMonthUseCase.stub {
+            onBlocking {
+                invoke()
+            } doReturn flowOf(Result.Loading, Result.Error(expectedErrorMessage))
+        }
 
-        testObject = GetPrayerTimesForWeekUseCase(
-            getDatesUseCase,
-            getPrayerTimeResponsesForMonthUseCase
-        )
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())

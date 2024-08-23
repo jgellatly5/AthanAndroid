@@ -12,9 +12,11 @@ import com.gallopdevs.athanhelper.utilities.MIDNIGHT
 import com.gallopdevs.athanhelper.utilities.ONE_SEVENTH
 import com.gallopdevs.athanhelper.utilities.SHAFII
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.stub
 
 class SettingsRepositoryTest {
 
@@ -22,42 +24,56 @@ class SettingsRepositoryTest {
 
     private val mockSettingsLocalDataSource: SettingsLocalDataSource = mock()
 
+    @Before
+    fun setup() {
+        testObject = SettingsRepository(mockSettingsLocalDataSource)
+    }
+
     @Test
     fun get_boolean_enable_notifications_true_successful() {
         val expectedBoolean = true
-        whenever(mockSettingsLocalDataSource.getBoolean(ENABLE_NOTIFICATIONS, false))
-            .thenReturn(expectedBoolean)
+        mockSettingsLocalDataSource.stub {
+            on {
+                getBoolean(ENABLE_NOTIFICATIONS, false)
+            } doReturn expectedBoolean
+        }
 
-        testObject = SettingsRepository(mockSettingsLocalDataSource)
         assertEquals(expectedBoolean, testObject.getBoolean(ENABLE_NOTIFICATIONS, false))
     }
 
     @Test
     fun get_int_calculation_method_isna_successful() {
         val expectedInt = ISNA
-        whenever(mockSettingsLocalDataSource.getInt(CALCULATION_METHOD, JAFARI))
-            .thenReturn(expectedInt)
+        mockSettingsLocalDataSource.stub {
+            on {
+                getInt(CALCULATION_METHOD, JAFARI)
+            } doReturn expectedInt
+        }
 
-        testObject = SettingsRepository(mockSettingsLocalDataSource)
         assertEquals(expectedInt, testObject.getInt(CALCULATION_METHOD, JAFARI))
     }
 
     @Test
     fun get_int_asr_method_hanafi_successful() {
         val expectedInt = HANAFI
-        whenever(mockSettingsLocalDataSource.getInt(ASR_METHOD, SHAFII)).thenReturn(expectedInt)
+        mockSettingsLocalDataSource.stub {
+            on {
+                getInt(ASR_METHOD, SHAFII)
+            } doReturn expectedInt
+        }
 
-        testObject = SettingsRepository(mockSettingsLocalDataSource)
         assertEquals(expectedInt, testObject.getInt(ASR_METHOD, SHAFII))
     }
 
     @Test
     fun get_int_latitudes_method_one_seventh_successful() {
         val expectedInt = ONE_SEVENTH
-        whenever(mockSettingsLocalDataSource.getInt(LATITUDES_METHOD, MIDNIGHT))
-            .thenReturn(expectedInt)
+        mockSettingsLocalDataSource.stub {
+            on {
+                getInt(LATITUDES_METHOD, MIDNIGHT)
+            } doReturn expectedInt
+        }
 
-        testObject = SettingsRepository(mockSettingsLocalDataSource)
         assertEquals(expectedInt, testObject.getInt(LATITUDES_METHOD, MIDNIGHT))
     }
 }

@@ -9,10 +9,11 @@ import com.gallopdevs.athanhelper.utilities.JAFARI
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 
 class PrayerRepositoryTest {
 
@@ -20,6 +21,11 @@ class PrayerRepositoryTest {
 
     private val remoteDataSource: RemoteDataSource = mock()
     private val prayerLocalDataSource: PrayerLocalDataSource = mock()
+
+    @Before
+    fun setup() {
+        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
+    }
 
     @Test
     fun `getPrayerTimesForDate Result Success`() = runTest {
@@ -29,17 +35,17 @@ class PrayerRepositoryTest {
         val method = JAFARI
         val timings = Timings()
 
-        Mockito.lenient()
-            .`when`(
-                remoteDataSource.getPrayerTimesForDate(
+        remoteDataSource.stub {
+            onBlocking {
+                getPrayerTimesForDate(
                     date,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Result.Success(timings)
+            } doReturn Result.Success(timings)
+        }
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimesForDate(date, latitude, longitude, method).toList()
 
@@ -55,17 +61,17 @@ class PrayerRepositoryTest {
         val method = JAFARI
         val errorMessage = "API Error"
 
-        Mockito.lenient()
-            .`when`(
-                remoteDataSource.getPrayerTimesForDate(
+        remoteDataSource.stub {
+            onBlocking {
+                getPrayerTimesForDate(
                     date,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Result.Error(errorMessage)
+            } doReturn Result.Error(errorMessage)
+        }
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimesForDate(date, latitude, longitude, method).toList()
 
@@ -86,18 +92,18 @@ class PrayerRepositoryTest {
             )
         )
 
-        Mockito.lenient()
-            .`when`(
-                remoteDataSource.getPrayerTimesForMonth(
+        remoteDataSource.stub {
+            onBlocking {
+                getPrayerTimesForMonth(
                     year,
                     month,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Result.Success(timingsResponseList)
+            } doReturn Result.Success(timingsResponseList)
+        }
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimeResponsesForMonth(year, month, latitude, longitude, method)
                 .toList()
@@ -115,18 +121,18 @@ class PrayerRepositoryTest {
         val method = JAFARI
         val errorMessage = "API Error"
 
-        Mockito.lenient()
-            .`when`(
-                remoteDataSource.getPrayerTimesForMonth(
+        remoteDataSource.stub {
+            onBlocking {
+                getPrayerTimesForMonth(
                     year,
                     month,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Result.Error(errorMessage)
+            } doReturn Result.Error(errorMessage)
+        }
 
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
         val actualResult =
             testObject.getPrayerTimeResponsesForMonth(year, month, latitude, longitude, method)
                 .toList()

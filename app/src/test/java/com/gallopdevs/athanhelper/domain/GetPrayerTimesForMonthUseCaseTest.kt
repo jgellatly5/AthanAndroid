@@ -11,10 +11,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import java.util.Calendar
 
 class GetPrayerTimesForMonthUseCaseTest {
@@ -23,6 +24,11 @@ class GetPrayerTimesForMonthUseCaseTest {
 
     private val prayerRepo: PrayerRepo = mock()
     private val settingsRepo: SettingsRepo = mock()
+
+    @Before
+    fun setup() {
+        testObject = GetPrayerTimesForMonthUseCase(prayerRepo, settingsRepo)
+    }
 
     @Test
     fun `getPrayerTimesForMonth Result Success`() = runTest {
@@ -38,18 +44,18 @@ class GetPrayerTimesForMonthUseCaseTest {
             )
         )
 
-        Mockito.lenient()
-            .`when`(
-                prayerRepo.getPrayerTimeResponsesForMonth(
+        prayerRepo.stub {
+            onBlocking {
+                getPrayerTimeResponsesForMonth(
                     year,
                     month,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn flowOf(Result.Loading, Result.Success(expectedTimingsResponseList))
+            } doReturn flowOf(Result.Loading, Result.Success(expectedTimingsResponseList))
+        }
 
-        testObject = GetPrayerTimesForMonthUseCase(prayerRepo, settingsRepo)
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())
@@ -66,18 +72,18 @@ class GetPrayerTimesForMonthUseCaseTest {
         val method = JAFARI
         val expectedErrorMessage = "API Error"
 
-        Mockito.lenient()
-            .`when`(
-                prayerRepo.getPrayerTimeResponsesForMonth(
+        prayerRepo.stub {
+            onBlocking {
+                getPrayerTimeResponsesForMonth(
                     year,
                     month,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn flowOf(Result.Loading, Result.Error(expectedErrorMessage))
+            } doReturn flowOf(Result.Loading, Result.Error(expectedErrorMessage))
+        }
 
-        testObject = GetPrayerTimesForMonthUseCase(prayerRepo, settingsRepo)
         val actualResult = testObject.invoke()
 
         assertEquals(Result.Loading, actualResult.first())

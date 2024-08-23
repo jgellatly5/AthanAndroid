@@ -6,10 +6,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -22,12 +23,23 @@ class GetNextPrayerTimeUseCaseTest {
     private val formatTimesUseCase: FormatTimesUseCase = mock()
     private val getNextPrayerUseCase: GetNextPrayerUseCase = mock()
 
+    @Before
+    fun setup() {
+        testObject = GetNextPrayerTimeUseCase(
+            formatCurrentTimeUseCase,
+            parseTimeToMillisUseCase,
+            formatTimesUseCase,
+            getNextPrayerUseCase
+        )
+    }
+
     @Test
     fun `getNextPrayerTime Result Success`() = runTest {
         val currentTimeMillisSdf = SimpleDateFormat("HH:mm:ss", Locale.US)
         val parsedTimesSdf = SimpleDateFormat("HH:mm", Locale.US)
         val expectedCurrentTime = "10:00:00"
-        val expectedGetNextPrayerUseCaseResponse = longArrayOf(-10000, 0, 10000, 20000, 30000, 40000, 50000, 86460000)
+        val expectedGetNextPrayerUseCaseResponse =
+            longArrayOf(-10000, 0, 10000, 20000, 30000, 40000, 50000, 86460000)
         val expectedNextPrayer = NextPrayer(
             name = "Fajr",
             index = 7
@@ -48,32 +60,30 @@ class GetNextPrayerTimeUseCaseTest {
             nextPrayer = expectedNextPrayer
         )
 
-        Mockito.lenient()
-            .`when`(
-                formatCurrentTimeUseCase()
-            ) doReturn expectedCurrentTime
+        formatCurrentTimeUseCase.stub {
+            on {
+                invoke()
+            } doReturn expectedCurrentTime
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(currentTimeMillisSdf, expectedCurrentTime)
-            ) doReturn 1964000L
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(currentTimeMillisSdf, expectedCurrentTime)
+            } doReturn 1964000L
+        }
 
-        Mockito.lenient()
-            .`when`(
-                formatTimesUseCase(parsedTimesSdf)
-            ) doReturn flowOf(Result.Loading, Result.Success(expectedTimes))
+        formatTimesUseCase.stub {
+            onBlocking {
+                invoke(parsedTimesSdf)
+            } doReturn flowOf(Result.Loading, Result.Success(expectedTimes))
+        }
 
-        Mockito.lenient()
-            .`when`(
-                getNextPrayerUseCase(expectedGetNextPrayerUseCaseResponse)
-            ) doReturn expectedNextPrayer
+        getNextPrayerUseCase.stub {
+            on {
+                invoke(expectedGetNextPrayerUseCaseResponse)
+            } doReturn expectedNextPrayer
+        }
 
-        testObject = GetNextPrayerTimeUseCase(
-            formatCurrentTimeUseCase,
-            parseTimeToMillisUseCase,
-            formatTimesUseCase,
-            getNextPrayerUseCase
-        )
         val actualResult = testObject()
 
         assertEquals(Result.Loading, actualResult.first())
@@ -86,38 +96,37 @@ class GetNextPrayerTimeUseCaseTest {
         val currentTimeMillisSdf = SimpleDateFormat("HH:mm:ss", Locale.US)
         val parsedTimesSdf = SimpleDateFormat("HH:mm", Locale.US)
         val expectedCurrentTime = "10:00:00"
-        val expectedGetNextPrayerUseCaseResponse = longArrayOf(-10000, 0, 10000, 20000, 30000, 40000, 50000, 86460000)
+        val expectedGetNextPrayerUseCaseResponse =
+            longArrayOf(-10000, 0, 10000, 20000, 30000, 40000, 50000, 86460000)
         val expectedNextPrayer = NextPrayer(
             name = "Fajr",
             index = 7
         )
 
-        Mockito.lenient()
-            .`when`(
-                formatCurrentTimeUseCase()
-            ) doReturn expectedCurrentTime
+        formatCurrentTimeUseCase.stub {
+            on {
+                invoke()
+            } doReturn expectedCurrentTime
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(currentTimeMillisSdf, expectedCurrentTime)
-            ) doReturn 1964000L
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(currentTimeMillisSdf, expectedCurrentTime)
+            } doReturn 1964000L
+        }
 
-        Mockito.lenient()
-            .`when`(
-                formatTimesUseCase(parsedTimesSdf)
-            ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
+        formatTimesUseCase.stub {
+            onBlocking {
+                invoke(parsedTimesSdf)
+            } doReturn flowOf(Result.Loading, Result.Error(errorMessage))
+        }
 
-        Mockito.lenient()
-            .`when`(
-                getNextPrayerUseCase(expectedGetNextPrayerUseCaseResponse)
-            ) doReturn expectedNextPrayer
+        getNextPrayerUseCase.stub {
+            on {
+                invoke(expectedGetNextPrayerUseCaseResponse)
+            } doReturn expectedNextPrayer
+        }
 
-        testObject = GetNextPrayerTimeUseCase(
-            formatCurrentTimeUseCase,
-            parseTimeToMillisUseCase,
-            formatTimesUseCase,
-            getNextPrayerUseCase
-        )
         val actualResult = testObject()
 
         assertEquals(Result.Loading, actualResult.first())
