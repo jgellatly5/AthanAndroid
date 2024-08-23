@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToLog
@@ -84,7 +85,7 @@ class DayViewScreenTest {
                 fetchSemanticsNodes().forEachIndexed { i, _ ->
                     get(i).assertIsDisplayed()
                     prayerInfo.prayerTimesList[pageIndex].timingsResponse.timings?.fajr?.let {
-                        get(i).assertTextContains(it)
+                        get(i).onChildren()[2].assertTextContains(it)
                     }
                 }
             }

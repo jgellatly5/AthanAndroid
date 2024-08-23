@@ -10,9 +10,9 @@ import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import retrofit2.Response
 
 class NetworkRemoteDataSourceTest {
@@ -37,15 +37,16 @@ class NetworkRemoteDataSourceTest {
         )
         val expectedResult = Result.Success(timings)
 
-        Mockito.lenient()
-            .`when`(
-                aladhanApi.getPrayerTimesForDate(
+        aladhanApi.stub {
+            onBlocking {
+                getPrayerTimesForDate(
                     date,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Response.success(aladhanResponse)
+            } doReturn Response.success(aladhanResponse)
+        }
 
         testObject = NetworkRemoteDataSource(aladhanApi)
         assertEquals(
@@ -65,15 +66,16 @@ class NetworkRemoteDataSourceTest {
         val responseBody = errorMessage.toResponseBody("text/plain".toMediaTypeOrNull())
         val expectedResult = Result.Error(errorMessage)
 
-        Mockito.lenient()
-            .`when`(
-                aladhanApi.getPrayerTimesForDate(
+        aladhanApi.stub {
+            onBlocking {
+                getPrayerTimesForDate(
                     date,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Response.error(500, responseBody)
+            } doReturn Response.error(500, responseBody)
+        }
 
         testObject = NetworkRemoteDataSource(aladhanApi)
         assertEquals(
@@ -97,16 +99,17 @@ class NetworkRemoteDataSourceTest {
         val aladhanResponse = AladhanResponse(timingsResponseList = timingsResponseList)
         val expectedResult = Result.Success(timingsResponseList)
 
-        Mockito.lenient()
-            .`when`(
-                aladhanApi.getPrayerTimesForMonth(
+        aladhanApi.stub {
+            onBlocking {
+                getPrayerTimesForMonth(
                     year,
                     month,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Response.success(aladhanResponse)
+            } doReturn Response.success(aladhanResponse)
+        }
 
         testObject = NetworkRemoteDataSource(aladhanApi)
         assertEquals(
@@ -127,16 +130,17 @@ class NetworkRemoteDataSourceTest {
         val responseBody = errorMessage.toResponseBody("text/plain".toMediaTypeOrNull())
         val expectedResult = Result.Error(errorMessage)
 
-        Mockito.lenient()
-            .`when`(
-                aladhanApi.getPrayerTimesForMonth(
+        aladhanApi.stub {
+            onBlocking {
+                getPrayerTimesForMonth(
                     year,
                     month,
                     latitude,
                     longitude,
                     method
                 )
-            ) doReturn Response.error(500, responseBody)
+            } doReturn Response.error(500, responseBody)
+        }
 
         testObject = NetworkRemoteDataSource(aladhanApi)
         assertEquals(

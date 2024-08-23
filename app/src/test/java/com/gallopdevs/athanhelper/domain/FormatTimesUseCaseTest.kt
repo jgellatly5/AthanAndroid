@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.stub
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -76,50 +76,59 @@ class FormatTimesUseCaseTest {
             1954000L
         )
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.fajr)
-            ) doReturn expectedTimes[0]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, firstTimings?.fajr)
+            } doReturn expectedTimes[0]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.sunrise)
-            ) doReturn expectedTimes[1]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, firstTimings?.sunrise)
+            } doReturn expectedTimes[1]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.dhuhr)
-            ) doReturn expectedTimes[2]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, firstTimings?.dhuhr)
+            } doReturn expectedTimes[2]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.asr)
-            ) doReturn expectedTimes[3]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, firstTimings?.asr)
+            } doReturn expectedTimes[3]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.sunset)
-            ) doReturn expectedTimes[4]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, firstTimings?.sunset)
+            } doReturn expectedTimes[4]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.maghrib)
-            ) doReturn expectedTimes[5]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, firstTimings?.maghrib)
+            } doReturn expectedTimes[5]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, firstTimings?.isha)
-            ) doReturn expectedTimes[6]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, firstTimings?.isha)
+            } doReturn expectedTimes[6]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, secondTimings?.fajr)
-            ) doReturn expectedTimes[0]
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, secondTimings?.fajr)
+            } doReturn expectedTimes[0]
+        }
 
-        Mockito.lenient()
-            .`when`(
-                getPrayerTimesForWeekUseCase()
-            ) doReturn flowOf(Result.Loading, Result.Success(prayerTimesList))
+        getPrayerTimesForWeekUseCase.stub {
+            onBlocking {
+                invoke()
+            } doReturn flowOf(Result.Loading, Result.Success(prayerTimesList))
+        }
 
         testObject = FormatTimesUseCase(parseTimeToMillisUseCase, getPrayerTimesForWeekUseCase)
         val actualResult = testObject.invoke(simpleDateFormat)
@@ -133,15 +142,17 @@ class FormatTimesUseCaseTest {
         val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
         val errorMessage = "Error"
 
-        Mockito.lenient()
-            .`when`(
-                parseTimeToMillisUseCase(simpleDateFormat, "5:00")
-            ) doThrow RuntimeException(errorMessage)
+        parseTimeToMillisUseCase.stub {
+            on {
+                invoke(simpleDateFormat, "5:00")
+            } doThrow RuntimeException(errorMessage)
+        }
 
-        Mockito.lenient()
-            .`when`(
-                getPrayerTimesForWeekUseCase()
-            ) doReturn flowOf(Result.Loading, Result.Error(errorMessage))
+        getPrayerTimesForWeekUseCase.stub {
+            onBlocking {
+                invoke()
+            } doReturn flowOf(Result.Loading, Result.Error(errorMessage))
+        }
 
         testObject = FormatTimesUseCase(parseTimeToMillisUseCase, getPrayerTimesForWeekUseCase)
         val actualResult = testObject.invoke(simpleDateFormat)
