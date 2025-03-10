@@ -17,7 +17,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
@@ -32,15 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.MainActivity
 import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
-import com.gallopdevs.athanhelper.ui.dayview.ErrorMessage
+import com.gallopdevs.athanhelper.ui.clock.NextPrayerHeaderConstants.LOADING_STATE
+import com.gallopdevs.athanhelper.ui.shared.ErrorMessage
+import com.gallopdevs.athanhelper.ui.shared.LoadingIndicator
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
-import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
-import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -53,11 +50,7 @@ fun NextPrayerHeader(
     enableNotifications: Boolean
 ) {
     when (prayerInfoUiState) {
-        PrayerInfoUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-        }
+        PrayerInfoUiState.Loading -> { LoadingIndicator(testTag = LOADING_STATE) }
 
         is PrayerInfoUiState.Success -> {
             val nextPrayerTime = prayerInfoUiState.prayerInfo.nextPrayerTime
@@ -97,7 +90,10 @@ fun NextPrayerHeader(
                             fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
                         )
                     } else {
-                        if (enableNotifications) createNotification(LocalContext.current, nextPrayerTime.nextPrayer.index)
+                        if (enableNotifications) createNotification(
+                            LocalContext.current,
+                            nextPrayerTime.nextPrayer.index
+                        )
                         Text(
                             text = stringResource(id = R.string.end_time),
                             fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
@@ -126,4 +122,8 @@ private fun createNotification(context: Context, nextTimeIndex: Int) {
         .setAutoCancel(true)
     val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.notify(0, builder.build())
+}
+
+object NextPrayerHeaderConstants {
+    const val LOADING_STATE = "LOADING_STATE"
 }

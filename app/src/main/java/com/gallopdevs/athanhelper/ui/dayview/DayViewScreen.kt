@@ -25,6 +25,8 @@ import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_OF_WEEK_
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.LOADING_STATE
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.PRAYER_ROW
+import com.gallopdevs.athanhelper.ui.shared.ErrorMessage
+import com.gallopdevs.athanhelper.ui.shared.LoadingIndicator
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 
@@ -42,9 +44,7 @@ fun DayViewScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when (prayerInfoUiState) {
-                is PrayerInfoUiState.Loading -> {
-                    LoadingIndicator(testTag = LOADING_STATE)
-                }
+                is PrayerInfoUiState.Loading -> { LoadingIndicator(testTag = LOADING_STATE) }
 
                 is PrayerInfoUiState.Success -> {
                     val prayerInfo = prayerInfoUiState.prayerInfo
@@ -68,43 +68,13 @@ fun DayViewScreen(
                     }
                 }
 
-                is PrayerInfoUiState.Error -> {
-                    ErrorMessage(message = prayerInfoUiState.message)
-                }
+                is PrayerInfoUiState.Error -> { ErrorMessage(message = prayerInfoUiState.message) }
             }
         }
     }
 }
 
-@Composable
-fun LoadingIndicator(testTag: String) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .align(Center)
-                .testTag(testTag)
-        )
-    }
-}
 
-@Composable
-fun ErrorMessage(message: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = message,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.subtitle1,
-            modifier = Modifier
-                .width(300.dp)
-                .padding(start = 16.dp, end = 16.dp)
-        )
-    }
-}
 
 object DayViewScreenConstants {
     const val DAY_VIEW_SCREEN = "DAY_VIEW_SCREEN"
