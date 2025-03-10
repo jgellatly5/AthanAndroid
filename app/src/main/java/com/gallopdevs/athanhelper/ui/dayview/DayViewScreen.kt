@@ -1,34 +1,27 @@
 package com.gallopdevs.athanhelper.ui.dayview
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.tooling.preview.Preview
+import com.gallopdevs.athanhelper.data.models.TimingsResponse
+import com.gallopdevs.athanhelper.domain.NextPrayer
+import com.gallopdevs.athanhelper.domain.NextPrayerTime
+import com.gallopdevs.athanhelper.domain.PrayerInfo
+import com.gallopdevs.athanhelper.domain.PrayerTimes
+import com.gallopdevs.athanhelper.test
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.LOADING_STATE
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.PRAYER_ROW
 import com.gallopdevs.athanhelper.ui.shared.ErrorMessage
 import com.gallopdevs.athanhelper.ui.shared.LoadingIndicator
+import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
-import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 
 @Composable
 fun DayViewScreen(
@@ -44,7 +37,9 @@ fun DayViewScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when (prayerInfoUiState) {
-                is PrayerInfoUiState.Loading -> { LoadingIndicator(testTag = LOADING_STATE) }
+                is PrayerInfoUiState.Loading -> {
+                    LoadingIndicator(testTag = LOADING_STATE)
+                }
 
                 is PrayerInfoUiState.Success -> {
                     val prayerInfo = prayerInfoUiState.prayerInfo
@@ -68,12 +63,13 @@ fun DayViewScreen(
                     }
                 }
 
-                is PrayerInfoUiState.Error -> { ErrorMessage(message = prayerInfoUiState.message) }
+                is PrayerInfoUiState.Error -> {
+                    ErrorMessage(message = prayerInfoUiState.message)
+                }
             }
         }
     }
 }
-
 
 
 object DayViewScreenConstants {
@@ -82,4 +78,32 @@ object DayViewScreenConstants {
     const val LOADING_STATE = "LOADING_STATE"
     const val DAY_OF_WEEK_PLUS_DATE_HEADER = "DAY_OF_WEEK_PLUS_DATE_HEADER"
     const val PRAYER_ROW = "PRAYER_ROW"
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DayViewScreenPreview() {
+    AthanHelperTheme {
+        val prayerInfoUiState = PrayerInfoUiState.Success(
+            prayerInfo = PrayerInfo.test(
+                nextPrayerTime = NextPrayerTime.test(
+                    nextPrayerTimeMillis = 10000,
+                    nextPrayer = NextPrayer.test(
+                        name = "Fajr",
+                        index = 0
+                    )
+                ),
+                prayerTimesList = listOf(
+                    PrayerTimes.test(
+                        date = "24 Apr 2024",
+                        timingsResponse = TimingsResponse.test()
+                    )
+                )
+            )
+        )
+        DayViewScreen(
+            pageIndex = 0,
+            prayerInfoUiState = prayerInfoUiState
+        )
+    }
 }
