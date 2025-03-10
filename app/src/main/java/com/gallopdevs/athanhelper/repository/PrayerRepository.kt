@@ -11,10 +11,28 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class PrayerRepository @Inject constructor(
+interface PrayerRepository {
+
+    suspend fun getPrayerTimesForDate(
+        date: String,
+        latitude: Double,
+        longitude: Double,
+        method: Int
+    ): Flow<Result<Timings>>
+
+    suspend fun getPrayerTimeResponsesForMonth(
+        year: String,
+        month: String,
+        latitude: Double,
+        longitude: Double,
+        method: Int
+    ): Flow<Result<List<TimingsResponse?>>>
+}
+
+class PrayerRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: PrayerLocalDataSource
-) : PrayerRepo {
+) : PrayerRepository {
 
     override suspend fun getPrayerTimesForDate(
         date: String,
@@ -53,22 +71,4 @@ class PrayerRepository @Inject constructor(
             emit(result)
         }.flowOn(Dispatchers.IO)
     }
-}
-
-interface PrayerRepo {
-
-    suspend fun getPrayerTimesForDate(
-        date: String,
-        latitude: Double,
-        longitude: Double,
-        method: Int
-    ): Flow<Result<Timings>>
-
-    suspend fun getPrayerTimeResponsesForMonth(
-        year: String,
-        month: String,
-        latitude: Double,
-        longitude: Double,
-        method: Int
-    ): Flow<Result<List<TimingsResponse?>>>
 }

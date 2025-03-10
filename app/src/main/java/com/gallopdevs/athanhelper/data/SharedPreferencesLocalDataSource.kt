@@ -2,33 +2,34 @@ package com.gallopdevs.athanhelper.data
 
 import android.content.SharedPreferences
 import javax.inject.Inject
+import androidx.core.content.edit
 
 class SharedPreferencesLocalDataSource @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : SettingsLocalDataSource {
 
     override fun saveBoolean(key: String, value: Boolean) {
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(key, value)
-        editor.apply()
+        sharedPreferences.edit {
+            putBoolean(key, value)
+        }
     }
 
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean =
         sharedPreferences.getBoolean(key, defaultValue)
 
     override fun saveInt(key: String, value: Int) {
-        val editor = sharedPreferences.edit()
-        editor.putInt(key, value)
-        editor.apply()
+        sharedPreferences.edit {
+            putInt(key, value)
+        }
     }
 
     override fun getInt(key: String, defaultValue: Int): Int =
         sharedPreferences.getInt(key, defaultValue)
 
     override fun saveString(key: String, value: String) {
-        val editor = sharedPreferences.edit()
-        editor.putString(key, value)
-        editor.apply()
+        sharedPreferences.edit {
+            putString(key, value)
+        }
     }
 
     override fun getString(key: String, defaultValue: String): String? =

@@ -20,13 +20,13 @@ import org.mockito.kotlin.stub
 
 class SettingsRepositoryTest {
 
-    private lateinit var testObject: SettingsRepository
+    private lateinit var testObject: SettingsRepositoryImpl
 
     private val mockSettingsLocalDataSource: SettingsLocalDataSource = mock()
 
     @Before
     fun setup() {
-        testObject = SettingsRepository(mockSettingsLocalDataSource)
+        testObject = SettingsRepositoryImpl(mockSettingsLocalDataSource)
     }
 
     @Test

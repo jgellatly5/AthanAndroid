@@ -7,7 +7,6 @@ import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companio
 import com.gallopdevs.athanhelper.domain.GetSharedPrefsUseCase
 import com.gallopdevs.athanhelper.domain.SaveSharedPrefsUseCase
 import com.gallopdevs.athanhelper.domain.SharedPrefType
-import com.gallopdevs.athanhelper.repository.SettingsRepo
 import com.gallopdevs.athanhelper.utilities.HANAFI
 import com.gallopdevs.athanhelper.utilities.ISNA
 import com.gallopdevs.athanhelper.utilities.JAFARI

@@ -3,8 +3,8 @@ package com.gallopdevs.athanhelper.domain
 import com.gallopdevs.athanhelper.data.Result
 import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
-import com.gallopdevs.athanhelper.repository.PrayerRepo
-import com.gallopdevs.athanhelper.repository.SettingsRepo
+import com.gallopdevs.athanhelper.repository.PrayerRepository
+import com.gallopdevs.athanhelper.repository.SettingsRepository
 import com.gallopdevs.athanhelper.utilities.JAFARI
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -22,12 +22,12 @@ class GetPrayerTimesForMonthUseCaseTest {
 
     private lateinit var testObject: GetPrayerTimesForMonthUseCase
 
-    private val prayerRepo: PrayerRepo = mock()
-    private val settingsRepo: SettingsRepo = mock()
+    private val prayerRepository: PrayerRepository = mock()
+    private val settingsRepository: SettingsRepository = mock()
 
     @Before
     fun setup() {
-        testObject = GetPrayerTimesForMonthUseCase(prayerRepo, settingsRepo)
+        testObject = GetPrayerTimesForMonthUseCase(prayerRepository, settingsRepository)
     }
 
     @Test
@@ -44,7 +44,7 @@ class GetPrayerTimesForMonthUseCaseTest {
             )
         )
 
-        prayerRepo.stub {
+        prayerRepository.stub {
             onBlocking {
                 getPrayerTimeResponsesForMonth(
                     year,
@@ -72,7 +72,7 @@ class GetPrayerTimesForMonthUseCaseTest {
         val method = JAFARI
         val expectedErrorMessage = "API Error"
 
-        prayerRepo.stub {
+        prayerRepository.stub {
             onBlocking {
                 getPrayerTimeResponsesForMonth(
                     year,

@@ -17,14 +17,14 @@ import org.mockito.kotlin.stub
 
 class PrayerRepositoryTest {
 
-    private lateinit var testObject: PrayerRepo
+    private lateinit var testObject: PrayerRepository
 
     private val remoteDataSource: RemoteDataSource = mock()
     private val prayerLocalDataSource: PrayerLocalDataSource = mock()
 
     @Before
     fun setup() {
-        testObject = PrayerRepository(remoteDataSource, prayerLocalDataSource)
+        testObject = PrayerRepositoryImpl(remoteDataSource, prayerLocalDataSource)
     }
 
     @Test
