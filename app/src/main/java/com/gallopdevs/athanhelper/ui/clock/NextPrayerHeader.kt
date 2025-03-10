@@ -49,10 +49,9 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun NextPrayerHeader(
-    prayerViewModel: PrayerViewModel = hiltViewModel(),
-    settingsViewModel: SettingsViewModel = hiltViewModel()
+    prayerInfoUiState: PrayerInfoUiState,
+    enableNotifications: Boolean
 ) {
-    val prayerInfoUiState by prayerViewModel.prayerInfoUiState.collectAsState()
     when (prayerInfoUiState) {
         PrayerInfoUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -61,7 +60,7 @@ fun NextPrayerHeader(
         }
 
         is PrayerInfoUiState.Success -> {
-            val nextPrayerTime = (prayerInfoUiState as PrayerInfoUiState.Success).prayerInfo.nextPrayerTime
+            val nextPrayerTime = prayerInfoUiState.prayerInfo.nextPrayerTime
             var timerCountDown by remember { mutableLongStateOf(nextPrayerTime.nextPrayerTimeMillis) }
             LaunchedEffect(timerCountDown) {
                 while (timerCountDown != 0L) {
@@ -98,8 +97,6 @@ fun NextPrayerHeader(
                             fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
                         )
                     } else {
-                        val enableNotifications =
-                            settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
                         if (enableNotifications) createNotification(LocalContext.current, nextPrayerTime.nextPrayer.index)
                         Text(
                             text = stringResource(id = R.string.end_time),
@@ -110,7 +107,7 @@ fun NextPrayerHeader(
             }
         }
 
-        is PrayerInfoUiState.Error -> ErrorMessage(message = (prayerInfoUiState as PrayerInfoUiState.Error).message)
+        is PrayerInfoUiState.Error -> ErrorMessage(message = prayerInfoUiState.message)
     }
 }
 

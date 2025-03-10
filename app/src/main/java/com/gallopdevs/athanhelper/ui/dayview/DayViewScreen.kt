@@ -31,10 +31,9 @@ import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 @Composable
 fun DayViewScreen(
     pageIndex: Int?,
-    prayerViewModel: PrayerViewModel = hiltViewModel()
+    prayerInfoUiState: PrayerInfoUiState
 ) {
     pageIndex?.let {
-        val prayerInfoUiState by prayerViewModel.prayerInfoUiState.collectAsState()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -48,7 +47,7 @@ fun DayViewScreen(
                 }
 
                 is PrayerInfoUiState.Success -> {
-                    val prayerInfo = (prayerInfoUiState as PrayerInfoUiState.Success).prayerInfo
+                    val prayerInfo = prayerInfoUiState.prayerInfo
                     val nextPrayer = prayerInfo.nextPrayerTime.nextPrayer
                     val prayerTimesList = prayerInfo.prayerTimesList
                     DayOfWeekPlusDateHeader(
@@ -70,7 +69,7 @@ fun DayViewScreen(
                 }
 
                 is PrayerInfoUiState.Error -> {
-                    ErrorMessage(message = (prayerInfoUiState as PrayerInfoUiState.Error).message)
+                    ErrorMessage(message = prayerInfoUiState.message)
                 }
             }
         }
