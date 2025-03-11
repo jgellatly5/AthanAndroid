@@ -1,19 +1,38 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class)
 
 package com.gallopdevs.athanhelper.ui.clock
 
+import android.Manifest
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.ENABLE_NOTIFICATIONS
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LATITUDE
+import com.gallopdevs.athanhelper.data.SharedPreferencesLocalDataSource.Companion.LONGITUDE
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.NextPrayer
 import com.gallopdevs.athanhelper.domain.NextPrayerTime
@@ -26,20 +45,83 @@ import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
 import com.gallopdevs.athanhelper.viewmodel.SettingsViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 @Composable
 fun ClockScreen(
     prayerViewModel: PrayerViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val locationState by prayerViewModel.locationState.collectAsState()
     val prayerInfoUiState by prayerViewModel.prayerInfoUiState.collectAsState()
     val enableNotifications = settingsViewModel.getBoolean(ENABLE_NOTIFICATIONS, false)
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { DAYS_IN_WEEK })
-    ClockScreenContent(
-        prayerInfoUiState = prayerInfoUiState,
-        enableNotifications = enableNotifications,
-        pagerState = pagerState
+
+    val permissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
     )
+
+    var hasRequestedPermissions by rememberSaveable { mutableStateOf(false) }
+    var permissionRequestCompleted by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(permissionsState.allPermissionsGranted) {
+        if (hasRequestedPermissions) {
+            permissionRequestCompleted = permissionsState.revokedPermissions.isNotEmpty()
+        }
+    }
+
+    when {
+        permissionsState.allPermissionsGranted -> {
+            when {
+                locationState != null -> {
+                    settingsViewModel.apply {
+                        saveString(LATITUDE, locationState!!.lastLocation?.latitude.toString())
+                        saveString(LONGITUDE, locationState!!.lastLocation?.longitude.toString())
+                    }
+                    ClockScreenContent(
+                        prayerInfoUiState = prayerInfoUiState,
+                        enableNotifications = enableNotifications,
+                        pagerState = pagerState
+                    )
+                }
+
+                else -> {
+                    Text("We could not find your location.")
+                }
+            }
+
+        }
+
+        permissionsState.shouldShowRationale -> {
+            PermissionRationale(
+                onClick = {
+                    permissionsState.launchMultiplePermissionRequest()
+                    hasRequestedPermissions = true
+                }
+            )
+        }
+
+        else -> {
+            when {
+                permissionRequestCompleted -> {
+                    PermissionDenied()
+                }
+
+                else -> {
+                    PermissionRationale(
+                        onClick = {
+                            permissionsState.launchMultiplePermissionRequest()
+                            hasRequestedPermissions = true
+                        }
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -63,6 +145,40 @@ private fun ClockScreenContent(
             )
         }
         TabDots(state = pagerState)
+    }
+}
+
+@Composable
+private fun PermissionRationale(onClick: () -> Unit) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
+        Text("Location permissions are required to use this feature.")
+        Button(
+            modifier = Modifier.padding(top = 16.dp),
+            onClick = onClick
+        ) {
+            Text("Request Permissions")
+        }
+    }
+}
+
+@Composable
+private fun PermissionDenied() {
+    val context = LocalContext.current
+    Text("Permissions denied. Please enable them in app settings to proceed.")
+    Button(
+        onClick = {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+            }
+            context.startActivity(intent)
+        },
+        modifier = Modifier.padding(top = 16.dp)
+    ) {
+        Text("Open App Settings")
     }
 }
 

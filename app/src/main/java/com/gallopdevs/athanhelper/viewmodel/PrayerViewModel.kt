@@ -3,8 +3,10 @@ package com.gallopdevs.athanhelper.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gallopdevs.athanhelper.data.Result
+import com.gallopdevs.athanhelper.domain.GetLocationUpdatesUseCase
 import com.gallopdevs.athanhelper.domain.GetPrayerInfoUseCase
 import com.gallopdevs.athanhelper.domain.PrayerInfo
+import com.google.android.gms.location.LocationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,15 +17,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PrayerViewModel @Inject constructor(
-    private val getPrayerInfoUseCase: GetPrayerInfoUseCase
+    private val getLocationUpdatesUseCase: GetLocationUpdatesUseCase,
+    private val getPrayerInfoUseCase: GetPrayerInfoUseCase,
 ) : ViewModel() {
+
+    private val _locationState = MutableStateFlow<LocationResult?>(null)
+    val locationState: StateFlow<LocationResult?> = _locationState.asStateFlow()
 
     private val _prayerInfoUiState =
         MutableStateFlow<PrayerInfoUiState>(PrayerInfoUiState.Loading)
     val prayerInfoUiState: StateFlow<PrayerInfoUiState> = _prayerInfoUiState.asStateFlow()
 
     init {
+        getLocationUpdates()
         getPrayerInfo()
+    }
+
+    fun getLocationUpdates() {
+        viewModelScope.launch {
+            getLocationUpdatesUseCase.invoke().collect { locationResult ->
+                _locationState.update { locationResult }
+            }
+        }
     }
 
     fun getPrayerInfo() {
