@@ -1,13 +1,17 @@
 package com.gallopdevs.athanhelper
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -31,14 +35,33 @@ import com.gallopdevs.athanhelper.ui.settings.SettingsScreen
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainPager() {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
-    val scope = rememberCoroutineScope()
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+    Scaffold(
+        topBar = { TopAppBar() },
+        bottomBar = { BottomAppBar(pagerState) }
+    ) {
+        Column(
+            modifier = Modifier.padding(it),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
+                when (it) {
+                    0 -> ClockScreen()
+                    1 -> SettingsScreen()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TopAppBar() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         Image(
             painterResource(id = R.drawable.athan),
@@ -46,28 +69,27 @@ fun MainPager() {
             alignment = Alignment.Center,
             modifier = Modifier.size(100.dp)
         )
-        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
-            when (it) {
-                0 -> ClockScreen()
-                1 -> SettingsScreen()
-            }
+    }
+}
+
+@Composable
+private fun BottomAppBar(pagerState: PagerState) {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
+    TabRow(
+        selectedTabIndex = selectedTabIndex,
+        indicator = { tabPositions ->
+            TabRowDefaults.SecondaryIndicator(
+                Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                color = colorResource(id = R.color.colorPrimaryDark)
+            )
         }
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            indicator = { tabPositions ->
-                // Custom indicator
-                TabRowDefaults.Indicator(
-                    Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                    color = colorResource(id = R.color.colorPrimaryDark)
-                )
-            }
-        ) {
-            for (i in 0 until NUM_ITEMS) {
-                TabElement(index = i, selectedTabIndex = selectedTabIndex) {
-                    selectedTabIndex = it
-                    scope.launch {
-                        pagerState.animateScrollToPage(it)
-                    }
+    ) {
+        for (i in 0 until NUM_ITEMS) {
+            TabElement(index = i, selectedTabIndex = selectedTabIndex) {
+                selectedTabIndex = it
+                scope.launch {
+                    pagerState.animateScrollToPage(it)
                 }
             }
         }
@@ -90,18 +112,6 @@ private fun TabElement(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun TabElementPreview() {
-    AthanHelperTheme {
-        TabElement(
-            index = 0,
-            selectedTabIndex = 0,
-            onTabSelected = {}
-        )
-    }
-}
-
 @Composable
 private fun TabIcon(index: Int) {
     val painterId = when (index) {
@@ -121,4 +131,21 @@ private fun TabIcon(index: Int) {
 
 object MainPagerConstants {
     const val NUM_ITEMS = 2
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TopAppBarPreview() {
+    AthanHelperTheme {
+        TopAppBar()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun BottomAppBarPreview() {
+    AthanHelperTheme {
+        val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
+        BottomAppBar(pagerState = pagerState)
+    }
 }
