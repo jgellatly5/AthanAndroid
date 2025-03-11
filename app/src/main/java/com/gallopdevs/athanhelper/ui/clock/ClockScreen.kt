@@ -8,14 +8,17 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,8 +28,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,8 +49,6 @@ import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.test
 import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.DAYS_IN_WEEK
 import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.LOADING_STATE
-import com.gallopdevs.athanhelper.ui.shared.ErrorMessage
-import com.gallopdevs.athanhelper.ui.shared.LoadingIndicator
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
@@ -85,7 +91,7 @@ fun ClockScreen(
                         saveString(LONGITUDE, locationState!!.lastLocation?.longitude.toString())
                     }
                     when (prayerInfoUiState) {
-                        PrayerInfoUiState.Loading -> LoadingIndicator(testTag = LOADING_STATE)
+                        PrayerInfoUiState.Loading -> LoadingIndicator()
 
                         is PrayerInfoUiState.Success -> {
                             val prayerInfo =
@@ -160,6 +166,36 @@ private fun ClockScreenContent(
                 pagerState = pagerState
             )
         }
+    }
+}
+
+@Composable
+private fun LoadingIndicator() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .align(Center)
+                .testTag(LOADING_STATE)
+        )
+    }
+}
+
+@Composable
+private fun ErrorMessage(message: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = message,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .width(300.dp)
+                .padding(start = 16.dp, end = 16.dp)
+        )
     }
 }
 
