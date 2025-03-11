@@ -41,7 +41,6 @@ import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.test
 import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.DAYS_IN_WEEK
 import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.LOADING_STATE
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
 import com.gallopdevs.athanhelper.ui.shared.ErrorMessage
 import com.gallopdevs.athanhelper.ui.shared.LoadingIndicator
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme

@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gallopdevs.athanhelper.R
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants
+import com.gallopdevs.athanhelper.ui.clock.DayViewScreenConstants
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 
 @Composable

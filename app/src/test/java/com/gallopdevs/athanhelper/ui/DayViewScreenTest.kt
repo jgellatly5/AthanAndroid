@@ -15,10 +15,10 @@ import com.gallopdevs.athanhelper.domain.NextPrayerTime
 import com.gallopdevs.athanhelper.domain.PrayerInfo
 import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.test
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.LOADING_STATE
-import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.PRAYER_ROW
+import com.gallopdevs.athanhelper.ui.clock.DayViewScreen
+import com.gallopdevs.athanhelper.ui.clock.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
+import com.gallopdevs.athanhelper.ui.clock.DayViewScreenConstants.LOADING_STATE
+import com.gallopdevs.athanhelper.ui.clock.DayViewScreenConstants.PRAYER_ROW
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
