@@ -26,3 +26,5 @@ const val TIME_24 = 0 // 24-hour format
 const val TIME_12 = 1 // 12-hour format
 const val TIME_12_NS = 2 // 12-hour format with no suffix
 const val FLOATING = 3 // floating point number
+
+const val CHANNEL_ID = "NOTIFICATION"

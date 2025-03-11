@@ -5,15 +5,12 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -33,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.gallopdevs.athanhelper.MainActivity
-import com.gallopdevs.athanhelper.MainActivity.Companion.CHANNEL_ID
 import com.gallopdevs.athanhelper.R
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.NextPrayer
@@ -45,6 +40,7 @@ import com.gallopdevs.athanhelper.ui.clock.NextPrayerHeaderConstants.LOADING_STA
 import com.gallopdevs.athanhelper.ui.shared.ErrorMessage
 import com.gallopdevs.athanhelper.ui.shared.LoadingIndicator
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
+import com.gallopdevs.athanhelper.utilities.CHANNEL_ID
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -58,7 +54,9 @@ fun NextPrayerHeader(
     enableNotifications: Boolean
 ) {
     when (prayerInfoUiState) {
-        PrayerInfoUiState.Loading -> { LoadingIndicator(testTag = LOADING_STATE) }
+        PrayerInfoUiState.Loading -> {
+            LoadingIndicator(testTag = LOADING_STATE)
+        }
 
         is PrayerInfoUiState.Success -> {
             val nextPrayerTime = prayerInfoUiState.prayerInfo.nextPrayerTime
