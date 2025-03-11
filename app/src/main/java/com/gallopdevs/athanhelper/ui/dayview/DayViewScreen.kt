@@ -3,17 +3,19 @@ package com.gallopdevs.athanhelper.ui.dayview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
-import com.gallopdevs.athanhelper.domain.NextPrayer
-import com.gallopdevs.athanhelper.domain.NextPrayerTime
 import com.gallopdevs.athanhelper.domain.PrayerInfo
 import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.test
+import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.DAYS_IN_WEEK
+import com.gallopdevs.athanhelper.ui.clock.TabDots
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.DAY_VIEW_SCREEN
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreenConstants.PRAYER_ROW
@@ -22,7 +24,8 @@ import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 @Composable
 fun DayViewScreen(
     pageIndex: Int?,
-    prayerInfo: PrayerInfo
+    prayerInfo: PrayerInfo,
+    pagerState: PagerState
 ) {
     pageIndex?.let {
         Column(
@@ -50,6 +53,7 @@ fun DayViewScreen(
                     }
                 }
             }
+            TabDots(state = pagerState)
         }
     }
 }
@@ -67,13 +71,6 @@ object DayViewScreenConstants {
 private fun DayViewScreenPreview() {
     AthanHelperTheme {
         val prayerInfo = PrayerInfo.test(
-            nextPrayerTime = NextPrayerTime.test(
-                nextPrayerTimeMillis = 10000,
-                nextPrayer = NextPrayer.test(
-                    name = "Fajr",
-                    index = 0
-                )
-            ),
             prayerTimesList = listOf(
                 PrayerTimes.test(
                     date = "24 Apr 2024",
@@ -81,9 +78,11 @@ private fun DayViewScreenPreview() {
                 )
             )
         )
+        val pagerState = rememberPagerState(initialPage = 0, pageCount = { DAYS_IN_WEEK })
         DayViewScreen(
             pageIndex = 0,
-            prayerInfo = prayerInfo
+            prayerInfo = prayerInfo,
+            pagerState = pagerState
         )
     }
 }

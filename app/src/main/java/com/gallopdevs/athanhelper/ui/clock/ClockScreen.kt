@@ -157,10 +157,10 @@ private fun ClockScreenContent(
         ) {
             DayViewScreen(
                 pageIndex = it,
-                prayerInfo = prayerInfo
+                prayerInfo = prayerInfo,
+                pagerState = pagerState
             )
         }
-        TabDots(state = pagerState)
     }
 }
 
