@@ -40,7 +40,10 @@ import com.gallopdevs.athanhelper.domain.PrayerInfo
 import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.test
 import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.DAYS_IN_WEEK
+import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.LOADING_STATE
 import com.gallopdevs.athanhelper.ui.dayview.DayViewScreen
+import com.gallopdevs.athanhelper.ui.shared.ErrorMessage
+import com.gallopdevs.athanhelper.ui.shared.LoadingIndicator
 import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 import com.gallopdevs.athanhelper.viewmodel.PrayerInfoUiState
 import com.gallopdevs.athanhelper.viewmodel.PrayerViewModel
@@ -82,11 +85,23 @@ fun ClockScreen(
                         saveString(LATITUDE, locationState!!.lastLocation?.latitude.toString())
                         saveString(LONGITUDE, locationState!!.lastLocation?.longitude.toString())
                     }
-                    ClockScreenContent(
-                        prayerInfoUiState = prayerInfoUiState,
-                        enableNotifications = enableNotifications,
-                        pagerState = pagerState
-                    )
+                    when (prayerInfoUiState) {
+                        PrayerInfoUiState.Loading -> LoadingIndicator(testTag = LOADING_STATE)
+
+                        is PrayerInfoUiState.Success -> {
+                            val prayerInfo =
+                                (prayerInfoUiState as PrayerInfoUiState.Success).prayerInfo
+                            ClockScreenContent(
+                                nextPrayerTime = prayerInfo.nextPrayerTime,
+                                prayerInfo = prayerInfo,
+                                enableNotifications = enableNotifications,
+                                pagerState = pagerState
+                            )
+                        }
+
+                        is PrayerInfoUiState.Error -> ErrorMessage(message = (prayerInfoUiState as PrayerInfoUiState.Error).message)
+                    }
+
                 }
 
                 else -> {
@@ -126,13 +141,14 @@ fun ClockScreen(
 
 @Composable
 private fun ClockScreenContent(
-    prayerInfoUiState: PrayerInfoUiState,
+    nextPrayerTime: NextPrayerTime,
+    prayerInfo: PrayerInfo,
     enableNotifications: Boolean,
     pagerState: PagerState
 ) {
     Column {
         NextPrayerHeader(
-            prayerInfoUiState = prayerInfoUiState,
+            nextPrayerTime = nextPrayerTime,
             enableNotifications = enableNotifications
         )
         HorizontalPager(
@@ -141,7 +157,7 @@ private fun ClockScreenContent(
         ) {
             DayViewScreen(
                 pageIndex = it,
-                prayerInfoUiState = prayerInfoUiState
+                prayerInfo = prayerInfo
             )
         }
         TabDots(state = pagerState)
@@ -184,32 +200,39 @@ private fun PermissionDenied() {
 
 object ClockScreenConstants {
     const val DAYS_IN_WEEK = 7
+    const val LOADING_STATE = "LOADING_STATE"
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ClockScreenContentPreview() {
     AthanHelperTheme {
-        val prayerInfoUiState = PrayerInfoUiState.Success(
-            prayerInfo = PrayerInfo.test(
-                nextPrayerTime = NextPrayerTime.test(
-                    nextPrayerTimeMillis = 10000,
-                    nextPrayer = NextPrayer.test(
-                        name = "Fajr",
-                        index = 0
-                    )
-                ),
-                prayerTimesList = listOf(
-                    PrayerTimes.test(
-                        date = "24 Apr 2024",
-                        timingsResponse = TimingsResponse.test()
-                    )
+        val nextPrayerTime = NextPrayerTime.test(
+            nextPrayerTimeMillis = 10000,
+            nextPrayer = NextPrayer.test(
+                name = "Fajr",
+                index = 0
+            )
+        )
+        val prayerInfo = PrayerInfo.test(
+            nextPrayerTime = NextPrayerTime.test(
+                nextPrayerTimeMillis = 10000,
+                nextPrayer = NextPrayer.test(
+                    name = "Fajr",
+                    index = 0
+                )
+            ),
+            prayerTimesList = listOf(
+                PrayerTimes.test(
+                    date = "24 Apr 2024",
+                    timingsResponse = TimingsResponse.test()
                 )
             )
         )
         val pagerState = rememberPagerState(initialPage = 0, pageCount = { DAYS_IN_WEEK })
         ClockScreenContent(
-            prayerInfoUiState = prayerInfoUiState,
+            nextPrayerTime = nextPrayerTime,
+            prayerInfo = prayerInfo,
             enableNotifications = false,
             pagerState = pagerState
         )
