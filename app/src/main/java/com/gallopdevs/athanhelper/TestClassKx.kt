@@ -66,7 +66,23 @@ fun Date.Companion.test(
 )
 
 fun Timings.Companion.test(
-    fajr: String = "5:00"
+    fajr: String = "5:00",
+    sunrise: String = "7:00",
+    dhuhr: String = "13:00",
+    asr: String = "17:00",
+    sunset: String = "19:00",
+    maghrib: String = "19:30",
+    isha: String = "20:00",
+    imsak: String = "6:00",
+    midnight: String = "1:00",
 ): Timings = Timings(
-    fajr
+    fajr,
+    sunrise,
+    dhuhr,
+    asr,
+    sunset,
+    maghrib,
+    isha,
+    imsak,
+    midnight
 )

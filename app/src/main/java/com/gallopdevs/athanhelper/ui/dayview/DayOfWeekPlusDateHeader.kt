@@ -28,7 +28,7 @@ fun DayOfWeekPlusDateHeader(
         color = colorResource(id = R.color.colorPrimaryDark),
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .padding(top = 32.dp, bottom = 40.dp)
+            .padding(vertical = 20.dp)
             .fillMaxWidth()
             .testTag(testTag)
     )

@@ -37,7 +37,10 @@ fun PrayerRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 60.dp, end = 60.dp)
+                .padding(
+                    horizontal = 60.dp,
+                    vertical = 10.dp
+                )
         ) {
             HighlightedPrayer(
                 prayerTitle = prayerTitle,
@@ -48,7 +51,7 @@ fun PrayerRow(
                 prayerTimePostFix = prayerTimePostFix
             )
         }
-        if (prayerTitle != stringResource(id = R.string.night)) {
+        if (prayerTitle != "Midnight") {
             HorizontalDivider(
                 modifier = Modifier
                     .padding(start = 60.dp, end = 60.dp)

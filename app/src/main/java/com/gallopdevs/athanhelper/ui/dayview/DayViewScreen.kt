@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import com.gallopdevs.athanhelper.data.models.Timings
 import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.PrayerInfo
 import com.gallopdevs.athanhelper.domain.PrayerTimes
@@ -58,7 +59,6 @@ fun DayViewScreen(
     }
 }
 
-
 object DayViewScreenConstants {
     const val DAY_VIEW_SCREEN = "DAY_VIEW_SCREEN"
     const val NEXT_PRAYER = "NEXT_PRAYER"
@@ -73,7 +73,7 @@ private fun DayViewScreenPreview() {
         val prayerInfo = PrayerInfo.test(
             prayerTimesList = listOf(
                 PrayerTimes.test(
-                    date = "24 Apr 2024",
+                    date = "11 Mar 2025",
                     timingsResponse = TimingsResponse.test()
                 )
             )
