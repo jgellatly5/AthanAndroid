@@ -63,7 +63,10 @@ fun MainPager() {
                 .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) {
                 when (it) {
                     0 -> ClockScreen()
                     1 -> SettingsScreen()
