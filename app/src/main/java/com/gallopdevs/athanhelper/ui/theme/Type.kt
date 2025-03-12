@@ -15,11 +15,6 @@ private val Montserrat = FontFamily(
     Font(R.font.montserrat_semibold, FontWeight.SemiBold)
 )
 
-private val Karla = FontFamily(
-    Font(R.font.karla_regular, FontWeight.Normal),
-    Font(R.font.karla_bold, FontWeight.Bold)
-)
-
 val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = Montserrat,

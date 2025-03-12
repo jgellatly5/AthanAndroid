@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,7 +68,7 @@ fun NextPrayerHeader(
         Column {
             Text(
                 text = stringResource(id = R.string.next_prayer),
-                fontSize = dimensionResource(id = R.dimen.next_prayer_text_size).value.sp
+                fontSize = 18.sp
             )
             if (timerCountDown != 0L) {
                 val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
@@ -79,7 +78,7 @@ fun NextPrayerHeader(
                         id = R.string.count_down_time,
                         offset.format(timerCountDown)
                     ),
-                    fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
+                    fontSize = 40.sp
                 )
             } else {
                 if (enableNotifications) createNotification(
@@ -88,7 +87,7 @@ fun NextPrayerHeader(
                 )
                 Text(
                     text = stringResource(id = R.string.end_time),
-                    fontSize = dimensionResource(id = R.dimen.prayer_timer_text_size).value.sp
+                    fontSize = 40.sp
                 )
             }
         }

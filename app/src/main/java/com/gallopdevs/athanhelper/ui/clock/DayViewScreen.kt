@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,7 +69,7 @@ private fun DayOfWeekPlusDateHeader(
 ) {
     Text(
         text = dayOfWeekPlusDate,
-        fontSize = dimensionResource(id = R.dimen.day_text_size).value.sp,
+        fontSize = 15.sp,
         color = colorResource(id = R.color.colorPrimaryDark),
         textAlign = TextAlign.Center,
         modifier = Modifier
@@ -142,7 +141,7 @@ private fun HighlightedPrayer(
         }
         Text(
             text = prayerTitle,
-            fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
+            fontSize = 24.sp,
             color = colorResource(id = R.color.colorPrimaryDark)
         )
     }
@@ -156,13 +155,13 @@ private fun PrayerTime(
     Row {
         Text(
             text = prayerTime,
-            fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
+            fontSize = 24.sp,
             color = colorResource(id = R.color.colorPrimaryDark)
         )
         prayerTimePostFix?.let {
             Text(
                 text = it,
-                fontSize = dimensionResource(id = R.dimen.postfix_text_size).value.sp,
+                fontSize = 12.sp,
                 color = colorResource(id = R.color.colorPrimaryDark)
             )
         }
