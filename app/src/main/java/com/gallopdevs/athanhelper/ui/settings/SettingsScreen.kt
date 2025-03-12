@@ -248,7 +248,7 @@ private fun HighlightedSetting(
         }
         Text(
             text = settingName,
-            fontSize = dimensionResource(id = R.dimen.prayer_name_text_size).value.sp,
+            fontSize = 24.sp,
             color = colorResource(id = R.color.colorPrimaryDark)
         )
     }

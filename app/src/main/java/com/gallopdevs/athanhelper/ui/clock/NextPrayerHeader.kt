@@ -64,31 +64,39 @@ fun NextPrayerHeader(
             modifier = Modifier
                 .width(150.dp)
                 .height(150.dp)
+                .weight(1f)
         )
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = stringResource(id = R.string.next_prayer),
                 fontSize = 18.sp
             )
-            if (timerCountDown != 0L) {
-                val offset = SimpleDateFormat("HH:mm:ss", Locale.US)
-                offset.timeZone = TimeZone.getTimeZone("GMT")
-                Text(
-                    text = stringResource(
-                        id = R.string.count_down_time,
-                        offset.format(timerCountDown)
-                    ),
-                    fontSize = 40.sp
-                )
-            } else {
-                if (enableNotifications) createNotification(
-                    LocalContext.current,
-                    nextPrayerTime.nextPrayer.index
-                )
-                Text(
-                    text = stringResource(id = R.string.end_time),
-                    fontSize = 40.sp
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                when {
+                    timerCountDown != 0L -> {
+                        val offset = SimpleDateFormat("H:mm:ss", Locale.US)
+                        offset.timeZone = TimeZone.getTimeZone("GMT")
+                        Text(
+                            text = offset.format(timerCountDown),
+                            fontSize = 40.sp
+                        )
+                    }
+
+                    else -> {
+                        if (enableNotifications) createNotification(
+                            LocalContext.current,
+                            nextPrayerTime.nextPrayer.index
+                        )
+                        Text(
+                            text = stringResource(id = R.string.end_time),
+                            fontSize = 40.sp
+                        )
+                    }
+                }
             }
         }
     }
