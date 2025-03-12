@@ -36,8 +36,7 @@ import com.gallopdevs.athanhelper.ui.theme.AthanHelperTheme
 @Composable
 fun DayViewScreen(
     pageIndex: Int?,
-    prayerInfo: PrayerInfo,
-    pagerState: PagerState
+    prayerInfo: PrayerInfo
 ) {
     pageIndex?.let {
         Column(
@@ -64,7 +63,6 @@ fun DayViewScreen(
                     }
                 }
             }
-            TabDots(state = pagerState)
         }
     }
 }

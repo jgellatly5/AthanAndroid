@@ -8,15 +8,20 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -162,10 +168,10 @@ private fun ClockScreenContent(
         ) {
             DayViewScreen(
                 pageIndex = it,
-                prayerInfo = prayerInfo,
-                pagerState = pagerState
+                prayerInfo = prayerInfo
             )
         }
+        TabDots(state = pagerState)
     }
 }
 
@@ -197,6 +203,38 @@ private fun ErrorMessage(message: String) {
                 .padding(start = 16.dp, end = 16.dp)
         )
     }
+}
+
+@Composable
+private fun TabDots(state: PagerState) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        for (i in 0 until DAYS_IN_WEEK) {
+            Dot(isSelected = i == state.currentPage)
+        }
+    }
+}
+
+@Composable
+private fun Dot(isSelected: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(20.dp)
+            .padding(horizontal = 4.dp)
+            .background(
+                color = if (isSelected) Color.Black else Color.Transparent,
+                shape = CircleShape
+            )
+            .border(
+                width = 1.dp,
+                color = Color.Black,
+                shape = CircleShape
+            )
+    )
 }
 
 @Composable
