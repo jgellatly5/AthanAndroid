@@ -1,30 +1,31 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.gallopdevs.athanhelper
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,13 +38,29 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainPager() {
+    val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
     Scaffold(
-        topBar = { TopAppBar() },
-        bottomBar = { BottomAppBar(pagerState) }
+        topBar = { AthanTopAppBar() },
+        bottomBar = {
+            AthanBottomAppBar(
+                onClockClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(0)
+                    }
+                },
+                onSettingsClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(1)
+                    }
+                }
+            )
+        }
     ) {
         Column(
-            modifier = Modifier.padding(it),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) {
@@ -57,76 +74,55 @@ fun MainPager() {
 }
 
 @Composable
-private fun TopAppBar() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Image(
-            painterResource(id = R.drawable.athan),
-            contentDescription = stringResource(id = R.string.app_name),
-            alignment = Alignment.Center,
-            modifier = Modifier.size(100.dp)
-        )
-    }
+private fun AthanTopAppBar() {
+    TopAppBar(
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painterResource(id = R.drawable.athan),
+                    contentDescription = stringResource(id = R.string.app_name),
+                    alignment = Alignment.Center,
+                    modifier = Modifier.size(100.dp)
+                )
+            }
+        }
+    )
 }
 
 @Composable
-private fun BottomAppBar(pagerState: PagerState) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val scope = rememberCoroutineScope()
-    TabRow(
-        selectedTabIndex = selectedTabIndex,
-        indicator = { tabPositions ->
-            TabRowDefaults.SecondaryIndicator(
-                Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                color = colorResource(id = R.color.colorPrimaryDark)
-            )
-        }
+private fun AthanBottomAppBar(
+    onClockClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
+    BottomAppBar(
+        containerColor = Color.White
     ) {
-        for (i in 0 until NUM_ITEMS) {
-            TabElement(index = i, selectedTabIndex = selectedTabIndex) {
-                selectedTabIndex = it
-                scope.launch {
-                    pagerState.animateScrollToPage(it)
-                }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            IconButton(
+                onClick = onClockClick
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = "Clock"
+                )
+            }
+            IconButton(
+                onClick = onSettingsClick
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings"
+                )
             }
         }
     }
-}
-
-@Composable
-private fun TabElement(
-    index: Int,
-    selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit
-) {
-    Tab(
-        icon = { TabIcon(index) },
-        selected = index == selectedTabIndex,
-        onClick = { onTabSelected(index) },
-        modifier = Modifier
-            .background(colorResource(id = R.color.colorPrimary))
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    )
-}
-
-@Composable
-private fun TabIcon(index: Int) {
-    val painterId = when (index) {
-        0 -> R.drawable.clock_icon
-        else -> R.drawable.settings_icon
-    }
-    val contentDescription = when (index) {
-        0 -> "clock"
-        else -> "settings"
-    }
-    Image(
-        painterResource(id = painterId),
-        contentDescription = contentDescription,
-        modifier = Modifier.size(30.dp)
-    )
 }
 
 object MainPagerConstants {
@@ -135,17 +131,16 @@ object MainPagerConstants {
 
 @Preview(showBackground = true)
 @Composable
-private fun TopAppBarPreview() {
+private fun AthanTopAppBarPreview() {
     AthanHelperTheme {
-        TopAppBar()
+        AthanTopAppBar()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun BottomAppBarPreview() {
+private fun AthanBottomAppBarPreview() {
     AthanHelperTheme {
-        val pagerState = rememberPagerState(initialPage = 0, pageCount = { NUM_ITEMS })
-        BottomAppBar(pagerState = pagerState)
+        AthanBottomAppBar(onClockClick = {}, onSettingsClick = {})
     }
 }

@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +25,6 @@ import com.gallopdevs.athanhelper.data.models.TimingsResponse
 import com.gallopdevs.athanhelper.domain.PrayerInfo
 import com.gallopdevs.athanhelper.domain.PrayerTimes
 import com.gallopdevs.athanhelper.test
-import com.gallopdevs.athanhelper.ui.clock.ClockScreenConstants.DAYS_IN_WEEK
 import com.gallopdevs.athanhelper.ui.clock.DayViewScreenConstants.DAY_OF_WEEK_PLUS_DATE_HEADER
 import com.gallopdevs.athanhelper.ui.clock.DayViewScreenConstants.DAY_VIEW_SCREEN
 import com.gallopdevs.athanhelper.ui.clock.DayViewScreenConstants.PRAYER_ROW
@@ -191,11 +188,9 @@ private fun DayViewScreenPreview() {
                 )
             )
         )
-        val pagerState = rememberPagerState(initialPage = 0, pageCount = { DAYS_IN_WEEK })
         DayViewScreen(
             pageIndex = 0,
-            prayerInfo = prayerInfo,
-            pagerState = pagerState
+            prayerInfo = prayerInfo
         )
     }
 }
